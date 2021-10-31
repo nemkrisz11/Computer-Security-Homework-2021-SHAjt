@@ -55,7 +55,7 @@ CaffFile CaffParser::parse(std::vector<unsigned char> buffer)
     return cf;
 }
 
-BlockHeader CaffParser::readNextBlockHeader_(std::vector<unsigned char> buffer)
+BlockHeader CaffParser::readNextBlockHeader_(std::vector<unsigned char> buffer) const
 {
     if (buffer.empty())
     {
@@ -64,7 +64,7 @@ BlockHeader CaffParser::readNextBlockHeader_(std::vector<unsigned char> buffer)
     BlockHeader header;
 
     auto it = buffer.begin();
-    if (*it > 3 || *it < 0)
+    if (*it > 3 || *it == 0)
     {
         throw std::invalid_argument("invalid block type");
     }
@@ -81,17 +81,18 @@ BlockHeader CaffParser::readNextBlockHeader_(std::vector<unsigned char> buffer)
 }
 
 
-CaffHeader CaffParser::parseHeaderBlock_(std::vector<unsigned char> block){
+CaffHeader CaffParser::parseHeaderBlock_(std::vector<unsigned char> block) const
+{
     auto it = block.begin();
-    std::string magic(it, it+MAGICBYTES);
-    if (magic.compare("CAFF") != 0)
+
+    if (std::string magic(it, it+MAGICBYTES); magic.compare("CAFF") != 0)
     {
         throw std::invalid_argument("invalid header magic value");
     }
     it += MAGICBYTES;
-    size_t headerBlockSize = bytesToInteger(std::vector<unsigned char>(it, it+FIELDLENGTHBYTES));
     // header block always 20 bytes
-    if (headerBlockSize != HEADERBLOCKLENGHT)
+    if (size_t headerBlockSize = bytesToInteger(std::vector<unsigned char>(it, it+FIELDLENGTHBYTES));
+        headerBlockSize != HEADERBLOCKLENGHT)
     {
         throw std::invalid_argument("invalid header block length");
     }
@@ -104,18 +105,18 @@ CaffHeader CaffParser::parseHeaderBlock_(std::vector<unsigned char> block){
     return header;
 }
 
-CaffCredits CaffParser::parseCreditsBlock_(std::vector<unsigned char> block, size_t blockLength)
+CaffCredits CaffParser::parseCreditsBlock_(std::vector<unsigned char> block, size_t blockLength) const
 {
     auto it = block.begin();
-    int year = (int)bytesToInteger(std::vector<unsigned char>(it, it+2));
+    auto year = (int)bytesToInteger(std::vector<unsigned char>(it, it+2));
     it+=2;
-    int month = (int)bytesToInteger(std::vector<unsigned char>(it, it+1));
+    auto month = (int)bytesToInteger(std::vector<unsigned char>(it, it+1));
     it++;
-    int day = (int)bytesToInteger(std::vector<unsigned char>(it, it+1));
+    auto day = (int)bytesToInteger(std::vector<unsigned char>(it, it+1));
     it++;
-    int hour = (int)bytesToInteger(std::vector<unsigned char>(it, it+1));
+    auto hour = (int)bytesToInteger(std::vector<unsigned char>(it, it+1));
     it++;
-    int minute = (int)bytesToInteger(std::vector<unsigned char>(it, it+1));
+    auto minute = (int)bytesToInteger(std::vector<unsigned char>(it, it+1));
     it++;
 
     size_t lengthOfCreater = bytesToInteger(std::vector<unsigned char>(it, it+FIELDLENGTHBYTES));
@@ -138,7 +139,7 @@ CaffCredits CaffParser::parseCreditsBlock_(std::vector<unsigned char> block, siz
     return credits;
 }
 
-CaffAnimationImage CaffParser::parseAnimationBlock_(std::vector<unsigned char> block, size_t blockLength)
+CaffAnimationImage CaffParser::parseAnimationBlock_(std::vector<unsigned char> block, size_t blockLength) const
 {
     auto it = block.begin();
     size_t duration = bytesToInteger(std::vector<unsigned char>(it, it+IMAGEDURATIONBYTES));

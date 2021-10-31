@@ -23,7 +23,7 @@ namespace utilities
         size_t value = 0;
         for(unsigned int i = 0; i<bytes.size(); i++)
         {
-            value = (size_t) (value | (*it << i*8));
+            value = value | (*it << i*8);
             it++;
         }
 
@@ -31,9 +31,9 @@ namespace utilities
     }
 
     template <typename Itr>
-    inline void SafeAdvance(Itr& currentItr, Itr endItr, int advance)
+    inline void SafeAdvance(Itr& currentItr, Itr endItr, size_t advance)
     {
-        if ((currentItr < endItr) && (distance(currentItr, endItr) >= advance))
+        if ((currentItr < endItr) && ((size_t)distance(currentItr, endItr) >= advance))
         {
             std::advance(currentItr, advance);
         }

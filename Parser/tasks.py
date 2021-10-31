@@ -8,7 +8,7 @@ def print_banner(msg):
     print("= {} ".format(msg))
 
 @invoke.task()
-def buildcppLib(c):
+def buildcpplib(c):
     """Build the shared library for the C++ code"""
     print_banner("Building C++ Library")
     invoke.run(

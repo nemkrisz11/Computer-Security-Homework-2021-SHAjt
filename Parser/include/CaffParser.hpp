@@ -58,10 +58,10 @@ class CaffParser
     public:
         CaffFile parse(std::vector<unsigned char> buffer);
     private:
-        BlockHeader readNextBlockHeader_(std::vector<unsigned char> buffer);
-        CaffHeader parseHeaderBlock_(std::vector<unsigned char> block);
-        CaffCredits parseCreditsBlock_(std::vector<unsigned char> block, size_t blockLength);
-        CaffAnimationImage parseAnimationBlock_(std::vector<unsigned char> block, size_t blockLength);
+        BlockHeader readNextBlockHeader_(std::vector<unsigned char> buffer) const;
+        CaffHeader parseHeaderBlock_(std::vector<unsigned char> block) const;
+        CaffCredits parseCreditsBlock_(std::vector<unsigned char> block, size_t blockLength) const;
+        CaffAnimationImage parseAnimationBlock_(std::vector<unsigned char> block, size_t blockLength) const;
 };
 
 #endif // CAFFPARSER_H
