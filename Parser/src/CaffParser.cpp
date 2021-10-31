@@ -17,7 +17,7 @@ CaffFile CaffParser::parse(std::vector<unsigned char> buffer)
     SafeAdvance(it, buffer.end(), BLOCKHEADERBYTES);
     BlockHeader firstBlockHeader = this->readNextBlockHeader_(buffer);
 
-    if (firstBlockHeader.type != HeaderBlock)
+    if (firstBlockHeader.type != BlockType::HeaderBlock)
     {
         throw std::invalid_argument("First block must be the header block");
     }
@@ -40,12 +40,12 @@ CaffFile CaffParser::parse(std::vector<unsigned char> buffer)
         BlockHeader nextBlockHeader = this->readNextBlockHeader_(std::vector<unsigned char>(it-BLOCKHEADERBYTES,it));
 
         SafeAdvance(it, buffer.end(), nextBlockHeader.length);
-        if (nextBlockHeader.type == CreditsBlock)
+        if (nextBlockHeader.type == BlockType::CreditsBlock)
         {
             auto credits = this->parseCreditsBlock_(std::vector<unsigned char>(it-nextBlockHeader.length, it), nextBlockHeader.length);
             cf.credits = credits;
         }
-        else if (nextBlockHeader.type == AnimationBlock)
+        else if (nextBlockHeader.type == BlockType::AnimationBlock)
         {
             auto animationImage = this->parseAnimationBlock_(std::vector<unsigned char>(it-nextBlockHeader.length, it), nextBlockHeader.length);
             cf.animationImages.insert(cf.animationImages.begin(), animationImage);

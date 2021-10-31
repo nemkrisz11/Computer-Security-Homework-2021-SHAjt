@@ -6,7 +6,12 @@
 #include "CiffParser.hpp"
 
 
-enum BlockType { HeaderBlock = 1, CreditsBlock = 2, AnimationBlock = 3 };
+enum class BlockType
+{
+    HeaderBlock = 1,
+    CreditsBlock = 2,
+    AnimationBlock = 3
+};
 
 class BlockHeader
 {
