@@ -1,11 +1,7 @@
 #include "../include/CiffParser.hpp"
+#include "../include/Utilities.hpp"
 
-CiffParser::CiffParser()
-{
-    //ctor
-}
-
-CiffParser::~CiffParser()
-{
-    //dtor
+CiffFile CiffParser::parse(std::vector<unsigned char> buffer){
+    CiffFile ciff;
+    return ciff;
 }

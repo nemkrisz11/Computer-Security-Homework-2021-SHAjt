@@ -4,33 +4,7 @@
 #include <iostream>
 
 using namespace constants;
-
-size_t bytesToInteger(std::vector<unsigned char> bytes)
-{
-    auto it = bytes.begin();
-    size_t value = 0;
-    for(unsigned int i = 0; i<bytes.size(); i++)
-    {
-        value = (size_t) (value | (*it << i*8));
-        it++;
-    }
-
-    return value;
-}
-
-template <typename Itr>
-void SafeAdvance(Itr& currentItr, Itr endItr, int advance)
-{
-    if ((currentItr < endItr) && (distance(currentItr, endItr) >= advance))
-    {
-        std::advance(currentItr, advance);
-    }
-    else
-    {
-        throw std::invalid_argument("Unexpected end of file");
-    }
-}
-
+using namespace utilities;
 
 CaffFile CaffParser::parse(std::vector<unsigned char> buffer)
 {
@@ -60,18 +34,22 @@ CaffFile CaffParser::parse(std::vector<unsigned char> buffer)
     CaffFile cf;
     cf.header = header;
 
-    SafeAdvance(it, buffer.end(), BLOCKHEADERBYTES);
-    BlockHeader nextBlockHeader = this->readNextBlockHeader_(std::vector<unsigned char>(it-BLOCKHEADERBYTES,it));
-
-    SafeAdvance(it, buffer.end(), nextBlockHeader.length);
-    if (nextBlockHeader.type == CreditsBlock)
+    while (it < buffer.end())
     {
-        auto credits = this->parseCreditsBlock_(std::vector<unsigned char>(it-nextBlockHeader.length, it), nextBlockHeader.length);
-        cf.credits = credits;
-    }
-    else if (nextBlockHeader.type == AnimationBlock)
-    {
+        SafeAdvance(it, buffer.end(), BLOCKHEADERBYTES);
+        BlockHeader nextBlockHeader = this->readNextBlockHeader_(std::vector<unsigned char>(it-BLOCKHEADERBYTES,it));
 
+        SafeAdvance(it, buffer.end(), nextBlockHeader.length);
+        if (nextBlockHeader.type == CreditsBlock)
+        {
+            auto credits = this->parseCreditsBlock_(std::vector<unsigned char>(it-nextBlockHeader.length, it), nextBlockHeader.length);
+            cf.credits = credits;
+        }
+        else if (nextBlockHeader.type == AnimationBlock)
+        {
+            auto animationImage = this->parseAnimationBlock_(std::vector<unsigned char>(it-nextBlockHeader.length, it), nextBlockHeader.length);
+            cf.animationImages.insert(cf.animationImages.begin(), animationImage);
+        }
     }
 
     return cf;
@@ -83,7 +61,7 @@ BlockHeader CaffParser::readNextBlockHeader_(std::vector<unsigned char> buffer)
     {
         throw std::invalid_argument("buffer is empty");
     }
-    BlockHeader bh;
+    BlockHeader header;
 
     auto it = buffer.begin();
     if (*it > 3 || *it < 0)
@@ -92,14 +70,14 @@ BlockHeader CaffParser::readNextBlockHeader_(std::vector<unsigned char> buffer)
     }
     else
     {
-        bh.type = static_cast<BlockType>(*it);
+        header.type = static_cast<BlockType>(*it);
         it++;
     }
 
     size_t blockLength = bytesToInteger(std::vector<unsigned char>(it, it+FIELDLENGTHBYTES));
-    bh.length = blockLength;
+    header.length = blockLength;
 
-    return bh;
+    return header;
 }
 
 
@@ -120,10 +98,10 @@ CaffHeader CaffParser::parseHeaderBlock_(std::vector<unsigned char> block){
     it += FIELDLENGTHBYTES;
 
     size_t numberOfCiffs = bytesToInteger(std::vector<unsigned char>(it, it+8));
-    CaffHeader ch;
-    ch.numOfCiffs = numberOfCiffs;
+    CaffHeader header;
+    header.numOfCiffs = numberOfCiffs;
 
-    return ch;
+    return header;
 }
 
 CaffCredits CaffParser::parseCreditsBlock_(std::vector<unsigned char> block, size_t blockLength)
@@ -149,14 +127,25 @@ CaffCredits CaffParser::parseCreditsBlock_(std::vector<unsigned char> block, siz
 
     std::string creatorName(it, it+lengthOfCreater);
 
-    CaffCredits cr;
-    cr.year = year;
-    cr.month = month;
-    cr.day = day;
-    cr.hour = hour;
-    cr.minute = minute;
-    cr.creator = creatorName;
+    CaffCredits credits;
+    credits.year = year;
+    credits.month = month;
+    credits.day = day;
+    credits.hour = hour;
+    credits.minute = minute;
+    credits.creator = creatorName;
 
-    return cr;
+    return credits;
+}
+
+CaffAnimationImage CaffParser::parseAnimationBlock_(std::vector<unsigned char> block, size_t blockLength)
+{
+    auto it = block.begin();
+    size_t duration = bytesToInteger(std::vector<unsigned char>(it, it+IMAGEDURATIONBYTES));
+    SafeAdvance(it, block.end(),IMAGEDURATIONBYTES);
+
+    CaffAnimationImage animationImage;
+    animationImage.duration = duration;
+    return animationImage;
 }
 

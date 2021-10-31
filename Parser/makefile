@@ -15,4 +15,15 @@ CiffParser.o: src/CiffParser.cpp include/CiffParser.hpp
 	g++ -Wall -Werror -std=c++17 -c src/CiffParser.cpp
 	
 clean:
-	rm *.o output *.so include/*.gch
+ifneq ("$(wildcard *.o)","")
+	rm *.o
+endif
+ifneq ("$(wildcard output)","")
+	rm output
+endif
+ifneq ("$(wildcard *.so)","")
+	rm *.so
+endif
+ifneq ("$(wildcard include/*.gch)","")
+	rm include/*.gch
+endif

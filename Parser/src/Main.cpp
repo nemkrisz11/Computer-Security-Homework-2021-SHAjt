@@ -26,5 +26,9 @@ int main()
 
     std::cout << cf.header.numOfCiffs << std::endl;
     std::cout << cf.credits.creator << std::endl;
+    for (auto image : cf.animationImages)
+    {
+        std::cout << image.duration << std::endl;
+    }
     std::cin.get();
 }
