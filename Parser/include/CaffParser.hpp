@@ -3,8 +3,8 @@
 
 #include <vector>
 #include <string>
+#include <cstddef>
 #include "CiffParser.hpp"
-
 
 enum class BlockType
 {
