@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - CaffParser
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
