@@ -3,15 +3,17 @@
 
 #include <vector>
 #include <string>
+#include "CiffParser.hpp"
+
 
 enum BlockType { HeaderBlock = 1, CreditsBlock = 2, AnimationBlock = 3 };
 
-typedef struct BlockHeader
+class BlockHeader
 {
     public:
         BlockType type;
         size_t length;
-} BlockHeader;
+};
 
 class CaffHeader
 {
@@ -31,12 +33,19 @@ class CaffCredits
 
 };
 
+class CaffAnimationImage
+{
+    public:
+        size_t duration;
+        CiffFile ciffImage;
+};
+
 class CaffFile
 {
     public:
         CaffHeader header;
         CaffCredits credits;
-
+        std::vector<CaffAnimationImage> animationImages;
 };
 
 class CaffParser
@@ -45,12 +54,9 @@ class CaffParser
         CaffFile parse(std::vector<unsigned char> buffer);
     private:
         BlockHeader readNextBlockHeader_(std::vector<unsigned char> buffer);
-        CaffHeader parseHeader_(std::vector<unsigned char> block);
-        CaffCredits parseCredits_(std::vector<unsigned char> block, size_t blockLength);
-
-        const unsigned int blockHeaderBytes_ = 9;
-        const unsigned int fieldLengthBytes_ = 8;
-        const unsigned int creditDateBytes_ = 6;
+        CaffHeader parseHeaderBlock_(std::vector<unsigned char> block);
+        CaffCredits parseCreditsBlock_(std::vector<unsigned char> block, size_t blockLength);
+        CaffCredits parseAnimationBlock_(std::vector<unsigned char> block, size_t blockLength);
 };
 
 #endif // CAFFPARSER_H

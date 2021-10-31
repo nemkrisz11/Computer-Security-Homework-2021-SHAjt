@@ -15,4 +15,4 @@ CiffParser.o: src/CiffParser.cpp include/CiffParser.hpp
 	g++ -Wall -Werror -std=c++17 -c src/CiffParser.cpp
 	
 clean:
-	rm *.o output *.so
+	rm *.o output *.so include/*.gch
