@@ -6,7 +6,7 @@
 using namespace constants;
 using namespace utilities;
 
-CaffFile CaffParser::parse(std::vector<unsigned char> buffer)
+CaffFile CaffParser::parse(std::vector<unsigned char> buffer) const
 {
     if (buffer.empty())
     {
@@ -87,7 +87,7 @@ CaffHeader CaffParser::parseHeaderBlock_(std::vector<unsigned char> block) const
 
     if (std::string magic(it, it+MAGICBYTES); magic.compare("CAFF") != 0)
     {
-        throw std::invalid_argument("invalid header magic value");
+        throw std::invalid_argument("invalid caff header magic value");
     }
     it += MAGICBYTES;
     // header block always 20 bytes
@@ -145,8 +145,12 @@ CaffAnimationImage CaffParser::parseAnimationBlock_(std::vector<unsigned char> b
     size_t duration = bytesToInteger(std::vector<unsigned char>(it, it+IMAGEDURATIONBYTES));
     SafeAdvance(it, block.end(),IMAGEDURATIONBYTES);
 
+    CiffParser ciffParser;
+    CiffFile ciffImage = ciffParser.parse(std::vector<unsigned char>(it, block.end()));
+
     CaffAnimationImage animationImage;
     animationImage.duration = duration;
+    animationImage.ciffImage = ciffImage;
     return animationImage;
 }
 

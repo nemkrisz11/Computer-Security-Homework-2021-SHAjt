@@ -13,6 +13,7 @@ namespace constants
     const size_t CREDITDATEBITES = 6;
     const size_t MAGICBYTES = 4;
     const size_t IMAGEDURATIONBYTES = 8;
+    const size_t IMAGESIZEBYTES = 8;
 }
 
 namespace utilities

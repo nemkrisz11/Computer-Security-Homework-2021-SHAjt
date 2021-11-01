@@ -8,6 +8,7 @@
 class CiffFileHeader
 {
     public:
+        size_t contentSize;
         size_t width;
         size_t height;
         std::string caption;
@@ -23,9 +24,9 @@ class CiffFile{
 class CiffParser
 {
     public:
-        CiffFile parse(std::vector<unsigned char> buffer);
+        CiffFile parse(std::vector<unsigned char> buffer) const;
     private:
-        CiffFileHeader parseHeader_(std::vector<unsigned char> block);
+        CiffFileHeader parseHeader_(std::vector<unsigned char> block) const;
 };
 
 #endif // CIFFPARSER_H

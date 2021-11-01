@@ -56,7 +56,7 @@ class CaffFile
 class CaffParser
 {
     public:
-        CaffFile parse(std::vector<unsigned char> buffer);
+        CaffFile parse(std::vector<unsigned char> buffer) const;
     private:
         BlockHeader readNextBlockHeader_(std::vector<unsigned char> buffer) const;
         CaffHeader parseHeaderBlock_(std::vector<unsigned char> block) const;
