@@ -1,29 +1,62 @@
+# Points to the root of Google Test, relative to where this file is.
+# Remember to tweak this if you move this file.
+GTEST_DIR = googletest/
+
+SRC_DIR = src/
+TEST_DIR = test/
+HEADER_DIR = include/
+
+CPPFLAGS += -isystem $(GTEST_DIR)/include
+
+CXXFLAGS += -g -Wall -Werror -pthread -Wextra -std=c++17 
+
+TESTS = ParserTest
+
+GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
+                $(GTEST_DIR)/include/gtest/internal/*.h
+
+GTEST_SRCS_ = $(GTEST_DIR)/src/*.cc $(GTEST_DIR)/src/*.h $(GTEST_HEADERS)
+
+CXX = g++
+
 
 BuildLib: CaffParser.o CiffParser.o
-	g++ -Wall -Werror -shared -std=c++17 -fPIC CaffParser.o CiffParser.o -o libCaffParser.so
+	$(CXX) $(CXXFLAGS) -shared -fPIC $^ -o libCaffParser.so
 
 BuildMain: Main.o CaffParser.o CiffParser.o
-	g++ -Wall -Werror -std=c++17 main.o CaffParser.o CiffParser.o -o output
+	$(CXX) $(CXXFLAGS) $^ -o output
 	
-Main.o: src/Main.cpp
-	g++ -Wall -Werror -std=c++17 -c -fPIC src/Main.cpp
+Main.o: $(SRC_DIR)Main.cpp
+	$(CXX) $(CXXFLAGS) -c -fPIC $(SRC_DIR)Main.cpp
 
-CaffParser.o: src/CaffParser.cpp include/CaffParser.hpp
-	g++ -Wall -Werror -std=c++17 -c -fPIC src/CaffParser.cpp
+CaffParser.o: $(SRC_DIR)CaffParser.cpp $(HEADER_DIR)CaffParser.hpp
+	$(CXX) $(CXXFLAGS) -c -fPIC $(SRC_DIR)CaffParser.cpp
 
-CiffParser.o: src/CiffParser.cpp include/CiffParser.hpp
-	g++ -Wall -Werror -std=c++17 -c -fPIC src/CiffParser.cpp
-	
+CiffParser.o: $(SRC_DIR)CiffParser.cpp $(HEADER_DIR)CiffParser.hpp
+	$(CXX) $(CXXFLAGS) -c -fPIC $(SRC_DIR)CiffParser.cpp
+
+ParserTest.o: $(TEST_DIR)ParserTest.cc $(HEADER_DIR)CaffParser.hpp $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)ParserTest.cc
+
+ParserTest: CaffParser.o CiffParser.o ParserTest.o gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+
+test: $(TESTS)
+
 clean:
-ifneq ("$(wildcard *.o)","")
-	rm *.o
-endif
-ifneq ("$(wildcard output)","")
-	rm output
-endif
-ifneq ("$(wildcard *.so)","")
-	rm *.so
-endif
-ifneq ("$(wildcard include/*.gch)","")
-	rm include/*.gch
-endif
+	rm -f *.o *.so output $(HEADER_DIR)*.gch $(TESTS)
+
+# google test objects
+gtest-all.o : $(GTEST_SRCS_)
+	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) -c \
+            $(GTEST_DIR)/src/gtest-all.cc
+
+gtest_main.o : $(GTEST_SRCS_)
+	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) -c \
+            $(GTEST_DIR)/src/gtest_main.cc
+
+gtest.a : gtest-all.o
+	$(AR) $(ARFLAGS) $@ $^
+
+gtest_main.a : gtest-all.o gtest_main.o
+	$(AR) $(ARFLAGS) $@ $^
