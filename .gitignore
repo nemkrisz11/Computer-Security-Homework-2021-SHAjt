@@ -42,6 +42,7 @@
 *.out
 *.app
 
+Parser/ParserTest
 Parser/output
 Parser/bin
 Parser/bin/*
