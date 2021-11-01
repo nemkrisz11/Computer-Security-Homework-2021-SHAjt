@@ -35,7 +35,7 @@ CaffParser.o: $(SRC_DIR)CaffParser.cpp $(HEADER_DIR)CaffParser.hpp
 CiffParser.o: $(SRC_DIR)CiffParser.cpp $(HEADER_DIR)CiffParser.hpp
 	$(CXX) $(CXXFLAGS) -c -fPIC $(SRC_DIR)CiffParser.cpp
 
-ParserTest.o: $(TEST_DIR)ParserTest.cc $(HEADER_DIR)CaffParser.hpp $(GTEST_HEADERS)
+ParserTest.o: $(TEST_DIR)ParserTest.cc $(HEADER_DIR)CaffParser.hpp $(HEADER_DIR)CiffParser.hpp $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)ParserTest.cc
 
 ParserTest: CaffParser.o CiffParser.o ParserTest.o gtest_main.a
