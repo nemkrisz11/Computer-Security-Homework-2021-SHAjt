@@ -6,7 +6,7 @@
 
 int main()
 {
-    const std::string inputFile = "TestFiles/1.caff";
+    const std::string inputFile = "TestFiles/2.caff";
     std::ifstream inFile(inputFile, std::ios_base::binary);
 
     inFile.seekg(0, std::ios_base::end);

@@ -54,7 +54,7 @@ CiffFileHeader CiffParser::parseHeader_(std::vector<unsigned char> block) const
     {
         if(*it == '\0')
         {
-            tags.emplace_back(std::string(tagFirstChar, it));
+            tags.emplace_back(tagFirstChar, it);
             //skip the \0
             tagFirstChar = it+1;
         }

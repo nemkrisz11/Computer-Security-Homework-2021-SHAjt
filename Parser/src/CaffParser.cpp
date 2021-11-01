@@ -47,7 +47,7 @@ CaffFile CaffParser::parse(std::vector<unsigned char> buffer) const
         }
         else if (nextBlockHeader.type == BlockType::AnimationBlock)
         {
-            auto animationImage = this->parseAnimationBlock_(std::vector<unsigned char>(it-nextBlockHeader.length, it), nextBlockHeader.length);
+            auto animationImage = this->parseAnimationBlock_(std::vector<unsigned char>(it-nextBlockHeader.length, it));
             cf.animationImages.insert(cf.animationImages.begin(), animationImage);
         }
     }
@@ -139,7 +139,7 @@ CaffCredits CaffParser::parseCreditsBlock_(std::vector<unsigned char> block, siz
     return credits;
 }
 
-CaffAnimationImage CaffParser::parseAnimationBlock_(std::vector<unsigned char> block, size_t blockLength) const
+CaffAnimationImage CaffParser::parseAnimationBlock_(std::vector<unsigned char> block) const
 {
     auto it = block.begin();
     size_t duration = bytesToInteger(std::vector<unsigned char>(it, it+IMAGEDURATIONBYTES));

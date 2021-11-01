@@ -61,7 +61,7 @@ class CaffParser
         BlockHeader readNextBlockHeader_(std::vector<unsigned char> buffer) const;
         CaffHeader parseHeaderBlock_(std::vector<unsigned char> block) const;
         CaffCredits parseCreditsBlock_(std::vector<unsigned char> block, size_t blockLength) const;
-        CaffAnimationImage parseAnimationBlock_(std::vector<unsigned char> block, size_t blockLength) const;
+        CaffAnimationImage parseAnimationBlock_(std::vector<unsigned char> block) const;
 };
 
 #endif // CAFFPARSER_H
