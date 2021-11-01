@@ -10,11 +10,12 @@ CiffFile CiffParser::parse(std::vector<unsigned char> buffer) const
     SafeAdvance(it, buffer.end(), MAGICBYTES+FIELDLENGTHBYTES);
     auto headerSize = bytesToInteger(std::vector<unsigned char>(it-FIELDLENGTHBYTES, it));
 
-    SafeAdvance(it, buffer.end(), headerSize);
+    SafeAdvance(it, buffer.end(), headerSize-(MAGICBYTES+FIELDLENGTHBYTES));
     auto header = parseHeader_(std::vector<unsigned char>(buffer.begin(), buffer.begin()+headerSize));
 
     CiffFile ciff;
     ciff.header = header;
+    ciff.pixelValues = std::vector<unsigned char>(it, buffer.end());
 
     return ciff;
 }
@@ -53,7 +54,7 @@ CiffFileHeader CiffParser::parseHeader_(std::vector<unsigned char> block) const
     {
         if(*it == '\0')
         {
-            tags.push_back(std::string(tagFirstChar, it));
+            tags.emplace_back(std::string(tagFirstChar, it));
             //skip the \0
             tagFirstChar = it+1;
         }

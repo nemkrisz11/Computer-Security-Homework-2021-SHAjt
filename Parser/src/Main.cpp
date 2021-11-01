@@ -31,11 +31,11 @@ int main()
         std::cout << "image height: " << image.ciffImage.header.height << std::endl;
         std::cout << "image width: " << image.ciffImage.header.width << std::endl;
         std::cout << "image content size: " << image.ciffImage.header.contentSize << std::endl;
+        std::cout << "image pixel values size: " << image.ciffImage.pixelValues.size() << std::endl;
         std::cout << "tags: " << std::endl;
         for (auto tag : image.ciffImage.header.tags)
         {
             std::cout << tag << " size: " << tag.size() << std::endl;
         }
     }
-    std::cin.get();
 }
