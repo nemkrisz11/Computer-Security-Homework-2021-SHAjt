@@ -41,6 +41,10 @@ jobs:
         working-directory: ./Parser
         run: |
           build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} make build all
+      - name: Run test to generate coverage reports
+        working-directory: ./Parser
+        run: |
+          ./ParserTest
       - name: Run sonar-scanner
         working-directory: ./Parser
         env:
