@@ -9,7 +9,8 @@ BUILD_DIR=build/
 
 CPPFLAGS += -isystem $(GTEST_DIR)/include
 
-CXXFLAGS += -g -Wall -Werror -pthread -Wextra -std=c++17 --coverage
+CXXFLAGS += -g -Wall -Werror -pthread -Wextra -std=c++17
+COVFLAGS = --coverage
 
 TESTS = ParserTest
 
@@ -27,25 +28,25 @@ all: BuildMain
 lib: BuildLib
 
 BuildLib: $(BUILD_DIR)CaffParser.o $(BUILD_DIR)CiffParser.o
-	$(CXX) $(CXXFLAGS) -shared -fPIC $^ -o libCaffParser.so
+	$(CXX) $(CXXFLAGS) $(COVFLAGS) -shared -fPIC $^ -o libCaffParser.so
 
 BuildMain: $(BUILD_DIR)Main.o $(BUILD_DIR)CaffParser.o $(BUILD_DIR)CiffParser.o
-	$(CXX) $(CXXFLAGS) $^ -o CaffParser
+	$(CXX) $(CXXFLAGS) $(COVFLAGS) $^ -o CaffParser
 	
 $(BUILD_DIR)Main.o: $(SRC_DIR)Main.cpp
-	$(CXX) $(CXXFLAGS) -c -fPIC $(SRC_DIR)Main.cpp -o $@
+	$(CXX) $(CXXFLAGS) $(COVFLAGS) -c -fPIC $(SRC_DIR)Main.cpp -o $@
 
 $(BUILD_DIR)CaffParser.o: $(SRC_DIR)CaffParser.cpp $(HEADER_DIR)CaffParser.hpp
-	$(CXX) $(CXXFLAGS) -c -fPIC $(SRC_DIR)CaffParser.cpp -o $@
+	$(CXX) $(CXXFLAGS) $(COVFLAGS) -c -fPIC $(SRC_DIR)CaffParser.cpp -o $@
 
 $(BUILD_DIR)CiffParser.o: $(SRC_DIR)CiffParser.cpp $(HEADER_DIR)CiffParser.hpp
-	$(CXX) $(CXXFLAGS) -c -fPIC $(SRC_DIR)CiffParser.cpp -o $@
+	$(CXX) $(CXXFLAGS) $(COVFLAGS) -c -fPIC $(SRC_DIR)CiffParser.cpp -o $@
 
 $(BUILD_DIR)ParserTest.o: $(TEST_DIR)ParserTest.cc $(HEADER_DIR)CaffParser.hpp $(HEADER_DIR)CiffParser.hpp $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)ParserTest.cc -o $@
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(COVFLAGS) -c $(TEST_DIR)ParserTest.cc -o $@
 
 ParserTest: $(BUILD_DIR)CaffParser.o $(BUILD_DIR)CiffParser.o $(BUILD_DIR)ParserTest.o $(BUILD_DIR)gtest_main.a
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(COVFLAGS) -lpthread $^ -o $@
 
 test: $(TESTS)
 
