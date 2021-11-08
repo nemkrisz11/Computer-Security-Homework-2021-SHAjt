@@ -27,7 +27,9 @@ int main(int argc, char* argv[])
               std::back_inserter(buffer));
 
     CaffParser parser;
-    CaffFile cf = parser.parse(buffer);
+
+    try {
+        CaffFile cf = parser.parse(buffer);
 
     std::cout << "num of ciff images: " << cf.header.numOfCiffs << std::endl;
     std::cout << "creator: "<< cf.credits.creator << std::endl;
@@ -44,5 +46,7 @@ int main(int argc, char* argv[])
         {
             std::cout << tag << " size: " << tag.size() << std::endl;
         }
+    }} catch(const std::invalid_argument& e) {
+        std::cerr << "ERROR: " << e.what() << std::endl;
     }
 }
