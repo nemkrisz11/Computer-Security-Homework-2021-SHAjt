@@ -54,8 +54,8 @@ build:
 	mkdir -p $(BUILD_DIR)
 
 clean:
-	rm -f *.o *.so *.gcno output $(HEADER_DIR)*.gch $(TESTS)
-	rm -r $(BUILD_DIR)
+	rm -f *.o *.so *.gcno output $(HEADER_DIR)*.gch $(TESTS) CaffParser
+	rm -rf $(BUILD_DIR)
 
 # google test objects
 $(BUILD_DIR)gtest-all.o : $(GTEST_SRCS_)

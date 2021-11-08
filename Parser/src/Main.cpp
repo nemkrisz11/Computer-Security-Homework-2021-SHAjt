@@ -4,9 +4,16 @@
 
 #include "../include/CaffParser.hpp"
 
-int main()
+int main(int argc, char* argv[])
 {
-    const std::string inputFile = "TestFiles/2.caff";
+    if (argc != 2) {
+        throw std::invalid_argument("Usage: ./CaffParser <filepath>");
+    }
+    else {
+        std::cout << "Parsing " << argv[1] << std::endl;
+    }
+
+    const std::string inputFile = argv[1];
     std::ifstream inFile(inputFile, std::ios_base::binary);
 
     inFile.seekg(0, std::ios_base::end);
