@@ -64,6 +64,7 @@ BlockHeader CaffParser::readNextBlockHeader_(std::vector<unsigned char> buffer) 
     BlockHeader header;
 
     auto it = buffer.begin();
+
     if (*it > 3 || *it == 0)
     {
         throw std::invalid_argument("invalid block type");
@@ -74,7 +75,8 @@ BlockHeader CaffParser::readNextBlockHeader_(std::vector<unsigned char> buffer) 
         it++;
     }
 
-    size_t blockLength = bytesToInteger(std::vector<unsigned char>(it, it+FIELDLENGTHBYTES));
+    SafeAdvance(it, buffer.end(), FIELDLENGTHBYTES);
+    size_t blockLength = bytesToInteger(std::vector<unsigned char>(it-FIELDLENGTHBYTES, it));
     header.length = blockLength;
 
     return header;
@@ -83,22 +85,29 @@ BlockHeader CaffParser::readNextBlockHeader_(std::vector<unsigned char> buffer) 
 
 CaffHeader CaffParser::parseHeaderBlock_(std::vector<unsigned char> block) const
 {
+    if (block.empty())
+    {
+        throw std::invalid_argument("block is empty");
+    }
+
     auto it = block.begin();
 
-    if (std::string magic(it, it+MAGICBYTES); magic.compare("CAFF") != 0)
+    SafeAdvance(it, block.end(), MAGICBYTES);
+    if (std::string magic(it-MAGICBYTES, it); magic.compare("CAFF") != 0)
     {
         throw std::invalid_argument("invalid caff header magic value");
     }
-    it += MAGICBYTES;
+
+    SafeAdvance(it, block.end(), FIELDLENGTHBYTES);
     // header block always 20 bytes
-    if (size_t headerBlockSize = bytesToInteger(std::vector<unsigned char>(it, it+FIELDLENGTHBYTES));
+    if (size_t headerBlockSize = bytesToInteger(std::vector<unsigned char>(it-FIELDLENGTHBYTES, it));
         headerBlockSize != HEADERBLOCKLENGHT)
     {
         throw std::invalid_argument("invalid header block length");
     }
-    it += FIELDLENGTHBYTES;
 
-    size_t numberOfCiffs = bytesToInteger(std::vector<unsigned char>(it, it+8));
+    SafeAdvance(it, block.end(), 8);
+    size_t numberOfCiffs = bytesToInteger(std::vector<unsigned char>(it-8, it));
     CaffHeader header;
     header.numOfCiffs = numberOfCiffs;
 
@@ -107,26 +116,32 @@ CaffHeader CaffParser::parseHeaderBlock_(std::vector<unsigned char> block) const
 
 CaffCredits CaffParser::parseCreditsBlock_(std::vector<unsigned char> block, size_t blockLength) const
 {
-    auto it = block.begin();
-    auto year = (int)bytesToInteger(std::vector<unsigned char>(it, it+2));
-    it+=2;
-    auto month = (int)bytesToInteger(std::vector<unsigned char>(it, it+1));
-    it++;
-    auto day = (int)bytesToInteger(std::vector<unsigned char>(it, it+1));
-    it++;
-    auto hour = (int)bytesToInteger(std::vector<unsigned char>(it, it+1));
-    it++;
-    auto minute = (int)bytesToInteger(std::vector<unsigned char>(it, it+1));
-    it++;
+    if (block.empty())
+    {
+        throw std::invalid_argument("block is empty");
+    }
 
-    size_t lengthOfCreater = bytesToInteger(std::vector<unsigned char>(it, it+FIELDLENGTHBYTES));
-    it += FIELDLENGTHBYTES;
+    auto it = block.begin();
+    SafeAdvance(it, block.end(), 2);
+    auto year = (int)bytesToInteger(std::vector<unsigned char>(it-2, it));
+    SafeAdvance(it, block.end(), 1);
+    auto month = (int)bytesToInteger(std::vector<unsigned char>(it-1, it));
+    SafeAdvance(it, block.end(), 1);
+    auto day = (int)bytesToInteger(std::vector<unsigned char>(it-1, it));
+    SafeAdvance(it, block.end(), 1);
+    auto hour = (int)bytesToInteger(std::vector<unsigned char>(it-1, it));
+    SafeAdvance(it, block.end(), 1);
+    auto minute = (int)bytesToInteger(std::vector<unsigned char>(it-1, it));
+
+    SafeAdvance(it, block.end(), FIELDLENGTHBYTES);
+    size_t lengthOfCreater = bytesToInteger(std::vector<unsigned char>(it-FIELDLENGTHBYTES, it));
     if((lengthOfCreater + CREDITDATEBITES + FIELDLENGTHBYTES) != blockLength)
     {
         throw std::invalid_argument("invalid credit block length");
     }
 
-    std::string creatorName(it, it+lengthOfCreater);
+    SafeAdvance(it, block.end(), lengthOfCreater);
+    std::string creatorName(it-lengthOfCreater, it);
 
     CaffCredits credits;
     credits.year = year;
@@ -141,9 +156,14 @@ CaffCredits CaffParser::parseCreditsBlock_(std::vector<unsigned char> block, siz
 
 CaffAnimationImage CaffParser::parseAnimationBlock_(std::vector<unsigned char> block) const
 {
+    if (block.empty())
+    {
+        throw std::invalid_argument("block is empty");
+    }
+
     auto it = block.begin();
-    size_t duration = bytesToInteger(std::vector<unsigned char>(it, it+IMAGEDURATIONBYTES));
     SafeAdvance(it, block.end(),IMAGEDURATIONBYTES);
+    size_t duration = bytesToInteger(std::vector<unsigned char>(it-IMAGEDURATIONBYTES, it));
 
     CiffParser ciffParser;
     CiffFile ciffImage = ciffParser.parse(std::vector<unsigned char>(it, block.end()));
