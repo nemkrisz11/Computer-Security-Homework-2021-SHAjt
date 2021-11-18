@@ -1,0 +1,23 @@
+<resources>
+    <!-- App -->
+    <string name="app_name">CaffShop</string>
+
+    <!-- Placeholder -->
+    <string name="placeholder">Placeholder</string>
+
+    <!-- Error -->
+    <string name="error_required_field_is_empty">Required field cannot be empty!</string>
+    <string name="error_invalid_username_or_password">Invalid username or password!</string>
+    <string name="error_invalid_username">Not a valid username</string>
+    <string name="error_invalid_password">Password must be >8 characters</string>
+    <string name="error_auth_failed">Authentication failed</string>
+
+    <!-- Auth -->
+    <string name="auth_title_activity_login">LoginActivity</string>
+    <string name="auth_title_activity_auth">AuthActivity</string>
+    <string name="auth_action_sign_in">Sign in or register</string>
+    <string name="auth_action_sign_in_short">Sign in</string>
+    <string name="auth_prompt_email">Email</string>
+    <string name="auth_prompt_password">Password</string>
+    <string name="auth_content_welcome">"Welcome %s!"</string>
+</resources>
