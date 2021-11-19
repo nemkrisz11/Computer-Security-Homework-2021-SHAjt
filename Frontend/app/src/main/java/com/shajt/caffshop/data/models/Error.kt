@@ -11,6 +11,7 @@ enum class Error(val errorStringResourceId: Int) {
     INVALID_USERNAME_OR_PASSWORD(R.string.error_invalid_username_or_password),
     INVALID_USERNAME(R.string.error_invalid_username),
     INVALID_PASSWORD(R.string.error_invalid_password),
-    AUTH_FAILED(R.string.error_required_field_is_empty)
+    INVALID_PASSWORD_AGAIN(R.string.error_invalid_password_again),
+    AUTH_FAILED(R.string.error_auth_failed)
 
 }

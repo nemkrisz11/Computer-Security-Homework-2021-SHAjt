@@ -8,5 +8,6 @@ import com.shajt.caffshop.data.models.Error
 data class AuthFormState(
     val usernameError: Error? = null,
     val passwordError: Error? = null,
+    val passwordAgainError: Error? = null,
     val isDataValid: Boolean = false
 )

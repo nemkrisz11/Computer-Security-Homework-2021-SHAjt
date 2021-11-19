@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.Toast
 import com.shajt.caffshop.databinding.ActivityAuthBinding
@@ -26,14 +25,20 @@ class AuthActivity : AppCompatActivity() {
     private lateinit var authViewModel: AuthViewModel
     private lateinit var binding: ActivityAuthBinding
 
+    private var loginMode = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityAuthBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val modeToggle = binding.modeToggle
+        val login = binding.login
+        val register = binding.register
         val username = binding.username
         val password = binding.password
+        val passwordAgain = binding.passwordAgain
         val auth = binding.auth
         val loading = binding.loading
 
@@ -41,77 +46,127 @@ class AuthActivity : AppCompatActivity() {
         authViewModel = ViewModelProvider(this, viewModelFactory)[AuthViewModel::class.java]
 
         authViewModel.authFormState.observe(this, Observer {
-            val loginState = it ?: return@Observer
+            val authState = it ?: return@Observer
 
             // Disable login button unless both username / password is valid
-            auth.isEnabled = loginState.isDataValid
+            auth.isEnabled = authState.isDataValid
 
             // Show errors
-            if (loginState.usernameError != null) {
-                username.error = getString(loginState.usernameError.errorStringResourceId)
+            if (authState.usernameError != null) {
+                username.error = getString(authState.usernameError.errorStringResourceId)
             }
-            if (loginState.passwordError != null) {
-                password.error = getString(loginState.passwordError.errorStringResourceId)
+            if (authState.passwordError != null) {
+                password.error = getString(authState.passwordError.errorStringResourceId)
+            }
+            if (authState.passwordAgainError != null) {
+                passwordAgain.error = getString(authState.passwordAgainError.errorStringResourceId)
             }
         })
 
         authViewModel.authResult.observe(this, Observer {
-            val loginResult = it ?: return@Observer
+            val authResult = it ?: return@Observer
 
             // Hide progress indicator
             loading.visibility = View.GONE
 
             // Show register/login error message
-            if (loginResult.error != null) {
-                showLoginFailed(loginResult.error.errorStringResourceId)
+            if (authResult.error != null) {
+                changeAllControlsIsEnabled()
+                showAuthFailed(authResult.error.errorStringResourceId)
                 return@Observer
             }
 
-            if (loginResult.success != null) {
+            if (authResult.success != null) {
                 // Welcome user
-                updateUiWithUser(loginResult.success)
+                updateUiWithUser(authResult.success)
 
                 // Start home activity
                 startActivity(
                     Intent(baseContext, HomeActivity::class.java)
                 )
-                //Complete and destroy login activity once successful
+                // Complete and destroy login activity once successful
                 setResult(Activity.RESULT_OK)
                 finish()
             }
         })
 
+        // Set the login checked as default
+        modeToggle.check(login.id)
+
+        modeToggle.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            // If login mode is selected show login related controls else register related
+            if (checkedId == login.id && isChecked) {
+                loginMode = true
+                passwordAgain.visibility = View.GONE
+                passwordAgain.text.clear()
+            } else if (checkedId == register.id && isChecked) {
+                loginMode = false
+                passwordAgain.text.clear()
+                passwordAgain.visibility = View.VISIBLE
+            }
+        }
+
+        // Validate data on change
         username.afterTextChanged {
-            authViewModel.loginDataChanged(
+            authViewModel.authDataChanged(
                 username.text.toString(),
-                password.text.toString()
+                password.text.toString(),
+                if (loginMode) {
+                    null
+                } else {
+                    passwordAgain.text.toString()
+                }
             )
         }
 
+        // Validate data on change
         password.apply {
             afterTextChanged {
-                authViewModel.loginDataChanged(
+                authViewModel.authDataChanged(
                     username.text.toString(),
-                    password.text.toString()
+                    password.text.toString(),
+                    if (loginMode) {
+                        null
+                    } else {
+                        passwordAgain.text.toString()
+                    }
                 )
             }
+        }
 
-            setOnEditorActionListener { _, actionId, _ ->
-                when (actionId) {
-                    EditorInfo.IME_ACTION_DONE ->
-                        authViewModel.login(
-                            username.text.toString(),
-                            password.text.toString()
-                        )
-                }
-                false
-            }
-
-            auth.setOnClickListener {
-                loading.visibility = View.VISIBLE
-                authViewModel.login(username.text.toString(), password.text.toString())
+        // Validate data on change
+        passwordAgain.apply {
+            afterTextChanged {
+                authViewModel.authDataChanged(
+                    username.text.toString(),
+                    password.text.toString(),
+                    passwordAgain.text.toString()
+                )
             }
         }
+
+        auth.setOnClickListener {
+            loading.visibility = View.VISIBLE
+            changeAllControlsIsEnabled(false)
+            if (loginMode) {
+                authViewModel.login(username.text.toString(), password.text.toString())
+            } else {
+                authViewModel.register(username.text.toString(), password.text.toString())
+            }
+        }
+    }
+
+    /**
+     * Changes the enabled sate of the controls.
+     */
+    private fun changeAllControlsIsEnabled(isEnabled: Boolean = true) {
+        binding.modeToggle.isEnabled = isEnabled
+        binding.login.isEnabled = isEnabled
+        binding.register.isEnabled = isEnabled
+        binding.username.isEnabled = isEnabled
+        binding.password.isEnabled = isEnabled
+        binding.passwordAgain.isEnabled = isEnabled
+        binding.auth.isEnabled = isEnabled
     }
 
     /**
@@ -125,7 +180,7 @@ class AuthActivity : AppCompatActivity() {
     /**
      * Shows error message.
      */
-    private fun showLoginFailed(@StringRes errorString: Int) {
+    private fun showAuthFailed(@StringRes errorString: Int) {
         Toast.makeText(baseContext, errorString, Toast.LENGTH_SHORT).show()
     }
 

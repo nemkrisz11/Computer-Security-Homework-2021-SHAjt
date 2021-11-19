@@ -4,9 +4,10 @@ import com.shajt.caffshop.data.models.Error
 import com.shajt.caffshop.data.models.auth.AuthResult
 import com.shajt.caffshop.data.models.User
 import com.shajt.caffshop.data.models.auth.UserCredentials
+import com.shajt.caffshop.network.CaffShopApiInteractor
 
 class CaffShopRepository(
-    // TODO add api
+    private val apiInteractor: CaffShopApiInteractor
 ) {
 
     var user: User? = null
@@ -22,16 +23,30 @@ class CaffShopRepository(
         user = null
     }
 
-    fun loginOrRegister(userCredentials: UserCredentials): AuthResult {
+    suspend fun login(userCredentials: UserCredentials): AuthResult {
         if (!validateCredentials(userCredentials)) {
             return AuthResult(error = Error.REQUIRED_FIELD_IS_EMPTY)
         }
 
-        // TODO call api
+        val result = apiInteractor.login(userCredentials)
 
-        val resultUser = User(userCredentials.username, "")
-        setUser(resultUser)
-        return AuthResult(success = resultUser) // TODO modify to api result
+        if (result.success != null) {
+            setUser(result.success)
+        }
+        return result
+    }
+
+    suspend fun register(userCredentials: UserCredentials): AuthResult {
+        if (!validateCredentials(userCredentials)) {
+            return AuthResult(error = Error.REQUIRED_FIELD_IS_EMPTY)
+        }
+
+        val result = apiInteractor.register(userCredentials)
+
+        if (result.success != null) {
+            setUser(result.success)
+        }
+        return result
     }
 
     // TODO find a better name

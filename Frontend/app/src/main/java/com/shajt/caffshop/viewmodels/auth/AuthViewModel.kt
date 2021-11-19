@@ -25,9 +25,17 @@ class AuthViewModel(
     val authResult: LiveData<AuthResult> = _authResult
 
     fun login(username: String, password: String) {
-        // Log in or register user in the background and post result
+        // Log in user in the background and post result
         viewModelScope.launch(Dispatchers.IO) {
-            val result = caffShopRepository.loginOrRegister(UserCredentials(username, password))
+            val result = caffShopRepository.login(UserCredentials(username, password))
+            _authResult.postValue(result)
+        }
+    }
+
+    fun register(username: String, password: String) {
+        // Register user in the background and post result
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = caffShopRepository.register(UserCredentials(username, password))
             _authResult.postValue(result)
         }
     }
@@ -35,11 +43,13 @@ class AuthViewModel(
     /**
      * Validates typed data.
      */
-    fun loginDataChanged(username: String, password: String) {
+    fun authDataChanged(username: String, password: String, passwordAgain: String?) {
         if (!isUserNameValid(username)) {
             _authForm.value = AuthFormState(usernameError = Error.INVALID_USERNAME)
         } else if (!isPasswordValid(password)) {
             _authForm.value = AuthFormState(passwordError = Error.INVALID_PASSWORD)
+        } else if (passwordAgain != null && password != passwordAgain) {
+            _authForm.value = AuthFormState(passwordAgainError = Error.INVALID_PASSWORD_AGAIN)
         } else {
             _authForm.value = AuthFormState(isDataValid = true)
         }
