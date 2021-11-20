@@ -4,12 +4,16 @@ import com.shajt.caffshop.data.models.Error
 import com.shajt.caffshop.data.models.User
 import com.shajt.caffshop.data.models.auth.AuthResult
 import com.shajt.caffshop.data.models.auth.UserCredentials
+import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class CaffShopApiInteractor {
+class CaffShopApiInteractor(
+    private val baseUrl: HttpUrl = CaffShopApi.BASE_URL.toHttpUrl()
+) {
 
     private val caffShopApi: CaffShopApi
 
@@ -23,7 +27,7 @@ class CaffShopApiInteractor {
             .build()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl(CaffShopApi.BASE_URL)
+            .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .client(httpClient)
             .build()
@@ -36,7 +40,9 @@ class CaffShopApiInteractor {
             val result = caffShopApi.login(userCredentials)
             return if (result.isSuccessful && result.body() != null) {
                 // TODO
-                AuthResult(success = User(userCredentials.username, ""))
+                val token = result.body()!!["token"].asString
+                val isAdmin = result.body()!!["isAdmin"].asBoolean
+                AuthResult(success = User(userCredentials.username, token, isAdmin))
             } else {
                 // TODO send specific error based on the response error code
                 AuthResult(error = Error.AUTH_FAILED)
@@ -63,5 +69,16 @@ class CaffShopApiInteractor {
             AuthResult(error = Error.AUTH_FAILED)
         }
     }
+
+    suspend fun getCaffs(token: String) {
+        return try {
+            val result = caffShopApi.getCaffs(createAuthHeaderFromToken(token))
+            TODO()
+        } catch (e: Exception) {
+            TODO()
+        }
+    }
+
+    private fun createAuthHeaderFromToken(token: String) = "Bearer $token"
 
 }

@@ -24,8 +24,8 @@ interface CaffShopApi {
         @Body userCredentials: UserCredentials
     ): Response<JsonObject>
 
-    @GET
+    @GET("/caff")
     suspend fun getCaffs(
-        @Header("Authorization: Bearer ") token: String,
+        @Header("Authorization") authHeader: String,
     )
 }
