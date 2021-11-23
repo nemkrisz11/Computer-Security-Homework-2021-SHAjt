@@ -6,12 +6,27 @@
     <string name="placeholder">Placeholder</string>
 
     <!-- Error -->
+    <string name="error_network_error">Network error</string>
+    <string name="error_user_list_request_failed">Failed to load the users data</string>
+    <string name="error_user_request_failed">Failed to load the user data</string>
+    <string name="error_user_delete_failed">Failed to delete the selected user</string>
+    <string name="error_registration_failed">Registration failed</string>
+    <string name="error_login_failed">Login failed</string>
+    <string name="error_logout_failed">Logout failed</string>
+    <string name="error_auth_failed">Authentication failed</string>
+    <string name="error_caff_request_failed">Failed to load the caffs</string>
+    <string name="error_caff_delete_failed">Failed to delete the selected caff</string>
+    <string name="error_caff_search_failed">Failed to load the searched caffs</string>
+    <string name="error_caff_upload_failed">Failed to upload the caff</string>
+    <string name="error_caff_download_failed">Failed to download the caff</string>
+    <string name="error_comment_list_request_failed">Failed to load the comments</string>
+    <string name="error_comment_post_failed">Failed to post the comment</string>
+    <string name="error_comment_delete_failed">Failed to delete the comment</string>
     <string name="error_required_field_is_empty">Required field cannot be empty!</string>
     <string name="error_invalid_username_or_password">Invalid username or password!</string>
     <string name="error_invalid_username">Not a valid username</string>
     <string name="error_invalid_password">Password must be >8 characters</string>
     <string name="error_invalid_password_again">Passwords must be the same</string>
-    <string name="error_auth_failed">Authentication failed</string>
 
     <!-- Auth -->
     <string name="auth_title_activity_login">LoginActivity</string>

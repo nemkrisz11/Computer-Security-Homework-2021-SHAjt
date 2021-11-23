@@ -1,8 +1,10 @@
 package com.shajt.caffshop.network
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.google.gson.Gson
 import com.shajt.caffshop.data.enums.ErrorMessage
-import com.shajt.caffshop.data.models.User
+import com.shajt.caffshop.data.models.Error
+import com.shajt.caffshop.data.models.auth.LoginResult
 import com.shajt.caffshop.data.models.auth.UserCredentials
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
@@ -33,45 +35,65 @@ class CaffShopApiInteractorTest {
     }
 
     @Test
-    fun testLogin_successful() = runBlocking {
+    fun testRegister_successful() = runBlocking {
+        val expectedRegisterResult = true
         val mockResponse = MockResponse()
-            .setResponseCode(HttpURLConnection.HTTP_OK)
-            .setBody("{\"token\":\"abcd\",\"expire\":10000,\"isAdmin\":false}")
+            .setResponseCode(HttpURLConnection.HTTP_CREATED)
         mockWebServer.enqueue(mockResponse)
 
         val userCredentials = UserCredentials("test", "test")
-        val result = caffShopApiInteractor.login(userCredentials)
+        val serverResult = caffShopApiInteractor.register(userCredentials)
 
-        assertNotNull(result.success)
-        assertNull(result.error)
+        assertNull(serverResult.error)
+        assertNotNull(serverResult.result)
+        assertEquals(expectedRegisterResult, serverResult.result)
+    }
 
-        // TODO change when interactor implementation is correct
-        val user = User("test", "abcd")
-        assertEquals(user, result.success)
+    @Test
+    fun testRegister_unsuccessful() = runBlocking {
+        val error = Error(2, "Username already taken")
+        val mockResponse = MockResponse()
+            .setResponseCode(HttpURLConnection.HTTP_BAD_REQUEST)
+            .setBody(Gson().toJson(error))
+        mockWebServer.enqueue(mockResponse)
+
+        val userCredentials = UserCredentials("test", "test")
+        val serverResult = caffShopApiInteractor.register(userCredentials)
+
+        assertNotNull(serverResult.error)
+        assertNull(serverResult.result)
+        assertEquals(ErrorMessage.REGISTRATION_FAILED, serverResult.error)
+    }
+
+    @Test
+    fun testLogin_successful() = runBlocking {
+        val expectedLoginResponse = LoginResult("abcd", 1000)
+        val mockResponse = MockResponse()
+            .setResponseCode(HttpURLConnection.HTTP_OK)
+            .setBody(Gson().toJson(expectedLoginResponse))
+        mockWebServer.enqueue(mockResponse)
+
+        val userCredentials = UserCredentials("test", "test")
+        val serverResult = caffShopApiInteractor.login(userCredentials)
+
+        assertNull(serverResult.error)
+        assertNotNull(serverResult.result)
+        assertEquals(expectedLoginResponse, serverResult.result)
     }
 
     @Test
     fun testLogin_unsuccessful() = runBlocking {
+        val error = Error(1, "Invalid username or password")
         val mockResponse = MockResponse()
             .setResponseCode(HttpURLConnection.HTTP_BAD_REQUEST)
-            .setBody("{\"errorCode\":001,\"errorMessage\":\"Invalid username or password\"}")
+            .setBody(Gson().toJson(error))
         mockWebServer.enqueue(mockResponse)
 
         val userCredentials = UserCredentials("test", "test")
-        val result = caffShopApiInteractor.login(userCredentials)
+        val serverResult = caffShopApiInteractor.login(userCredentials)
 
-        assertNull(result.success)
-        assertNotNull(result.error)
-
-        // TODO change when interactor implementation is correct
-        assertEquals(ErrorMessage.AUTH_FAILED, result.error)
-    }
-
-    @Test
-    fun register() {
-    }
-
-    @Test
-    fun getCaffs() {
+        assertNotNull(serverResult.error)
+        assertNull(serverResult.result)
+        assertEquals(ErrorMessage.LOGIN_FAILED, serverResult.error)
     }
 }
