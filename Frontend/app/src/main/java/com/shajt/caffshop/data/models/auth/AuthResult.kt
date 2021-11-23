@@ -1,6 +1,6 @@
 package com.shajt.caffshop.data.models.auth
 
-import com.shajt.caffshop.data.models.Error
+import com.shajt.caffshop.data.enums.ErrorMessage
 import com.shajt.caffshop.data.models.User
 
 /**
@@ -8,5 +8,5 @@ import com.shajt.caffshop.data.models.User
  */
 data class AuthResult(
     val success: User? = null,
-    val error: Error? = null
+    val error: ErrorMessage? = null
 )

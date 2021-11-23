@@ -1,7 +1,7 @@
 package com.shajt.caffshop.network
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.shajt.caffshop.data.models.Error
+import com.shajt.caffshop.data.enums.ErrorMessage
 import com.shajt.caffshop.data.models.User
 import com.shajt.caffshop.data.models.auth.UserCredentials
 import kotlinx.coroutines.runBlocking
@@ -64,7 +64,7 @@ class CaffShopApiInteractorTest {
         assertNotNull(result.error)
 
         // TODO change when interactor implementation is correct
-        assertEquals(Error.AUTH_FAILED, result.error)
+        assertEquals(ErrorMessage.AUTH_FAILED, result.error)
     }
 
     @Test

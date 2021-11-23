@@ -1,6 +1,6 @@
 package com.shajt.caffshop.data
 
-import com.shajt.caffshop.data.models.Error
+import com.shajt.caffshop.data.enums.ErrorMessage
 import com.shajt.caffshop.data.models.auth.AuthResult
 import com.shajt.caffshop.data.models.User
 import com.shajt.caffshop.data.models.auth.UserCredentials
@@ -25,7 +25,7 @@ class CaffShopRepository(
 
     suspend fun login(userCredentials: UserCredentials): AuthResult {
         if (!validateCredentials(userCredentials)) {
-            return AuthResult(error = Error.REQUIRED_FIELD_IS_EMPTY)
+            return AuthResult(error = ErrorMessage.REQUIRED_FIELD_IS_EMPTY)
         }
 
         val result = apiInteractor.login(userCredentials)
@@ -38,7 +38,7 @@ class CaffShopRepository(
 
     suspend fun register(userCredentials: UserCredentials): AuthResult {
         if (!validateCredentials(userCredentials)) {
-            return AuthResult(error = Error.REQUIRED_FIELD_IS_EMPTY)
+            return AuthResult(error = ErrorMessage.REQUIRED_FIELD_IS_EMPTY)
         }
 
         val result = apiInteractor.register(userCredentials)

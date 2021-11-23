@@ -7,7 +7,7 @@ import android.util.Patterns
 import androidx.lifecycle.viewModelScope
 
 import com.shajt.caffshop.data.CaffShopRepository
-import com.shajt.caffshop.data.models.Error
+import com.shajt.caffshop.data.enums.ErrorMessage
 import com.shajt.caffshop.data.models.auth.UserCredentials
 import com.shajt.caffshop.data.models.auth.AuthFormState
 import com.shajt.caffshop.data.models.auth.AuthResult
@@ -45,11 +45,11 @@ class AuthViewModel(
      */
     fun authDataChanged(username: String, password: String, passwordAgain: String?) {
         if (!isUserNameValid(username)) {
-            _authForm.value = AuthFormState(usernameError = Error.INVALID_USERNAME)
+            _authForm.value = AuthFormState(usernameError = ErrorMessage.INVALID_USERNAME)
         } else if (!isPasswordValid(password)) {
-            _authForm.value = AuthFormState(passwordError = Error.INVALID_PASSWORD)
+            _authForm.value = AuthFormState(passwordError = ErrorMessage.INVALID_PASSWORD)
         } else if (passwordAgain != null && password != passwordAgain) {
-            _authForm.value = AuthFormState(passwordAgainError = Error.INVALID_PASSWORD_AGAIN)
+            _authForm.value = AuthFormState(passwordAgainError = ErrorMessage.INVALID_PASSWORD_AGAIN)
         } else {
             _authForm.value = AuthFormState(isDataValid = true)
         }

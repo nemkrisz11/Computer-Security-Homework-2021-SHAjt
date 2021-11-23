@@ -1,6 +1,6 @@
 package com.shajt.caffshop.network
 
-import com.shajt.caffshop.data.models.Error
+import com.shajt.caffshop.data.enums.ErrorMessage
 import com.shajt.caffshop.data.models.User
 import com.shajt.caffshop.data.models.auth.AuthResult
 import com.shajt.caffshop.data.models.auth.UserCredentials
@@ -45,10 +45,10 @@ class CaffShopApiInteractor(
                 AuthResult(success = User(userCredentials.username, token, isAdmin))
             } else {
                 // TODO send specific error based on the response error code
-                AuthResult(error = Error.AUTH_FAILED)
+                AuthResult(error = ErrorMessage.AUTH_FAILED)
             }
         } catch (e: Exception) {
-            AuthResult(error = Error.AUTH_FAILED)
+            AuthResult(error = ErrorMessage.AUTH_FAILED)
         }
 
     }
@@ -61,12 +61,12 @@ class CaffShopApiInteractor(
                 AuthResult(success = User(userCredentials.username, ""))
             } else if (result.errorBody() != null) {
                 // TODO send specific error based on the response error code
-                AuthResult(error = Error.AUTH_FAILED)
+                AuthResult(error = ErrorMessage.AUTH_FAILED)
             } else {
-                AuthResult(error = Error.AUTH_FAILED)
+                AuthResult(error = ErrorMessage.AUTH_FAILED)
             }
         } catch (e: Exception) {
-            AuthResult(error = Error.AUTH_FAILED)
+            AuthResult(error = ErrorMessage.AUTH_FAILED)
         }
     }
 
