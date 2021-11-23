@@ -8,7 +8,7 @@ import com.shajt.caffshop.viewmodels.CaffShopViewModelFactory
 class CaffShopApplication : Application() {
 
     val caffShopApiInteractor by lazy { CaffShopApiInteractor() }
-    val caffShopRepository by lazy { CaffShopRepository(caffShopApiInteractor) }
+    val caffShopRepository by lazy { CaffShopRepository(caffShopApiInteractor, baseContext) }
     val caffShopViewModelFactory by lazy { CaffShopViewModelFactory(caffShopRepository) }
 
 }
