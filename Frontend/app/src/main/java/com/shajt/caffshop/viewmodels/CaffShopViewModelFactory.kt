@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.shajt.caffshop.data.CaffShopRepository
 import com.shajt.caffshop.viewmodels.auth.AuthViewModel
 import com.shajt.caffshop.viewmodels.home.HomeViewModel
+import com.shajt.caffshop.viewmodels.user.DetailedUserViewModel
 
 /**
  * ViewModel provider factory to instantiate a view model.
@@ -19,6 +20,8 @@ class CaffShopViewModelFactory(
             return AuthViewModel(caffShopRepository) as T
         } else if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
             return HomeViewModel(caffShopRepository) as T
+        } else if (modelClass.isAssignableFrom(DetailedUserViewModel::class.java)) {
+            return DetailedUserViewModel(caffShopRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

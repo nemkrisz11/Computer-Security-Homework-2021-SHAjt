@@ -5,6 +5,11 @@
     <!-- Placeholder -->
     <string name="placeholder">Placeholder</string>
 
+    <!-- ActionBar -->
+    <string name="action_profile">Profile</string>
+    <string name="action_search">Search</string>
+    <string name="action_users">Users</string>
+
     <!-- Error -->
     <string name="error_network_error">Network error</string>
     <string name="error_user_list_request_failed">Failed to load the users data</string>

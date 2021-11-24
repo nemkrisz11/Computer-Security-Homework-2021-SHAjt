@@ -2,6 +2,7 @@ package com.shajt.caffshop.ui.home
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import com.shajt.caffshop.R
 
 class HomeActivity : AppCompatActivity() {
@@ -14,5 +15,10 @@ class HomeActivity : AppCompatActivity() {
                 .replace(R.id.container, HomeFragment())
                 .commitNow()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.action_bar, menu)
+        return super.onCreateOptionsMenu(menu)
     }
 }
