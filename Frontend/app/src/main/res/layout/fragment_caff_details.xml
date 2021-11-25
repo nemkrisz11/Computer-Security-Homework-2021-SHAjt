@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    tools:context=".ui.caffdetails.CaffDetailsFragment">
+
+    <ImageView
+        android:id="@+id/ciff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/caff_details_item_margin"
+        android:contentDescription="@string/caff_details_caff_animation_image"
+        android:src="@drawable/ic_launcher_background"
+        app:layout_constraintBottom_toTopOf="@id/details"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TableLayout
+        android:id="@+id/details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/caff_details_item_margin"
+        android:orientation="horizontal"
+        android:stretchColumns="*"
+        app:layout_constraintBottom_toTopOf="@id/comments"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ciff">
+
+        <TableRow>
+
+            <TextView
+                android:gravity="start"
+                android:text="@string/caff_details_title_name"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+
+            <TextView
+                android:id="@+id/name"
+                android:gravity="end"
+                android:text="@string/placeholder"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:gravity="start"
+                android:text="@string/caff_details_title_creator"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+
+            <TextView
+                android:id="@+id/creator"
+                android:gravity="end"
+                android:text="@string/placeholder"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:gravity="start"
+                android:text="@string/caff_details_title_creation_date"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+
+            <TextView
+                android:id="@+id/creation"
+                android:gravity="end"
+                android:text="@string/placeholder"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:gravity="start"
+                android:text="@string/caff_details_title_uploader_name"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+
+            <TextView
+                android:id="@+id/uploader"
+                android:gravity="end"
+                android:text="@string/placeholder"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:gravity="start"
+                android:text="@string/caff_details_title_upload_date"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+
+            <TextView
+                android:id="@+id/upload"
+                android:gravity="end"
+                android:text="@string/placeholder"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:gravity="start"
+                android:text="@string/caff_details_title_number_of_ciffs"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+
+            <TextView
+                android:id="@+id/numOfCiffs"
+                android:gravity="end"
+                android:text="@string/placeholder"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+        </TableRow>
+
+    </TableLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/comments"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/commentInput"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/details"
+        tools:listitem="@layout/fragment_caff_details_comment_list_item" />
+
+    <ProgressBar
+        android:id="@+id/commentLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/comments"
+        app:layout_constraintEnd_toEndOf="@id/comments"
+        app:layout_constraintStart_toStartOf="@id/comments"
+        app:layout_constraintTop_toTopOf="@id/comments" />
+
+    <EditText
+        android:id="@+id/commentInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/caff_details_item_margin"
+        android:hint="@string/caff_details_content_post_comment"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/send"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/comments" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/send"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_margin="@dimen/caff_details_item_margin"
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        android:scaleType="centerInside"
+        app:icon="@drawable/ic_round_send_24"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/commentInput"
+        app:layout_constraintTop_toBottomOf="@id/comments" />
+
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

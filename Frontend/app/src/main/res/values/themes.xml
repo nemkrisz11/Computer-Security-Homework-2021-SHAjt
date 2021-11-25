@@ -18,4 +18,11 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <style name="Theme.CaffShop.CardView.Comment" parent="Widget.MaterialComponents.CardView">
+        <item name="elevation">4dp</item>
+        <item name="cardCornerRadius">8dp</item>
+        <item name="cardBackgroundColor">?attr/colorSecondaryVariant</item>
+    </style>
+
 </resources>

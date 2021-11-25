@@ -45,4 +45,18 @@
     <string name="auth_prompt_password">Password</string>
     <string name="auth_prompt_password_again">Password again</string>
     <string name="auth_content_welcome">"Welcome %s!"</string>
+    
+    <!-- CaffDetails -->
+    <string name="caff_details_caff_animation_image">Caff animation image</string>
+    <string name="caff_details_title_name">Name</string>
+    <string name="caff_details_title_creator">Creator</string>
+    <string name="caff_details_title_creation_date">Creation date</string>
+    <string name="caff_details_title_uploader_name">Uploader name</string>
+    <string name="caff_details_title_upload_date">Upload date</string>
+    <string name="caff_details_title_number_of_ciffs">Number of ciffs</string>
+    <string name="caff_details_content_post_comment">Post comment…</string>
+
+    <!-- Comment -->
+    <string name="comment_content_delete">Delete comment</string>
+    
 </resources>
