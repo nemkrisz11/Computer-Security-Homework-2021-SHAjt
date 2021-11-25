@@ -1,23 +1,22 @@
 package com.shajt.caffshop.ui.home
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import com.shajt.caffshop.app.CaffShopApplication
 import com.shajt.caffshop.databinding.FragmentHomeBinding
 import com.shajt.caffshop.viewmodels.home.HomeViewModel
-import android.content.Intent
 import android.view.*
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.shajt.caffshop.R
-import com.shajt.caffshop.ui.user.DetailedUserActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: HomeViewModel
+    private lateinit var homeViewModel: HomeViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,16 +30,13 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(
-            this,
-            (requireActivity().application as CaffShopApplication).caffShopViewModelFactory
-        )[HomeViewModel::class.java]
+        homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
     }
 
     override fun onPrepareOptionsMenu(menu: Menu){
         super.onPrepareOptionsMenu(menu)
         val item = menu.findItem(R.id.action_users)
-        item.isVisible = viewModel.userIsAdmin
+        item.isVisible = homeViewModel.userIsAdmin
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -15,11 +15,12 @@ import android.widget.Toast
 import com.shajt.caffshop.databinding.ActivityAuthBinding
 
 import com.shajt.caffshop.R
-import com.shajt.caffshop.app.CaffShopApplication
 import com.shajt.caffshop.data.models.User
 import com.shajt.caffshop.ui.home.HomeActivity
 import com.shajt.caffshop.viewmodels.auth.AuthViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AuthActivity : AppCompatActivity() {
 
     private lateinit var authViewModel: AuthViewModel
@@ -42,8 +43,7 @@ class AuthActivity : AppCompatActivity() {
         val auth = binding.auth
         val loading = binding.loading
 
-        val viewModelFactory = (application as CaffShopApplication).caffShopViewModelFactory
-        authViewModel = ViewModelProvider(this, viewModelFactory)[AuthViewModel::class.java]
+        authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
 
         authViewModel.authFormState.observe(this, Observer {
             val authState = it ?: return@Observer

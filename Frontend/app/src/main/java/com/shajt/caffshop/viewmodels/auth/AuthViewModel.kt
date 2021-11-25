@@ -11,10 +11,13 @@ import com.shajt.caffshop.data.enums.ErrorMessage
 import com.shajt.caffshop.data.models.auth.UserCredentials
 import com.shajt.caffshop.data.models.auth.AuthFormState
 import com.shajt.caffshop.data.models.auth.AuthResult
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AuthViewModel(
+@HiltViewModel
+class AuthViewModel @Inject constructor(
     private val caffShopRepository: CaffShopRepository
 ) : ViewModel() {
 

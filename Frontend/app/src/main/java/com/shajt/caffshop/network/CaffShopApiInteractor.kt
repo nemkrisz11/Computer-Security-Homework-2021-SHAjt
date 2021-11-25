@@ -13,8 +13,10 @@ import retrofit2.HttpException
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
 import kotlin.Error
 
+@Singleton
 class CaffShopApiInteractor(
     private val baseUrl: HttpUrl = CaffShopApi.BASE_URL.toHttpUrl()
 ) {

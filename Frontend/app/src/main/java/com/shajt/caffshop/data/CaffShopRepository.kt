@@ -14,10 +14,14 @@ import com.shajt.caffshop.data.models.auth.UserCredentials
 import com.shajt.caffshop.network.CaffShopApiInteractor
 import com.shajt.caffshop.utils.DeCryptor
 import com.shajt.caffshop.utils.EnCryptor
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class CaffShopRepository(
+@Singleton
+class CaffShopRepository @Inject constructor(
     private val apiInteractor: CaffShopApiInteractor,
-    baseContext: Context
+    @ApplicationContext baseContext: Context
 ) {
 
     companion object {
@@ -40,6 +44,7 @@ class CaffShopRepository(
         // If user credentials will be cached in local storage, it is recommended it be encrypted
         // @see https://developer.android.com/training/articles/keystore
         user = loadUser()
+        println("called")
     }
 
     suspend fun login(userCredentials: UserCredentials): AuthResult {
