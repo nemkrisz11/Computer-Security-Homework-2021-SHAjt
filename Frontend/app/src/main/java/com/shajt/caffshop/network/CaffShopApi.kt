@@ -3,6 +3,7 @@ package com.shajt.caffshop.network
 import com.shajt.caffshop.data.models.*
 import com.shajt.caffshop.data.models.auth.LoginResult
 import com.shajt.caffshop.data.models.auth.UserCredentials
+import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -70,10 +71,12 @@ interface CaffShopApi {
         @Query("perpage") perpage: Int
     ): Response<CaffList>
 
+    @Multipart
     @POST("/caff/upload")
     suspend fun uploadCaff(
         @Header("Authorization") authHeader: String,
-        @Body caffRaw: CaffRaw
+        @Part("name") name: String,
+        @Part file: MultipartBody.Part
     )
 
     @GET("/caff/download/{id}")

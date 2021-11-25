@@ -27,6 +27,7 @@ enum class ErrorMessage(val errorStringResourceId: Int) {
     INVALID_USERNAME_OR_PASSWORD(R.string.error_invalid_username_or_password),
     INVALID_USERNAME(R.string.error_invalid_username),
     INVALID_PASSWORD(R.string.error_invalid_password),
-    INVALID_PASSWORD_AGAIN(R.string.error_invalid_password_again)
+    INVALID_PASSWORD_AGAIN(R.string.error_invalid_password_again),
+    INVALID_USER_DATA(R.string.error_invalid_user_data)
 
 }

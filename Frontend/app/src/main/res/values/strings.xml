@@ -32,6 +32,7 @@
     <string name="error_invalid_username">Not a valid username</string>
     <string name="error_invalid_password">Password must be >8 characters</string>
     <string name="error_invalid_password_again">Passwords must be the same</string>
+    <string name="error_invalid_user_data">Please log out and log in again</string>
 
     <!-- Auth -->
     <string name="auth_title_activity_login">LoginActivity</string>

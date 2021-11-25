@@ -7,12 +7,16 @@ import com.shajt.caffshop.data.models.auth.LoginResult
 import com.shajt.caffshop.data.models.auth.UserCredentials
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
+import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.HttpException
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
 import javax.inject.Singleton
 import kotlin.Error
 
@@ -185,10 +189,13 @@ class CaffShopApiInteractor(
 
     suspend fun uploadCaff(
         token: String,
-        caffRaw: CaffRaw
+        name: String,
+        file: File
     ): ServerResult<Boolean, ErrorMessage> {
         return try {
-            caffShopApi.uploadCaff(createAuthHeaderFromToken(token), caffRaw)
+            val requestBody = file.asRequestBody("multipart/form-data".toMediaType())
+            val multiPartBody = MultipartBody.Part.createFormData("file", file.name, requestBody)
+            caffShopApi.uploadCaff(createAuthHeaderFromToken(token), name, multiPartBody)
             ServerResult(result = true)
         } catch (e: HttpException) {
             createErrorMessage(
@@ -236,7 +243,7 @@ class CaffShopApiInteractor(
         } catch (e: HttpException) {
             createErrorMessage(
                 e.response()?.errorBody()?.charStream()?.readText(),
-                ErrorMessage.LOGOUT_FAILED
+                ErrorMessage.COMMENT_POST_FAILED
             )
         } catch (e: Exception) {
             ServerResult(error = ErrorMessage.COMMENT_POST_FAILED)
@@ -253,7 +260,7 @@ class CaffShopApiInteractor(
         } catch (e: HttpException) {
             createErrorMessage(
                 e.response()?.errorBody()?.charStream()?.readText(),
-                ErrorMessage.LOGOUT_FAILED
+                ErrorMessage.COMMENT_DELETE_FAILED
             )
         } catch (e: Exception) {
             ServerResult(error = ErrorMessage.COMMENT_DELETE_FAILED)

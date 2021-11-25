@@ -12,6 +12,6 @@ class HomeViewModel @Inject constructor(
 
     val userIsAdmin: Boolean
         get(){
-            return caffShopRepository.user?.isAdmin!!
+            return caffShopRepository.localUser?.isAdmin!!
         }
 }
