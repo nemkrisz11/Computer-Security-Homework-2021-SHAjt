@@ -46,6 +46,18 @@
     <string name="auth_prompt_password">Password</string>
     <string name="auth_prompt_password_again">Password again</string>
     <string name="auth_content_welcome">"Welcome %s!"</string>
+
+    <!-- Home -->
+    <string name="home_action_upload">Upload caff</string>
+
+    <!-- Upload -->
+    <string name="upload_content_file_name">No file selected…</string>
+    <string name="upload_action_select">Select</string>
+    <string name="upload_content_custom_name">Custom file name</string>
+    <string name="upload_action_upload">Upload selected file</string>
+
+    <!-- CaffList -->
+    <string name="caff_list_content_ciff">Ciff preview</string>
     
     <!-- CaffDetails -->
     <string name="caff_details_caff_animation_image">Caff animation image</string>
