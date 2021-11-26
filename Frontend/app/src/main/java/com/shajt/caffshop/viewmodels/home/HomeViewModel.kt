@@ -1,5 +1,6 @@
 package com.shajt.caffshop.viewmodels.home
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -56,7 +57,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun uploadCaff() {
-
+    fun uploadCaff(uri: Uri, name: String) {
+        // TODO
     }
 }

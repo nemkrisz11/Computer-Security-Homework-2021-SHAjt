@@ -9,6 +9,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/upload_item_margin"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
         android:maxLines="1"
         android:padding="4dp"
         android:text="@string/upload_content_file_name"

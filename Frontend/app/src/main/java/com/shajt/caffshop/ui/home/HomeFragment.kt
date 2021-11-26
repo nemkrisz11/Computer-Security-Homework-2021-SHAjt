@@ -46,7 +46,8 @@ class HomeFragment : Fragment() {
         homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
         checkPermission()
-        val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()
+        val permissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
         ) { isGranted ->
             if (isGranted) {
                 permission = isGranted
@@ -78,6 +79,7 @@ class HomeFragment : Fragment() {
         }
 
         upload.setOnClickListener {
+            checkPermission()
             if (permission) {
                 UploadBottomSheet().show(childFragmentManager, UploadBottomSheet.TAG)
             } else {
