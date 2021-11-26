@@ -47,6 +47,12 @@ interface CaffShopApi {
         @Header("Authorization") authHeader: String,
     )
 
+    @POST("/user/password")
+    suspend fun modifyPassword(
+        @Header("Authorization") authHeader: String,
+        @Body modifyPassword: ModifyPassword
+    )
+
     @GET("/caff/{id}")
     suspend fun getCaff(
         @Header("Authorization") authHeader: String,

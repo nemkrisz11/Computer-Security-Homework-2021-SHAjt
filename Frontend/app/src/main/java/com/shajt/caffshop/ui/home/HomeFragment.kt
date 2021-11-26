@@ -1,5 +1,6 @@
 package com.shajt.caffshop.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.shajt.caffshop.databinding.FragmentHomeBinding
@@ -8,6 +9,8 @@ import android.view.*
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.shajt.caffshop.R
+import com.shajt.caffshop.ui.auth.AuthActivity
+import com.shajt.caffshop.ui.user.DetailedUserActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -48,7 +51,9 @@ class HomeFragment : Fragment() {
                 true
             }
             R.id.action_profile -> {
-                // TODO change to activity
+                startActivity(
+                    Intent(activity, DetailedUserActivity::class.java)
+                )
                 true
             }
             R.id.action_search -> {

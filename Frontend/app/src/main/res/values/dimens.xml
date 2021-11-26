@@ -15,4 +15,8 @@
     <dimen name="comment_item_margin">8dp</dimen>
     <dimen name="comment_text_margin">8dp</dimen>
 
+    <!-- UserDetails -->
+    <dimen name="user_details_item_margin">8dp</dimen>
+
+
 </resources>

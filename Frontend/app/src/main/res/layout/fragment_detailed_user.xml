@@ -7,14 +7,150 @@
     android:layout_height="match_parent"
     tools:context=".ui.user.DetailedUserFragment">
 
-    <TextView
-        android:id="@+id/message"
+    <ImageView
+        android:id="@+id/ProfileImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="DetailedUserFragment"
+        android:layout_margin="@dimen/user_details_item_margin"
+        android:contentDescription="@string/user_details_sample_account_image_description"
+        android:src="@drawable/ic_account_box_156"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TableLayout
+        android:id="@+id/details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/user_details_item_margin"
+        android:orientation="horizontal"
+        android:stretchColumns="*"
+        app:layout_constraintTop_toBottomOf="@id/ProfileImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TableRow>
+
+            <TextView
+                android:gravity="start"
+                android:text="@string/user_details_username"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+
+            <TextView
+                android:id="@+id/username"
+                android:gravity="end"
+                android:text="@string/placeholder"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:gravity="start"
+                android:text="@string/user_details_is_admin"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+
+            <TextView
+                android:id="@+id/isAdmin"
+                android:gravity="end"
+                android:text="@string/placeholder"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:gravity="start"
+                android:text="@string/user_details_reg_date"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+
+            <TextView
+                android:id="@+id/regDate"
+                android:gravity="end"
+                android:text="@string/placeholder"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+        </TableRow>
+    </TableLayout>
+
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/delete"
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:layout_margin="@dimen/user_details_item_margin"
+        android:contentDescription="@string/user_content_delete"
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        android:scaleType="centerInside"
+        android:visibility="gone"
+        android:text="@string/user_delete_text"
+        app:icon="@drawable/ic_round_delete_24"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/details"
+        tools:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/modifyPasswordContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/delete"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:gravity="start"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="@string/user_details_modify_password_text"
+            android:layout_margin="@dimen/user_details_item_margin"
+            android:textSize="24sp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+
+
+        <EditText
+            android:id="@+id/passwordInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/user_details_item_margin"
+            android:hint="@string/user_details_content_new_password"
+            android:importantForAutofill="no"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/passwordAgainInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/user_details_item_margin"
+            android:hint="@string/user_details_content_new_password_again"
+            android:importantForAutofill="no"
+            android:inputType="textPassword" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/changePassword"
+            android:layout_gravity="end"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_margin="@dimen/user_details_item_margin"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            android:scaleType="centerInside"
+            android:text="@string/user_details_modify_password_text" />
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

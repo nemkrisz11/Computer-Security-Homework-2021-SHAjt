@@ -131,6 +131,23 @@ class CaffShopApiInteractor(
         }
     }
 
+    suspend fun modifyPassword(
+        token: String,
+        modifyPassword: ModifyPassword
+    ): ServerResult<Boolean, ErrorMessage> {
+        return try {
+            caffShopApi.modifyPassword(createAuthHeaderFromToken(token), modifyPassword)
+            ServerResult(result = true)
+        } catch (e: HttpException) {
+            createErrorMessage(
+                e.response()?.errorBody()?.charStream()?.readText(),
+                ErrorMessage.MODIFY_PASSWORD_FAILED
+            )
+        } catch (e: Exception) {
+            ServerResult(error = ErrorMessage.MODIFY_PASSWORD_FAILED)
+        }
+    }
+
     suspend fun getCaff(
         token: String,
         id: Int

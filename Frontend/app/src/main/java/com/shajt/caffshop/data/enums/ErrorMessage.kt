@@ -14,6 +14,7 @@ enum class ErrorMessage(val errorStringResourceId: Int) {
     REGISTRATION_FAILED(R.string.error_registration_failed),
     LOGIN_FAILED(R.string.error_login_failed),
     LOGOUT_FAILED(R.string.error_logout_failed),
+    MODIFY_PASSWORD_FAILED(R.string.error_modify_password_failed),
     AUTH_FAILED(R.string.error_auth_failed),
     CAFF_REQUEST_FAILED(R.string.error_caff_request_failed),
     CAFF_DELETE_FAILED(R.string.error_caff_delete_failed),
