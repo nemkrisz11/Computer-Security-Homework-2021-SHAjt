@@ -60,7 +60,7 @@
 
     <!-- CaffList -->
     <string name="caff_list_content_ciff">Ciff preview</string>
-    
+
     <!-- CaffDetails -->
     <string name="caff_details_caff_animation_image">Caff animation image</string>
     <string name="caff_details_title_name">Name</string>
@@ -74,6 +74,16 @@
     <!-- Comment -->
     <string name="comment_content_expand">Expand comment</string>
     <string name="comment_action_delete">Delete comment</string>
+
+    <!-- Search -->
+    <string name="search_title_filter">Filter</string>
+    <string name="search_content_search_term">Search term</string>
+    <string name="search_content_creator_name">Creator name</string>
+    <string name="search_content_uploader_name">Uploader name</string>
+    <string name="search_content_creation_date">Creation date</string>
+    <string name="search_content_upload_date">Upload date</string>
+    <string name="search_action_search">Search</string>
+    <string name="search_action_clear">Clear</string>
 
     <!-- UserDetails -->
     <string name="user_details_username">Username</string>

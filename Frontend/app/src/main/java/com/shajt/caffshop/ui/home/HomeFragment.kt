@@ -18,6 +18,7 @@ import com.shajt.caffshop.R
 import com.shajt.caffshop.ui.caffdetails.CaffDetailsActivity
 import com.shajt.caffshop.ui.commons.CaffsRecyclerViewAdapter
 import com.shajt.caffshop.ui.home.upload.UploadBottomSheet
+import com.shajt.caffshop.ui.search.SearchActivity
 import com.shajt.caffshop.ui.user.DetailedUserActivity
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -108,8 +109,9 @@ class HomeFragment : Fragment() {
                 true
             }
             R.id.action_search -> {
-                // TODO make search
-                Toast.makeText(activity, "search clicked", Toast.LENGTH_SHORT).show()
+                startActivity(
+                    Intent(activity, SearchActivity::class.java)
+                )
                 true
             }
             else -> super.onOptionsItemSelected(item)

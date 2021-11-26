@@ -8,7 +8,6 @@
         android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-
     <application
         android:name=".app.CaffShopApplication"
         android:allowBackup="true"
@@ -18,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CaffShop"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".ui.search.SearchActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.caffdetails.CaffDetailsActivity"
             android:exported="false" />
