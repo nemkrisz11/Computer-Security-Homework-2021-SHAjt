@@ -101,6 +101,14 @@ class CaffDetailsFragment : Fragment() {
                     caffDetailsViewModel.getMoreComments(caffId)
                 }
             }
+
+            /*ItemTouchHelper(
+                GenericSwipeCallback({ pos ->
+                    caffDetailsViewModel.deleteComment(listAdapter.currentList[pos])
+                })
+            ).apply {
+                attachToRecyclerView(this@with)
+            }*/
         }
 
         send.setOnClickListener {

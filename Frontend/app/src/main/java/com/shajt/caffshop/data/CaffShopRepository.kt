@@ -19,6 +19,7 @@ import com.shajt.caffshop.data.models.comment.PostCommentResult
 import com.shajt.caffshop.data.models.user.DeleteUserResult
 import com.shajt.caffshop.data.models.user.GetUserResult
 import com.shajt.caffshop.data.models.user.GetUsersResult
+import com.shajt.caffshop.data.models.user.ModifyPasswordResult
 import com.shajt.caffshop.network.CaffShopApiInteractor
 import com.shajt.caffshop.utils.DeCryptor
 import com.shajt.caffshop.utils.EnCryptor
@@ -154,6 +155,18 @@ class CaffShopRepository @Inject constructor(
         sharedPreferences.edit(commit = true) {
             clear()
         }
+    }
+
+    suspend fun modifyPassword(modifyPassword: ModifyPassword): ModifyPasswordResult {
+        if (localUser == null) {
+            return ModifyPasswordResult(error = ErrorMessage.INVALID_USER_DATA)
+        }
+        val result = apiInteractor.modifyPassword(localUser!!.token, modifyPassword)
+        val check = checkServerResult(result, ErrorMessage.MODIFY_PASSWORD_FAILED)
+        if (check != null) {
+            return ModifyPasswordResult(error = check)
+        }
+        return ModifyPasswordResult(success = true)
     }
 
     suspend fun getUsers(page: Int = 1, perpage: Int = 20): GetUsersResult {

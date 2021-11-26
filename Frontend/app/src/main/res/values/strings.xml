@@ -58,7 +58,8 @@
     <string name="caff_details_content_post_comment">Post comment…</string>
 
     <!-- Comment -->
-    <string name="comment_content_delete">Delete comment</string>
+    <string name="comment_content_expand">Expand comment</string>
+    <string name="comment_action_delete">Delete comment</string>
 
     <!-- UserDetails -->
     <string name="user_details_username">Username</string>
@@ -68,8 +69,8 @@
     <string name="user_delete_text">Delete user</string>
     <string name="user_details_modify_password_text">Change password</string>
     <string name="user_details_sample_account_image_description">Account image</string>
-    <string name="user_details_content_new_password">new password</string>
-    <string name="user_details_content_new_password_again">new password again</string>
+    <string name="user_details_content_new_password">New password</string>
+    <string name="user_details_content_new_password_again">New password again</string>
 
 
 
