@@ -1,7 +1,7 @@
 from flask import request, jsonify
 from flaskapp.database.models import User
 from flask_restful import Resource
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, current_user
 from math import ceil
 
 
@@ -30,8 +30,13 @@ class UserDataApi(Resource):
         if user is None:
             return jsonify(errorMessage='user not found'), 404
 
-        return jsonify(username=user.name, idAdmin=user.isAdmin, regDate=user.regDate)
+        return jsonify(username=user.name, idAdmin=user.isAdmin, regDate=user.regDate), 200
 
     @jwt_required()
-    def delete(self):
-        pass
+    def delete(self, username):
+        if current_user.isAdmin:
+            user = User.objects.get(name=username)
+            user.delete()
+            return jsonify(message='user delete successful'), 200
+        else:
+            return jsonify(errorMessage='forbidden interaction'), 403
