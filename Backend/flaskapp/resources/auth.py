@@ -1,9 +1,10 @@
 from flask import request
-from database.models import User
+from flaskapp.database.models import User
 from flask_restful import Resource
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import jwt_required
 import datetime
+
 
 class RegisterApi(Resource):
     @jwt_required
@@ -14,6 +15,7 @@ class RegisterApi(Resource):
         user.save()
         id = user.id
         return {'id': str(id)}, 200
+
 
 class LoginApi(Resource):
     def post(self):

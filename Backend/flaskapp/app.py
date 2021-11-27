@@ -1,33 +1,32 @@
 import os
 from flask import Flask
 from flask_restful import Api
-from database.db import initialize_db
-from resources.routes import initialize_routes
+from flaskapp.database.db import initialize_db
+from flaskapp.resources.routes import initialize_routes
 from flask_jwt_extended import JWTManager
-from flask_cors import CORS
+# from flask_cors import CORS
+import logging
 
 application = Flask(__name__)
 api = Api(application)
 
-# for docker
-# application.config['MONGODB_DB'] = os.environ['MONGODB_DATABASE']
-# application.config['MONGODB_HOST'] = os.environ['MONGODB_HOSTNAME']
-# application.config['MONGODB_PORT'] = 27017
-# application.config['MONGODB_USERNAME'] = os.environ['MONGODB_USERNAME']
-# application.config['MONGODB_PASSWORD'] = os.environ['MONGODB_PASSWORD']
+logging.basicConfig(filename='/tmp/debug.log', level=logging.DEBUG)
+
+# For docker
+application.config['MONGODB_DB'] = os.environ['MONGODB_DATABASE']
+application.config['MONGODB_HOST'] = os.environ['MONGODB_HOSTNAME']
+application.config['MONGODB_PORT'] = int(os.environ['MONGODB_PORT'])
+application.config['MONGODB_USERNAME'] = os.environ['MONGODB_USERNAME']
+application.config['MONGODB_PASSWORD'] = os.environ['MONGODB_PASSWORD']
 
 # for local testing
-application.config['MONGODB_SETTINGS'] = {
-    'host': 'mongodb://localhost:27017/CaffDatabase'
-}
+# application.config['MONGODB_SETTINGS'] = {
+#     'host': 'mongodb://localhost:27017/CaffDatabase'
+# }
 
-# for local
-application.config['SECRET_KEY'] = 'super-secret'
+application.config['SECRET_KEY'] = "nMZSrZeLKofMnfJ7csa2zXwdvXWEqV7CBM327b2EVBGLwbioFYXjf3DAeZhdm7YL"
 
-# for docker
-# application.config.from_envvar('ENV_FILE_LOCATION')
-
-cors = CORS(application, resources={r"/api/*": {"origins": "*"}})
+# cors = CORS(application, resources={r"/api/*": {"origins": "*"}})
 initialize_db(application)
 initialize_routes(api)
 jwt = JWTManager(application)
