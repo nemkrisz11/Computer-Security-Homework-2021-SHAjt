@@ -11,7 +11,7 @@ class RegisterApi(Resource):
     @jwt_required
     def post(self):
         body = request.get_json()
-        user = User(**body)
+        user = User(name=body.get('name'), password=body.get('password'))
         user.hash_password()
         user.save()
         id = user.id
@@ -45,7 +45,7 @@ class PasswordChangeApi(Resource):
         body = request.get_json()
         new_password = body.get('password')
 
-        if current_user.admin:
+        if current_user.isAdmin:
             target_user = User.objects.get(name=body.get('name'))
             target_user.change_password(new_password)
             return jsonify(msg="password change successful"), 200

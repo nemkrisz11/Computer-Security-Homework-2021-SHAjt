@@ -1,6 +1,7 @@
 from flaskapp.database.db import db
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError, VerificationError, InvalidHash, HashingError
+import datetime
 
 
 class CaffFile(db.Document):
@@ -14,7 +15,8 @@ class CaffFile(db.Document):
 class User(db.Document):
     name = db.StringField(required=True, unique=True)
     password = db.StringField(required=True, min_length=8)
-    admin = db.BooleanField(required=True, default=False)
+    isAdmin = db.BooleanField(required=True, default=False)
+    regDate = db.DateTimeField(required=True, default=datetime.datetime.utcnow)
     meta = {
         "collection": "user"
     }
