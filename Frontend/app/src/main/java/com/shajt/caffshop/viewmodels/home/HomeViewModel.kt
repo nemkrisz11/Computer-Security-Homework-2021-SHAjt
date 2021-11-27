@@ -24,6 +24,9 @@ class HomeViewModel @Inject constructor(
     private var _caffs = MutableLiveData<List<Caff>>()
     val caffs: LiveData<List<Caff>> = _caffs
 
+    private var _uploadSuccess = MutableLiveData<Boolean>()
+    val uploadSuccess: LiveData<Boolean> = _uploadSuccess
+
     private var actualPage = 0
     private var totalPages = 1
 
@@ -61,7 +64,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val uploadCaffResult = caffShopRepository.uploadCaff(uri, name)
             if (uploadCaffResult.success) {
-                // TODO do something
+                _uploadSuccess.postValue(true)
             } else {
                 _error.postValue(uploadCaffResult.error!!)
             }

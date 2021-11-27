@@ -8,12 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.shajt.caffshop.R
-import com.shajt.caffshop.databinding.FragmentDetailedUserBinding
 import com.shajt.caffshop.databinding.FragmentUsersBinding
-import com.shajt.caffshop.ui.caffdetails.CaffDetailsCommentsRecyclerViewAdapter
-import com.shajt.caffshop.ui.user.DetailedUserFragment
-import com.shajt.caffshop.viewmodels.user.DetailedUserViewModel
+import com.shajt.caffshop.ui.commons.DisplayMessage
 import com.shajt.caffshop.viewmodels.users.UsersViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -68,6 +64,10 @@ class UsersFragment : Fragment() {
                 }
             }
         }
+
+        usersViewModel.error.observe(viewLifecycleOwner, Observer {
+            DisplayMessage.displaySnackbar(binding.root, it.errorStringResourceId)
+        })
     }
 
 }

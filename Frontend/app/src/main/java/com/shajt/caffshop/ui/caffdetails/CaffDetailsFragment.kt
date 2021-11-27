@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shajt.caffshop.data.models.CaffAnimationImage
+import com.shajt.caffshop.ui.commons.DisplayMessage
 import com.shajt.caffshop.ui.home.HomeActivity
 import com.shajt.caffshop.viewmodels.caffdetails.CaffDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -149,6 +150,10 @@ class CaffDetailsFragment : Fragment() {
                 commentInput.editText!!.text.clear()
             }
         }
+
+        caffDetailsViewModel.error.observe(viewLifecycleOwner, Observer {
+            DisplayMessage.displaySnackbar(binding.root, it.errorStringResourceId)
+        })
     }
 
     private fun createCiffImage(caffAnimationImage: CaffAnimationImage) {

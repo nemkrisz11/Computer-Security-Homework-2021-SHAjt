@@ -43,7 +43,7 @@ class UploadBottomSheet : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+        homeViewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
 
         val fileName = binding.fileName
         val select = binding.select
@@ -76,7 +76,7 @@ class UploadBottomSheet : BottomSheetDialogFragment() {
 
         upload.setOnClickListener {
             fileUri?.let {
-                val text = validateNameText(name.text.toString())
+                val text = validateNameText(name.editText!!.text.toString())
                 if (text == null) {
                     name.error = getString(R.string.error_invalid_caff_name)
                 } else {
@@ -86,7 +86,7 @@ class UploadBottomSheet : BottomSheetDialogFragment() {
             }
         }
 
-        name.doAfterTextChanged {
+        name.editText!!.doAfterTextChanged {
             name.error = null
         }
 

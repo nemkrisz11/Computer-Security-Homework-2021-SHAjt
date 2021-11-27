@@ -19,6 +19,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.shajt.caffshop.R
 import com.shajt.caffshop.ui.caffdetails.CaffDetailsActivity
 import com.shajt.caffshop.ui.commons.CaffsRecyclerViewAdapter
+import com.shajt.caffshop.ui.commons.DisplayMessage
 import com.shajt.caffshop.ui.home.upload.UploadBottomSheet
 import com.shajt.caffshop.ui.search.SearchActivity
 import com.shajt.caffshop.ui.start.StartActivity
@@ -48,7 +49,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+        homeViewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
 
         checkPermission()
         val permissionLauncher = registerForActivityResult(
@@ -91,6 +92,14 @@ class HomeFragment : Fragment() {
                 permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
             }
         }
+
+        homeViewModel.uploadSuccess.observe(viewLifecycleOwner, Observer {
+            DisplayMessage.displaySnackbar(binding.root, R.string.upload_content_successful, upload)
+        })
+
+        homeViewModel.error.observe(viewLifecycleOwner, Observer {
+            DisplayMessage.displaySnackbar(binding.root, it.errorStringResourceId, upload)
+        })
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {

@@ -9,13 +9,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import com.shajt.caffshop.databinding.FragmentDetailedUserBinding
 import com.shajt.caffshop.viewmodels.user.DetailedUserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
 import androidx.lifecycle.Observer
+import com.shajt.caffshop.R
+import com.shajt.caffshop.ui.commons.DisplayMessage
 import com.shajt.caffshop.ui.home.HomeActivity
+import com.shajt.caffshop.utils.UserCredentialValidator
 
 @AndroidEntryPoint
 class DetailedUserFragment : Fragment() {
@@ -69,7 +73,7 @@ class DetailedUserFragment : Fragment() {
         val loading = binding.loading
         val delete = binding.delete
         val newPasswordInput = binding.passwordInput
-        val newPasswordAgainInput = binding.passwordInput
+        val newPasswordAgainInput = binding.passwordAgainInput
         val changePassword = binding.changePassword
         val modifyPasswordContainer = binding.modifyPasswordContainer
 
@@ -79,7 +83,8 @@ class DetailedUserFragment : Fragment() {
             regDate.text = SimpleDateFormat.getDateInstance().format(Date(it.regDate))
             loading.visibility = View.GONE
             delete.isVisible = detailedUserViewModel.userIsAdmin && !it.isAdmin
-            modifyPasswordContainer.isVisible = (detailedUserViewModel.userIsAdmin && !it.isAdmin) ||
+            modifyPasswordContainer.isVisible =
+                (detailedUserViewModel.userIsAdmin && !it.isAdmin) ||
                         it.username == detailedUserViewModel.currentUsername
         })
 
@@ -100,27 +105,39 @@ class DetailedUserFragment : Fragment() {
         })
 
         changePassword.setOnClickListener {
-            val passwordTrimmed = validatePasswordText(newPasswordInput.text.toString())
-            val passwordAgainTrimmed = validatePasswordText(newPasswordAgainInput.text.toString())
+            val passwordTrimmed =
+                validatePasswordText(newPasswordInput.editText!!.text.toString())
+            val passwordAgainTrimmed =
+                validatePasswordText(newPasswordAgainInput.editText!!.text.toString())
+
             if (passwordTrimmed != null && passwordTrimmed == passwordAgainTrimmed) {
                 detailedUserViewModel.changePassword(passwordTrimmed)
+            } else if (passwordTrimmed == null) {
+                newPasswordInput.error = getString(R.string.error_invalid_password)
             } else {
-                // TODO errors
+                newPasswordAgainInput.error = getString(R.string.error_invalid_password_again)
             }
         }
+
+        newPasswordInput.editText!!.doAfterTextChanged {
+            newPasswordInput.error = null
+        }
+
+        newPasswordAgainInput.editText!!.doAfterTextChanged {
+            newPasswordAgainInput.error = null
+        }
+
+        detailedUserViewModel.error.observe(viewLifecycleOwner, Observer {
+            DisplayMessage.displaySnackbar(binding.root, it.errorStringResourceId)
+        })
     }
 
     private fun validatePasswordText(text: String): String? {
         val trimmed = text.trim()
-        return if (trimmed.isBlank() || !isPasswordValid(trimmed)) {
+        return if (trimmed.isBlank() || !UserCredentialValidator.isPasswordValid(trimmed)) {
             null
         } else {
             trimmed
         }
     }
-
-    private fun isPasswordValid(password: String): Boolean {
-        return password.length > 8
-    }
-
 }

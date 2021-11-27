@@ -64,6 +64,7 @@
     <string name="upload_content_custom_name">Custom file name</string>
     <string name="upload_action_upload">Upload selected file</string>
     <string name="upload_title_select">Select a CAFF file</string>
+    <string name="upload_content_successful">File uploaded successfully</string>
 
     <!-- CaffList -->
     <string name="caff_list_content_ciff">Ciff preview</string>
@@ -78,7 +79,7 @@
     <string name="caff_details_title_number_of_ciffs">Number of ciffs</string>
     <string name="caff_details_action_download">Download</string>
     <string name="caff_details_action_delete">Delete</string>
-    <string name="caff_details_content_post_comment">Post comment…</string>
+    <string name="caff_details_content_post_comment">Comment</string>
 
     <!-- Comment -->
     <string name="comment_content_expand">Expand comment</string>
@@ -93,7 +94,7 @@
     <string name="search_content_creation_date">Creation date</string>
     <string name="search_content_upload_date">Upload date</string>
     <string name="search_action_search">Search</string>
-    <string name="search_action_clear">Clear</string>
+    <string name="search_action_clear">Clear all</string>
 
     <!-- UserDetails -->
     <string name="user_details_username">Username</string>

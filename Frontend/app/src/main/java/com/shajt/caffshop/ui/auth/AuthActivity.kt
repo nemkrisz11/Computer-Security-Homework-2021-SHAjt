@@ -11,11 +11,11 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
-import android.widget.Toast
 import com.shajt.caffshop.databinding.ActivityAuthBinding
 
 import com.shajt.caffshop.R
 import com.shajt.caffshop.data.models.User
+import com.shajt.caffshop.ui.commons.DisplayMessage
 import com.shajt.caffshop.ui.home.HomeActivity
 import com.shajt.caffshop.viewmodels.auth.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -98,37 +98,37 @@ class AuthActivity : AppCompatActivity() {
             if (checkedId == login.id && isChecked) {
                 loginMode = true
                 passwordAgain.visibility = View.GONE
-                passwordAgain.text.clear()
+                passwordAgain.editText!!.text.clear()
             } else if (checkedId == register.id && isChecked) {
                 loginMode = false
-                passwordAgain.text.clear()
+                passwordAgain.editText!!.text.clear()
                 passwordAgain.visibility = View.VISIBLE
             }
         }
 
         // Validate data on change
-        username.afterTextChanged {
+        username.editText!!.afterTextChanged {
             authViewModel.authDataChanged(
-                username.text.toString(),
-                password.text.toString(),
+                username.editText!!.text.toString(),
+                password.editText!!.text.toString(),
                 if (loginMode) {
                     null
                 } else {
-                    passwordAgain.text.toString()
+                    passwordAgain.editText!!.text.toString()
                 }
             )
         }
 
         // Validate data on change
         password.apply {
-            afterTextChanged {
+            editText!!.afterTextChanged {
                 authViewModel.authDataChanged(
-                    username.text.toString(),
-                    password.text.toString(),
+                    username.editText!!.text.toString(),
+                    password.editText!!.text.toString(),
                     if (loginMode) {
                         null
                     } else {
-                        passwordAgain.text.toString()
+                        passwordAgain.editText!!.text.toString()
                     }
                 )
             }
@@ -136,11 +136,11 @@ class AuthActivity : AppCompatActivity() {
 
         // Validate data on change
         passwordAgain.apply {
-            afterTextChanged {
+            editText!!.afterTextChanged {
                 authViewModel.authDataChanged(
-                    username.text.toString(),
-                    password.text.toString(),
-                    passwordAgain.text.toString()
+                    username.editText!!.text.toString(),
+                    password.editText!!.text.toString(),
+                    passwordAgain.editText!!.text.toString()
                 )
             }
         }
@@ -149,9 +149,15 @@ class AuthActivity : AppCompatActivity() {
             loading.visibility = View.VISIBLE
             changeAllControlsIsEnabled(false)
             if (loginMode) {
-                authViewModel.login(username.text.toString(), password.text.toString())
+                authViewModel.login(
+                    username.editText!!.text.toString(),
+                    password.editText!!.text.toString()
+                )
             } else {
-                authViewModel.register(username.text.toString(), password.text.toString())
+                authViewModel.register(
+                    username.editText!!.text.toString(),
+                    password.editText!!.text.toString()
+                )
             }
         }
     }
@@ -174,14 +180,14 @@ class AuthActivity : AppCompatActivity() {
      */
     private fun updateUiWithUser(user: User) {
         val welcome = getString(R.string.auth_content_welcome, user.username)
-        Toast.makeText(baseContext, welcome, Toast.LENGTH_SHORT).show()
+        DisplayMessage.displayToast(baseContext, welcome)
     }
 
     /**
      * Shows error message.
      */
     private fun showAuthFailed(@StringRes errorString: Int) {
-        Toast.makeText(baseContext, errorString, Toast.LENGTH_SHORT).show()
+        DisplayMessage.displaySnackbar(binding.root, errorString)
     }
 
     /**

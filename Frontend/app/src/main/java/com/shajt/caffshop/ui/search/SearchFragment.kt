@@ -13,6 +13,7 @@ import com.shajt.caffshop.data.models.caff.SearchCaffQuery
 import com.shajt.caffshop.databinding.FragmentSearchBinding
 import com.shajt.caffshop.ui.caffdetails.CaffDetailsActivity
 import com.shajt.caffshop.ui.commons.CaffsRecyclerViewAdapter
+import com.shajt.caffshop.ui.commons.DisplayMessage
 import com.shajt.caffshop.ui.search.date.DatePickerFragment
 import com.shajt.caffshop.viewmodels.search.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -81,23 +82,27 @@ class SearchFragment : Fragment() {
         }
 
         clear.setOnClickListener {
-            searchTerm.text.clear()
-            creator.text.clear()
-            uploader.text.clear()
+            searchTerm.editText!!.text.clear()
+            creator.editText!!.text.clear()
+            uploader.editText!!.text.clear()
             creationDate.text = null
             uploadDate.text = null
         }
 
         search.setOnClickListener {
             searchCaffQuery = SearchCaffQuery(
-                validateText(searchTerm.text.toString()),
-                validateText(creator.text.toString()),
-                validateText(uploader.text.toString()),
+                validateText(searchTerm.editText!!.text.toString()),
+                validateText(creator.editText!!.text.toString()),
+                validateText(uploader.editText!!.text.toString()),
                 selectedCreationDate,
                 selectedUploadDate
             )
             searchViewModel.searchCaffs(searchCaffQuery)
         }
+
+        searchViewModel.error.observe(viewLifecycleOwner, Observer {
+            DisplayMessage.displaySnackbar(binding.root, it.errorStringResourceId)
+        })
     }
 
     private fun validateText(text: String): String? {

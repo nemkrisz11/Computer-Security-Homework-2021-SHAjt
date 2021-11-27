@@ -55,7 +55,7 @@
             app:layout_constraintTop_toTopOf="@id/title"
             app:tint="?attr/colorOnPrimary" />
 
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/searchTerm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,11 +64,18 @@
             android:importantForAutofill="no"
             android:inputType="text"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            app:endIconMode="clear_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/title" />
+            app:layout_constraintTop_toBottomOf="@id/title">
 
-        <EditText
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/creator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -77,11 +84,18 @@
             android:importantForAutofill="no"
             android:inputType="text"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            app:endIconMode="clear_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/searchTerm" />
+            app:layout_constraintTop_toBottomOf="@id/searchTerm">
 
-        <EditText
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/uploader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -90,9 +104,16 @@
             android:importantForAutofill="no"
             android:inputType="text"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            app:endIconMode="clear_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/creator" />
+            app:layout_constraintTop_toBottomOf="@id/creator">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/creationDate"
