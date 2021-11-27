@@ -7,6 +7,7 @@ def initialize_routes(api):
     api.add_resource(LoginApi, '/user/login')
     # api.add_resource(LogoutApi, '/user/logout') # TODO
     # api.add_resource(PasswordChangeApi, '/user/password') # TODO
+    # api.add_resource(UsersListApi, '/user/') # TODO
     # api.add_resource(UserDataApi, '/user/<username>') # TODO
 
     # api.add_resource(CaffDataApi, '/caff/<id>') # TODO
