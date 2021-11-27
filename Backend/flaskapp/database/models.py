@@ -51,7 +51,7 @@ class Comment(db.EmbeddedDocument):
 
 class CaffFile(db.Document):
     caffName = db.StringField(required=True)
-    caffAnimationImage = db.EmbeddedDocumentField(CaffAnimationImage)
+    caffAnimationImage = db.EmbeddedDocumentField(CaffAnimationImage, required=True)
     numOfCiffs = db.IntField(required=True)
     creator = db.StringField()
     creationDate = db.DateTimeField()
