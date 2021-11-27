@@ -1,5 +1,7 @@
 package com.shajt.caffshop.ui.user
 
+import android.app.Activity
+import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -13,6 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
 import androidx.lifecycle.Observer
+import com.shajt.caffshop.ui.home.HomeActivity
 
 @AndroidEntryPoint
 class DetailedUserFragment : Fragment() {
@@ -40,7 +43,7 @@ class DetailedUserFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            username = it.getString(DetailedUserFragment.ARG_USERNAME) ?: ""
+            username = it.getString(ARG_USERNAME) ?: ""
         }
     }
 
@@ -78,6 +81,22 @@ class DetailedUserFragment : Fragment() {
             delete.isVisible = detailedUserViewModel.userIsAdmin && !it.isAdmin
             modifyPasswordContainer.isVisible = (detailedUserViewModel.userIsAdmin && !it.isAdmin) ||
                         it.username == detailedUserViewModel.currentUsername
+        })
+
+        delete.setOnClickListener {
+            detailedUserViewModel.deleteUser(this.username)
+        }
+
+        detailedUserViewModel.deleteUserResult.observe(viewLifecycleOwner, Observer {
+            startActivity(
+                Intent(requireContext(), HomeActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+            )
+            with(requireActivity()) {
+                setResult(Activity.RESULT_OK)
+                finish()
+            }
         })
 
         changePassword.setOnClickListener {

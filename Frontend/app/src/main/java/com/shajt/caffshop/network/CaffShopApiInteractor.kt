@@ -245,8 +245,7 @@ class CaffShopApiInteractor(
         context: Context
     ): Long {
         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        val baseUri = baseUrl.toUri()
-        val fullPath = "${baseUri.path}/caff/download/${id}"
+        val fullPath = "${baseUrl}caff/download/${id}"
         val request = DownloadManager.Request(Uri.parse(fullPath)).apply {
             addRequestHeader("Authorization", createAuthHeaderFromToken(token))
         }

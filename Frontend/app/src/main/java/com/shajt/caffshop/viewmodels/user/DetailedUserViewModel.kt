@@ -23,6 +23,9 @@ class DetailedUserViewModel @Inject constructor(
     private var _user = MutableLiveData<UserData>()
     val user: LiveData<UserData> = _user
 
+    private var _deleteUserResult = MutableLiveData<Boolean>()
+    val deleteUserResult: LiveData<Boolean> = _deleteUserResult
+
     val userIsAdmin: Boolean
         get() = caffShopRepository.localUser?.isAdmin!!
 
@@ -46,6 +49,17 @@ class DetailedUserViewModel @Inject constructor(
                 _user.postValue(userResult.success!!)
             } else {
                 _error.postValue(userResult.error!!)
+            }
+        }
+    }
+
+    fun deleteUser(username: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val deleteUserResult = caffShopRepository.deleteUser(username)
+            if (deleteUserResult.success) {
+                _deleteUserResult.postValue(true)
+            } else {
+                _error.postValue(deleteUserResult.error!!)
             }
         }
     }

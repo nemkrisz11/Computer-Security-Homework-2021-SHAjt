@@ -1,5 +1,7 @@
 package com.shajt.caffshop.ui.caffdetails
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.shajt.caffshop.databinding.FragmentCaffDetailsBinding
@@ -8,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shajt.caffshop.data.models.CaffAnimationImage
+import com.shajt.caffshop.ui.home.HomeActivity
 import com.shajt.caffshop.viewmodels.caffdetails.CaffDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
@@ -97,7 +100,15 @@ class CaffDetailsFragment : Fragment() {
         }
 
         caffDetailsViewModel.deleteCaffResult.observe(viewLifecycleOwner, Observer {
-            requireActivity().onBackPressed()
+            startActivity(
+                Intent(requireContext(), HomeActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+            )
+            with(requireActivity()) {
+                setResult(Activity.RESULT_OK)
+                finish()
+            }
         })
 
         with(comments) {

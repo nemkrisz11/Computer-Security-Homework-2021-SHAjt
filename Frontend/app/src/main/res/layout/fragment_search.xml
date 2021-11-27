@@ -22,10 +22,12 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/searchSheet"
+        style="@style/Theme.CaffShop.BottomSheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorOnPrimary"
-        app:behavior_peekHeight="auto"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="75dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <TextView
@@ -41,6 +43,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_margin="@dimen/search_item_margin"
+            android:contentDescription="@string/search_content_drag"
+            android:src="@drawable/ic_round_drag_handle_24"
+            app:layout_constraintBottom_toBottomOf="@id/title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/title"
+            app:tint="?attr/colorOnPrimary" />
 
         <EditText
             android:id="@+id/searchTerm"

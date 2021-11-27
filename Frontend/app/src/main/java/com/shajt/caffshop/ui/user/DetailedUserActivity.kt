@@ -3,7 +3,6 @@ package com.shajt.caffshop.ui.user
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.shajt.caffshop.R
-import com.shajt.caffshop.ui.caffdetails.CaffDetailsActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,7 +19,7 @@ class DetailedUserActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction()
                 .replace(
                     R.id.container,
-                    DetailedUserFragment.newInstance(intent.getStringExtra(DetailedUserActivity.ARG_USERNAME))
+                    DetailedUserFragment.newInstance(intent.getStringExtra(ARG_USERNAME))
                 )
                 .commitNow()
         }

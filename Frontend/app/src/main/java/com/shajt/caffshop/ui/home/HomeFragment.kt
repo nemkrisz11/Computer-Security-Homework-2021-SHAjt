@@ -1,6 +1,8 @@
 package com.shajt.caffshop.ui.home
 
 import android.Manifest
+import android.app.Activity
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -13,11 +15,13 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.shajt.caffshop.R
 import com.shajt.caffshop.ui.caffdetails.CaffDetailsActivity
 import com.shajt.caffshop.ui.commons.CaffsRecyclerViewAdapter
 import com.shajt.caffshop.ui.home.upload.UploadBottomSheet
 import com.shajt.caffshop.ui.search.SearchActivity
+import com.shajt.caffshop.ui.start.StartActivity
 import com.shajt.caffshop.ui.user.DetailedUserActivity
 import com.shajt.caffshop.ui.users.UsersActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -115,6 +119,16 @@ class HomeFragment : Fragment() {
                 )
                 true
             }
+            R.id.action_logout -> {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.logout_title_logout)
+                    .setMessage(R.string.logout_content_logout)
+                    .setPositiveButton(R.string.logout_action_positive, ::dialogOnClick)
+                    .setNegativeButton(R.string.logout_action_negative, ::dialogOnClick)
+                    .setCancelable(true)
+                    .show()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -139,5 +153,24 @@ class HomeFragment : Fragment() {
                 putExtra(CaffDetailsActivity.ARG_CAFF_ID, caffId)
             }
         )
+    }
+
+    private fun dialogOnClick(dialog: DialogInterface?, which: Int) {
+        when (which) {
+            DialogInterface.BUTTON_POSITIVE -> {
+                homeViewModel.logout()
+                dialog?.dismiss()
+                startActivity(
+                    Intent(requireContext(), StartActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
+                )
+                with(requireActivity()) {
+                    setResult(Activity.RESULT_OK)
+                    finish()
+                }
+            }
+            DialogInterface.BUTTON_NEGATIVE -> dialog?.dismiss()
+        }
     }
 }

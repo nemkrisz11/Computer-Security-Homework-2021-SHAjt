@@ -20,4 +20,10 @@
         android:title="@string/action_profile"
         app:showAsAction="ifRoom"/>
 
+    <item
+        android:id="@+id/action_logout"
+        android:icon="@drawable/ic_round_logout_24"
+        android:title="@string/action_logout"
+        app:showAsAction="ifRoom"/>
+
 </menu>

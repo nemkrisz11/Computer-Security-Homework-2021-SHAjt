@@ -67,4 +67,10 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
+    fun logout() {
+        viewModelScope.launch(Dispatchers.IO) {
+            caffShopRepository.logout()
+        }
+    }
 }

@@ -9,6 +9,7 @@
     <string name="action_profile">Profile</string>
     <string name="action_search">Search</string>
     <string name="action_users">Users</string>
+    <string name="action_logout">Logout</string>
 
     <!-- Error -->
     <string name="error_network_error">Network error</string>
@@ -51,6 +52,12 @@
     <!-- Home -->
     <string name="home_action_upload">Upload caff</string>
 
+    <!-- Logout -->
+    <string name="logout_title_logout">Logout</string>
+    <string name="logout_content_logout">Are you sure you want to log out?</string>
+    <string name="logout_action_positive">Yes</string>
+    <string name="logout_action_negative">No</string>
+
     <!-- Upload -->
     <string name="upload_content_file_name">No file selected…</string>
     <string name="upload_action_select">Select</string>
@@ -79,6 +86,7 @@
 
     <!-- Search -->
     <string name="search_title_filter">Filter</string>
+    <string name="search_content_drag">Drag</string>
     <string name="search_content_search_term">Search term</string>
     <string name="search_content_creator_name">Creator name</string>
     <string name="search_content_uploader_name">Uploader name</string>
