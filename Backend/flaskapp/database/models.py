@@ -4,14 +4,6 @@ from argon2.exceptions import VerifyMismatchError, VerificationError, InvalidHas
 import datetime
 
 
-class CaffFile(db.Document):
-    creator = db.StringField()
-    creation_date = db.DateTimeField()
-    meta = {
-        "collection": "caff_file"
-    }
-
-
 class User(db.Document):
     name = db.StringField(required=True, unique=True)
     password = db.StringField(required=True, min_length=8)
@@ -40,3 +32,32 @@ class User(db.Document):
             self.password = ph.hash(password)
         except HashingError:
             return False
+
+
+class CaffAnimationImage(db.EmbeddedDocument):
+    duration = db.IntField(required=True)
+    width = db.IntField(required=True)
+    height = db.IntField(required=True)
+    caption = db.StringField()
+    tags = db.ListField(db.StringField())
+    pixelValues = db.ListField(db.IntField())
+
+
+class Comment(db.EmbeddedDocument):
+    username = db.StringField(required=True, unique=True)
+    comment = db.StringField(required=True)
+    date = db.DateTimeField(required=True, default=datetime.datetime.utcnow)
+
+
+class CaffFile(db.Document):
+    caffName = db.StringField(required=True)
+    caffAnimationImage = db.EmbeddedDocumentField(CaffAnimationImage)
+    numOfCiffs = db.IntField(required=True)
+    creator = db.StringField()
+    creationDate = db.DateTimeField()
+    comments = db.EmbeddedDocumentListField(Comment)
+    uploaderName = db.StringField(required=True)
+    uploadDate = db.DateTimeField(required=True, default=datetime.datetime.utcnow)
+    meta = {
+        "collection": "caff_file"
+    }
