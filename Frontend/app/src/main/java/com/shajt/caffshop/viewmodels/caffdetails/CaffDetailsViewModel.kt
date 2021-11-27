@@ -103,7 +103,7 @@ class CaffDetailsViewModel @Inject constructor(
 
     fun deleteComment(comment: Comment) {
         viewModelScope.launch(Dispatchers.IO) {
-            val deleteResult = caffShopRepository.deleteComment(comment.id)
+            val deleteResult = caffShopRepository.deleteComment(comment.id, comment.caffId)
             if (deleteResult.success) {
                 if (comments.value != null) {
                     val comments = comments.value!!.toMutableList().apply {

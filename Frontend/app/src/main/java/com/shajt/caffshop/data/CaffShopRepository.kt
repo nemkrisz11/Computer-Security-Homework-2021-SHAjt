@@ -297,11 +297,11 @@ class CaffShopRepository @Inject constructor(
         return PostCommentResult(success = true)
     }
 
-    suspend fun deleteComment(commentId: Int): DeleteCommentResult {
+    suspend fun deleteComment(commentId: Int, caffId: Int): DeleteCommentResult {
         if (localUser == null) {
             return DeleteCommentResult(error = ErrorMessage.INVALID_USER_DATA)
         }
-        val result = apiInteractor.deleteComment(localUser!!.token, commentId)
+        val result = apiInteractor.deleteComment(localUser!!.token, commentId, caffId)
         val check = checkServerResult(result, ErrorMessage.COMMENT_DELETE_FAILED)
         if (check != null) {
             return DeleteCommentResult(error = check)

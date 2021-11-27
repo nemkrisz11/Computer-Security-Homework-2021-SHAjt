@@ -285,10 +285,11 @@ class CaffShopApiInteractor(
 
     suspend fun deleteComment(
         token: String,
-        id: Int
+        commentId: Int,
+        caffId: Int
     ): ServerResult<Boolean, ErrorMessage> {
         return try {
-            caffShopApi.deleteComment(createAuthHeaderFromToken(token), id)
+            caffShopApi.deleteComment(createAuthHeaderFromToken(token), commentId, caffId)
             ServerResult(result = true)
         } catch (e: HttpException) {
             createErrorMessage(
