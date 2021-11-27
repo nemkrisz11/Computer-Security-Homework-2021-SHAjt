@@ -5,13 +5,16 @@ from flask_jwt_extended import jwt_required
 
 
 class CommentApi(Resource):
+    @jwt_required()
     def get(self):
         pass
 
+    @jwt_required()
     def post(self):
         pass
 
 
 class DeleteCommentApi(Resource):
+    @jwt_required()
     def delete(self, comment_id):
         pass

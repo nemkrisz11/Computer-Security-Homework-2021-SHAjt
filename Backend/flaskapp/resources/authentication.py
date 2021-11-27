@@ -24,7 +24,7 @@ class LoginApi(Resource):
         user = User.objects.get(name=body.get('name'))
         authorized = user.check_password(body.get('password'))
         if not authorized:
-            return jsonify(error="name or password invalid"), 401
+            return jsonify(errorMessage="name or password invalid"), 401
 
         expires = datetime.timedelta(hours=1)
         access_token = create_access_token(identity=str(user.id), expires_delta=expires)
@@ -48,10 +48,10 @@ class PasswordChangeApi(Resource):
         if current_user.isAdmin:
             target_user = User.objects.get(name=body.get('name'))
             target_user.change_password(new_password)
-            return jsonify(msg="password change successful"), 200
+            return jsonify(message="password change successful"), 200
         else:
             if body.get('name') is not None:
-                return jsonify(error="forbidden interaction"), 403
+                return jsonify(errorMessage="forbidden interaction"), 403
             else:
                 current_user.change_password(new_password)
-                return jsonify(msg="password change successful"), 200
+                return jsonify(message="password change successful"), 200

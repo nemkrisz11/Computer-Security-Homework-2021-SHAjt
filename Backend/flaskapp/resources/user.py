@@ -12,7 +12,7 @@ class UsersListApi(Resource):
         perpage = int(request.args.get('perpage'))
 
         if page is None or perpage is None:
-            return jsonify(msg='incorrect arguments given'), 400
+            return jsonify(errorMessage='incorrect arguments given'), 400
 
         users = User.objects.skip((page - 1) * perpage).limit(perpage)
 
@@ -25,6 +25,13 @@ class UsersListApi(Resource):
 class UserDataApi(Resource):
     @jwt_required()
     def get(self, username):
-        pass
+        user = User.objects.get(name=username)
+
+        if user is None:
+            return jsonify(errorMessage='user not found'), 404
+
+        return jsonify(username=user.name, idAdmin=user.isAdmin, regDate=user.regDate)
+
+    @jwt_required()
     def delete(self):
         pass
