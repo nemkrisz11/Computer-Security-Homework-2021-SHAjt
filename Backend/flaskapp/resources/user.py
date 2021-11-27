@@ -21,7 +21,10 @@ class UsersListApi(Resource):
             totalPages=ceil(User.objects.count() / perpage)
         ), 200
 
+
 class UserDataApi(Resource):
     @jwt_required()
-    def get(self):
+    def get(self, username):
+        pass
+    def delete(self):
         pass

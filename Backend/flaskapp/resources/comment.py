@@ -13,5 +13,5 @@ class CommentApi(Resource):
 
 
 class DeleteCommentApi(Resource):
-    def delete(self):
+    def delete(self, comment_id):
         pass

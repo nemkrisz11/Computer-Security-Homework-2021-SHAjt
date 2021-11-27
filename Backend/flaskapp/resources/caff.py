@@ -6,11 +6,11 @@ from flask_jwt_extended import jwt_required
 
 class CaffDataApi(Resource):
     @jwt_required()
-    def get(self):
+    def get(self, caff_id):
         pass
 
     @jwt_required()
-    def delete(self):
+    def delete(self, caff_id):
         pass
 
 
@@ -28,5 +28,5 @@ class CaffUploadApi(Resource):
 
 class CaffDownloadApi(Resource):
     @jwt_required()
-    def get(self):
+    def get(self, caff_id):
         pass
