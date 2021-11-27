@@ -20,3 +20,8 @@ class UsersListApi(Resource):
             users=[{"username": u.name, "isAdmin": u.isAdmin, "regDate": u.regDate} for u in users],
             totalPages=ceil(User.objects.count() / perpage)
         ), 200
+
+class UserDataApi(Resource):
+    @jwt_required()
+    def get(self):
+        pass
