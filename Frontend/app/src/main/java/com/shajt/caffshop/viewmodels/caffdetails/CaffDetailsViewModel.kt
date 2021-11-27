@@ -1,5 +1,6 @@
 package com.shajt.caffshop.viewmodels.caffdetails
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,6 +25,9 @@ class CaffDetailsViewModel @Inject constructor(
 
     private var _caff = MutableLiveData<Caff>()
     val caff: LiveData<Caff> = _caff
+
+    private var _deleteCaffResult = MutableLiveData<Boolean>()
+    val deleteCaffResult: LiveData<Boolean> = _deleteCaffResult
 
     private var actualPage = 0
     private var totalPages = 1
@@ -65,6 +69,23 @@ class CaffDetailsViewModel @Inject constructor(
                 }
             } else {
                 _error.postValue(commentList.error!!)
+            }
+        }
+    }
+
+    fun downloadCaff(caffId: Int, context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            caffShopRepository.downloadCaff(caffId, context)
+        }
+    }
+
+    fun deleteCaff(caffId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val deleteCaffResult = caffShopRepository.deleteCaff(caffId)
+            if (deleteCaffResult.success) {
+                _deleteCaffResult.postValue(true)
+            } else {
+                _error.postValue(deleteCaffResult.error!!)
             }
         }
     }

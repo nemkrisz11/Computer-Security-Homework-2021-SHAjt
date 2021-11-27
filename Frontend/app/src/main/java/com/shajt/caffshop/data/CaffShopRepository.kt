@@ -2,16 +2,17 @@ package com.shajt.caffshop.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.net.Uri
 import android.util.Base64
 import androidx.core.content.edit
 import com.shajt.caffshop.data.enums.ErrorMessage
 import com.shajt.caffshop.data.models.*
 import com.shajt.caffshop.data.models.auth.AuthResult
-import com.shajt.caffshop.data.models.auth.LoginResult
 import com.shajt.caffshop.data.models.auth.UserCredentials
 import com.shajt.caffshop.data.models.caff.DeleteCaffResult
 import com.shajt.caffshop.data.models.caff.GetCaffResult
 import com.shajt.caffshop.data.models.caff.SearchCaffsResult
+import com.shajt.caffshop.data.models.caff.UploadCaffResult
 import com.shajt.caffshop.data.models.comment.DeleteCommentResult
 import com.shajt.caffshop.data.models.comment.GetCommentsResult
 import com.shajt.caffshop.data.models.comment.PostCommentResult
@@ -23,6 +24,7 @@ import com.shajt.caffshop.network.CaffShopApiInteractor
 import com.shajt.caffshop.utils.DeCryptor
 import com.shajt.caffshop.utils.EnCryptor
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -251,12 +253,24 @@ class CaffShopRepository @Inject constructor(
         return SearchCaffsResult(success = result.result)
     }
 
-    suspend fun uploadCaff() {
-
+    suspend fun uploadCaff(uri: Uri, name: String): UploadCaffResult {
+        if (localUser == null) {
+            return UploadCaffResult(error = ErrorMessage.INVALID_USER_DATA)
+        }
+        val file = File(uri.path)
+        val result = apiInteractor.uploadCaff(localUser!!.token, name, file)
+        val check = checkServerResult(result, ErrorMessage.CAFF_UPLOAD_FAILED)
+        if (check != null) {
+            return UploadCaffResult(error = check)
+        }
+        return UploadCaffResult(success = true)
     }
 
-    suspend fun downloadCaff() {
-
+    suspend fun downloadCaff(caffId: Int, context: Context) {
+        if (localUser == null) {
+            return
+        }
+        apiInteractor.enqueueDownload(localUser!!.token, caffId, context)
     }
 
     suspend fun getComments(caffId: Int, page: Int = 1, perpage: Int = 20): GetCommentsResult {

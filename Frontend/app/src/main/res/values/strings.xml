@@ -69,6 +69,8 @@
     <string name="caff_details_title_uploader_name">Uploader name</string>
     <string name="caff_details_title_upload_date">Upload date</string>
     <string name="caff_details_title_number_of_ciffs">Number of ciffs</string>
+    <string name="caff_details_action_download">Download</string>
+    <string name="caff_details_action_delete">Delete</string>
     <string name="caff_details_content_post_comment">Post comment…</string>
 
     <!-- Comment -->

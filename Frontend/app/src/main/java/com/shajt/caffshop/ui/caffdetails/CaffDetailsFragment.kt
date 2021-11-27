@@ -65,6 +65,8 @@ class CaffDetailsFragment : Fragment() {
         val uploader = binding.uploader
         val upload = binding.upload
         val numOfCiffs = binding.numOfCiffs
+        val download = binding.download
+        val delete = binding.delete
         val comments = binding.comments
         val commentsLoading = binding.commentLoading
         val commentInput = binding.commentInput
@@ -79,6 +81,23 @@ class CaffDetailsFragment : Fragment() {
             upload.text = SimpleDateFormat.getDateInstance().format(Date(it.uploadDate))
             numOfCiffs.text = it.numOfCiffs.toString()
             loading.visibility = View.GONE
+        })
+
+        download.setOnClickListener {
+            caffDetailsViewModel.downloadCaff(caffId, requireContext())
+        }
+
+        with(delete) {
+            if (caffDetailsViewModel.userIsAdmin) {
+                visibility = View.VISIBLE
+                setOnClickListener {
+                    caffDetailsViewModel.deleteCaff(caffId)
+                }
+            }
+        }
+
+        caffDetailsViewModel.deleteCaffResult.observe(viewLifecycleOwner, Observer {
+            requireActivity().onBackPressed()
         })
 
         with(comments) {
@@ -112,9 +131,11 @@ class CaffDetailsFragment : Fragment() {
         }
 
         send.setOnClickListener {
-            val trimmed = validateCommentText(commentInput.text.toString())
+            //val trimmed = validateCommentText(commentInput.text.toString())
+            val trimmed = validateCommentText(commentInput.editText!!.text.toString())
             if (trimmed != null) {
                 caffDetailsViewModel.postComment(caffId, trimmed)
+                commentInput.editText!!.text.clear()
             }
         }
     }

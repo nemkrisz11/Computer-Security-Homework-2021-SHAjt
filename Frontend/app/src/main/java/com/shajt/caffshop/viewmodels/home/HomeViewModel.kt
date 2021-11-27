@@ -58,6 +58,13 @@ class HomeViewModel @Inject constructor(
     }
 
     fun uploadCaff(uri: Uri, name: String) {
-        // TODO
+        viewModelScope.launch(Dispatchers.IO) {
+            val uploadCaffResult = caffShopRepository.uploadCaff(uri, name)
+            if (uploadCaffResult.success) {
+                // TODO do something
+            } else {
+                _error.postValue(uploadCaffResult.error!!)
+            }
+        }
     }
 }

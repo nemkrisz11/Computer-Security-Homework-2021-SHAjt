@@ -1,5 +1,8 @@
 package com.shajt.caffshop.network
 
+import android.app.DownloadManager
+import android.content.Context
+import android.net.Uri
 import com.google.gson.Gson
 import com.shajt.caffshop.data.enums.ErrorMessage
 import com.shajt.caffshop.data.models.*
@@ -234,6 +237,20 @@ class CaffShopApiInteractor(
         } catch (e: Exception) {
             ServerResult(error = ErrorMessage.CAFF_DOWNLOAD_FAILED)
         }
+    }
+
+    suspend fun enqueueDownload(
+        token: String,
+        id: Int,
+        context: Context
+    ): Long {
+        val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        val baseUri = baseUrl.toUri()
+        val fullPath = "${baseUri.path}/caff/download/${id}"
+        val request = DownloadManager.Request(Uri.parse(fullPath)).apply {
+            addRequestHeader("Authorization", createAuthHeaderFromToken(token))
+        }
+        return downloadManager.enqueue(request)
     }
 
     suspend fun getComments(

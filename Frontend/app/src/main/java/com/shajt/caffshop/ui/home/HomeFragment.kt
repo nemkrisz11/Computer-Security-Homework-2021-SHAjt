@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import com.shajt.caffshop.databinding.FragmentHomeBinding
 import com.shajt.caffshop.viewmodels.home.HomeViewModel
 import android.view.*
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer

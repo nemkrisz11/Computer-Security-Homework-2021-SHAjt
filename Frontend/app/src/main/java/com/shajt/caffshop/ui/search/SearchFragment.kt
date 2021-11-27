@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import com.shajt.caffshop.R
 import com.shajt.caffshop.data.models.caff.SearchCaffQuery
 import com.shajt.caffshop.databinding.FragmentSearchBinding
 import com.shajt.caffshop.ui.caffdetails.CaffDetailsActivity
@@ -85,8 +84,8 @@ class SearchFragment : Fragment() {
             searchTerm.text.clear()
             creator.text.clear()
             uploader.text.clear()
-            creationDate.text = getString(R.string.search_content_creation_date)
-            uploadDate.text = getString(R.string.search_content_upload_date)
+            creationDate.text = null
+            uploadDate.text = null
         }
 
         search.setOnClickListener {
