@@ -32,5 +32,9 @@
     <!-- UserDetails -->
     <dimen name="user_details_item_margin">8dp</dimen>
 
+    <!-- UserItem -->
+    <dimen name="user_item_margin">8dp</dimen>
+    <dimen name="user_text_margin">8dp</dimen>
+
 
 </resources>

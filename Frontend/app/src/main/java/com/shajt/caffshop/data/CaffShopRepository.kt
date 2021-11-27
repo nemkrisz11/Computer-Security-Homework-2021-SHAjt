@@ -5,10 +5,9 @@ import android.content.SharedPreferences
 import android.util.Base64
 import androidx.core.content.edit
 import com.shajt.caffshop.data.enums.ErrorMessage
-import com.shajt.caffshop.data.models.CommentToCreate
-import com.shajt.caffshop.data.models.ServerResult
+import com.shajt.caffshop.data.models.*
 import com.shajt.caffshop.data.models.auth.AuthResult
-import com.shajt.caffshop.data.models.User
+import com.shajt.caffshop.data.models.auth.LoginResult
 import com.shajt.caffshop.data.models.auth.UserCredentials
 import com.shajt.caffshop.data.models.caff.DeleteCaffResult
 import com.shajt.caffshop.data.models.caff.GetCaffResult

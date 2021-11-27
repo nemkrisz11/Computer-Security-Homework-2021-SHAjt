@@ -31,4 +31,10 @@
         <item name="cardBackgroundColor">?attr/colorSecondaryVariant</item>
     </style>
 
+    <style name="Theme.CaffShop.CardView.User" parent="Widget.MaterialComponents.CardView">
+        <item name="elevation">4dp</item>
+        <item name="cardCornerRadius">2dp</item>
+        <item name="cardBackgroundColor">?attr/colorSecondaryVariant</item>
+    </style>
+
 </resources>

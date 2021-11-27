@@ -96,8 +96,8 @@
     <string name="user_details_content_new_password">New password</string>
     <string name="user_details_content_new_password_again">New password again</string>
 
-
-
+    <!-- UserListItem -->
+    <string name="user_list_item_is_admin">Is admin</string>
 
 
 

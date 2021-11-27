@@ -20,6 +20,7 @@ import com.shajt.caffshop.ui.commons.CaffsRecyclerViewAdapter
 import com.shajt.caffshop.ui.home.upload.UploadBottomSheet
 import com.shajt.caffshop.ui.search.SearchActivity
 import com.shajt.caffshop.ui.user.DetailedUserActivity
+import com.shajt.caffshop.ui.users.UsersActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -98,8 +99,9 @@ class HomeFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_users -> {
-                // TODO change to activity
-                Toast.makeText(activity, "users clicked", Toast.LENGTH_SHORT).show()
+                startActivity(
+                    Intent(activity, UsersActivity::class.java)
+                )
                 true
             }
             R.id.action_profile -> {

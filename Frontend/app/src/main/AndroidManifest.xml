@@ -18,6 +18,9 @@
         android:theme="@style/Theme.CaffShop"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.users.UsersActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.search.SearchActivity"
             android:exported="false" />
         <activity
