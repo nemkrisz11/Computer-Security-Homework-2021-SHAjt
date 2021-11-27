@@ -1,7 +1,8 @@
-from flask import request
+from flask import request, jsonify
 from flaskapp.database.models import User
+from flaskapp.authorization import jwt_redis_blocklist, TOKEN_EXPIRES
 from flask_restful import Resource
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, get_jwt
 from flask_jwt_extended import jwt_required
 import datetime
 
@@ -14,7 +15,7 @@ class RegisterApi(Resource):
         user.hash_password()
         user.save()
         id = user.id
-        return {'id': str(id)}, 200
+        return jsonify(id=str(id)), 200
 
 
 class LoginApi(Resource):
@@ -23,8 +24,16 @@ class LoginApi(Resource):
         user = User.objects.get(name=body.get('name'))
         authorized = user.check_password(body.get('password'))
         if not authorized:
-            return {'error': 'name or password invalid'}, 401
+            return jsonify(error="name or password invalid"), 401
 
         expires = datetime.timedelta(hours=1)
         access_token = create_access_token(identity=str(user.id), expires_delta=expires)
         return {'token': access_token}, 200
+
+
+class LogoutApi(Resource):
+    @jwt_required()
+    def post(self):
+        jti = get_jwt()["jti"]
+        jwt_redis_blocklist.set(jti, "", ex=TOKEN_EXPIRES)
+        return jsonify(msg="successful logout"), 200

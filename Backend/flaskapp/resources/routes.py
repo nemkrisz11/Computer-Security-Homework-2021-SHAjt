@@ -1,11 +1,11 @@
-from flaskapp.resources.auth import RegisterApi, LoginApi
+from flaskapp.resources.authentication import RegisterApi, LoginApi, LogoutApi
 
 
 # API endpoints
 def initialize_routes(api):
     api.add_resource(RegisterApi, '/user/register')
     api.add_resource(LoginApi, '/user/login')
-    # api.add_resource(LogoutApi, '/user/logout') # TODO
+    api.add_resource(LogoutApi, '/user/logout')
     # api.add_resource(PasswordChangeApi, '/user/password') # TODO
     # api.add_resource(UsersListApi, '/user/') # TODO
     # api.add_resource(UserDataApi, '/user/<username>') # TODO
