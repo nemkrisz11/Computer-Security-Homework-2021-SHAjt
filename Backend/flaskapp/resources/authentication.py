@@ -4,7 +4,7 @@ from flaskapp.authorization import jwt_redis_blocklist, TOKEN_EXPIRES
 from flask_restful import Resource
 from flask_jwt_extended import create_access_token, get_jwt, current_user
 from flask_jwt_extended import jwt_required
-from mongoengine import ValidationError
+from mongoengine import ValidationError, NotUniqueError
 
 
 class RegisterApi(Resource):
@@ -13,9 +13,11 @@ class RegisterApi(Resource):
         user = User(name=body.get('name'), password=body.get('password'))
         try:
             user.hash_password()
+            user.save()
         except ValidationError as e:
             return make_response(jsonify(errors=e.to_dict()), 400)
-        user.save()
+        except NotUniqueError as e:
+            return make_response(jsonify(errors={"name": "Username already in use"}), 400)
         return make_response(jsonify(id=str(user.id)), 200)
 
 
