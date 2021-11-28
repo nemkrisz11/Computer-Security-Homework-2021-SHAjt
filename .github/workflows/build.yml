@@ -80,7 +80,7 @@ jobs:
 
       - name: Analyze with Coverage
         working-directory: ./Frontend
-        run: ./gradlew build
+        run: chmod +x ./gradlew & ./gradlew build
         env:
           # Needed to get some information about the pull request, if any
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
