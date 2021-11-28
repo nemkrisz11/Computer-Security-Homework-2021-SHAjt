@@ -4,11 +4,20 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id "org.sonarqube" version "3.3"
+    id 'jacoco'
 }
 
 sonarqube {
     properties {
-        property "sonar.sourceEncoding", "UTF-8"
+        property 'sonar.host.url', 'https://sonarcloud.io'
+        property 'sonar.organization', 'rem77s7athh6rn6kvejhh9ae94rgksba6f8o'
+        property 'sonar.projectKey', 'nemkrisz11_Computer-Security-Homework-2021-SHAjt'
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
     }
 }
 
