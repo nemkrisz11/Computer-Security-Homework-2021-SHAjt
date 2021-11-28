@@ -1,6 +1,6 @@
 from flaskapp.database.db import db
 from argon2 import PasswordHasher
-from argon2.exceptions import VerifyMismatchError, VerificationError, InvalidHash, HashingError
+from argon2.exceptions import VerifyMismatchError, VerificationError, InvalidHash
 import datetime
 
 
@@ -14,6 +14,7 @@ class User(db.Document):
     }
 
     def hash_password(self):
+        self.validate()
         ph = PasswordHasher()
         self.password = ph.hash(self.password)
 
@@ -28,11 +29,8 @@ class User(db.Document):
             return False
 
     def change_password(self, password):
-        try:
-            ph = PasswordHasher()
-            self.password = ph.hash(password)
-        except HashingError:
-            return False
+        self.password = password
+        self.hash_password()
 
 
 class CaffAnimationImage(db.EmbeddedDocument):

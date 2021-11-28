@@ -17,4 +17,3 @@ def initialize_routes(api):
     # api.add_resource(CaffDownloadApi, '/caff/download/<id>') # TODO
     #
     # api.add_resource(CommentApi, '/comment') # TODO
-    # api.add_resource(DeleteCommentApi, '/comment/<id>') # TODO

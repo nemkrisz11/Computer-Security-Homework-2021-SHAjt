@@ -4,18 +4,19 @@ from flaskapp.authorization import jwt_redis_blocklist, TOKEN_EXPIRES
 from flask_restful import Resource
 from flask_jwt_extended import create_access_token, get_jwt, current_user
 from flask_jwt_extended import jwt_required
-import datetime
+from mongoengine import ValidationError
 
 
 class RegisterApi(Resource):
-    @jwt_required
     def post(self):
         body = request.get_json()
         user = User(name=body.get('name'), password=body.get('password'))
-        user.hash_password()
+        try:
+            user.hash_password()
+        except ValidationError as e:
+            return make_response(jsonify(errors=e.to_dict()), 400)
         user.save()
-        id = user.id
-        return make_response(jsonify(id=str(id)), 200)
+        return make_response(jsonify(id=str(user.id)), 200)
 
 
 class LoginApi(Resource):

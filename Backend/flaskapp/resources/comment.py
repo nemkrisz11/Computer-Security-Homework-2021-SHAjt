@@ -13,8 +13,7 @@ class CommentApi(Resource):
     def post(self):
         pass
 
-
-class DeleteCommentApi(Resource):
     @jwt_required()
-    def delete(self, comment_id):
+    def delete(self):
+        # Params: caff_id, comment_id
         pass
