@@ -37,6 +37,8 @@ services:
       MONGODB_HOSTNAME: mongodb
       MONGODB_PORT: 27017
       PYTHONPATH: $PYTHONPATH:/var/www
+      FLASKTEST_PATH: /var/www/test
+      MONGOINIT_PATH: /var/www/mongoinit
     volumes:
       - ./flaskapp:/var/www/flaskapp:ro
       - ./test:/var/www/test

@@ -23,6 +23,7 @@ class User(db.Document):
             ph.verify(self.password, password)
             if ph.check_needs_rehash(self.password):
                 self.password = ph.hash(password)
+            return True
         except (VerifyMismatchError, VerificationError, InvalidHash):
             return False
 
