@@ -4,7 +4,7 @@ from flaskapp.authorization import jwt_redis_blocklist, TOKEN_EXPIRES
 from flask_restful import Resource
 from flask_jwt_extended import create_access_token, get_jwt, current_user
 from flask_jwt_extended import jwt_required
-from mongoengine import ValidationError, NotUniqueError
+from mongoengine import ValidationError, NotUniqueError, DoesNotExist
 
 
 class RegisterApi(Resource):
@@ -15,19 +15,22 @@ class RegisterApi(Resource):
             user.hash_password()
             user.save()
         except ValidationError as e:
-            return make_response(jsonify(errors=e.to_dict()), 400)
+            return make_response(jsonify(errorMessage=e.to_dict()), 400)
         except NotUniqueError as e:
-            return make_response(jsonify(errors={"name": "Username already in use"}), 400)
+            return make_response(jsonify(errorMessage={"name": "Username already in use"}), 400)
         return make_response(jsonify(id=str(user.id)), 200)
 
 
 class LoginApi(Resource):
     def post(self):
         body = request.get_json()
-        user = User.objects.get(name=body.get('name'))
+        try:
+            user = User.objects.get(name=body.get('name'))
+        except DoesNotExist:
+            return make_response(jsonify(errorMessage="name or password invalid"), 400)
         authorized = user.check_password(body.get('password'))
         if not authorized:
-            return make_response(jsonify(errorMessage="name or password invalid"), 401)
+            return make_response(jsonify(errorMessage="name or password invalid"), 400)
 
         access_token = create_access_token(identity=user, expires_delta=TOKEN_EXPIRES)
         return make_response(jsonify(token=access_token), 200)
@@ -38,7 +41,7 @@ class LogoutApi(Resource):
     def post(self):
         jti = get_jwt()["jti"]
         jwt_redis_blocklist.set(jti, "", ex=TOKEN_EXPIRES)
-        return make_response(jsonify(msg="successful logout"), 200)
+        return make_response(jsonify(message="successful logout"), 200)
 
 
 class PasswordChangeApi(Resource):
