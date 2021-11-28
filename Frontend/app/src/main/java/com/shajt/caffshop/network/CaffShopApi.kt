@@ -105,10 +105,10 @@ interface CaffShopApi {
         @Body commentToCreate: CommentToCreate
     )
 
-    @DELETE("/comment/{commentId}/{caffId}")
+    @DELETE("/comment")
     suspend fun deleteComment(
         @Header("Authorization") authHeader: String,
-        @Path("commentId") commentId: Int,
-        @Path("caffId") caffId: Int
+        @Query("commentId") commentId: Int,
+        @Query("caffId") caffId: Int
     )
 }
