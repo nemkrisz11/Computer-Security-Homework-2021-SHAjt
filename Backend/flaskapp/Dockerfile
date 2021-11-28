@@ -4,7 +4,7 @@ ENV GROUP_ID=1000 \
     USER_ID=1000
 
 RUN apt update && apt install -y \
-    build-essential libssl-dev libffi-dev python3-dev python3-pip
+    build-essential libssl-dev libffi-dev python3-dev python3-pip mongodb-clients
 
 ADD . /var/www/flaskapp
 

@@ -14,7 +14,7 @@ def init(mongo_uri):
     """
 
     client = MongoClient(mongo_uri)
-    db = client.flaskdb
+    db = client.CaffDatabase
     collections = ["user", "caff_file"]
     for coll in collections:
         db.drop_collection(coll)

@@ -40,8 +40,9 @@ services:
       FLASKTEST_PATH: /var/www/test
       MONGOINIT_PATH: /var/www/mongoinit
     volumes:
-      - ./flaskapp:/var/www/flaskapp:ro
+      - ./flaskapp:/var/www/flaskapp
       - ./test:/var/www/test
+      - ./mongoinit:/var/www/mongoinit
     ports:
       - "5000:5000"
     depends_on:

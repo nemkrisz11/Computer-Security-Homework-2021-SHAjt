@@ -10,14 +10,16 @@ from mongoengine import ValidationError, NotUniqueError, DoesNotExist
 class RegisterApi(Resource):
     def post(self):
         body = request.get_json()
-        user = User(name=body.get('name'), password=body.get('password'))
         try:
+            user = User(name=body.get('name'), password=body.get('password'))
             user.hash_password()
             user.save()
         except ValidationError as e:
             return make_response(jsonify(errorMessage=e.to_dict()), 400)
         except NotUniqueError as e:
             return make_response(jsonify(errorMessage={"name": "Username already in use"}), 400)
+        except AttributeError:
+            return make_response(jsonify(errorMessage="invalid parameters"), 400)
         return make_response(jsonify(id=str(user.id)), 200)
 
 
@@ -28,6 +30,9 @@ class LoginApi(Resource):
             user = User.objects.get(name=body.get('name'))
         except DoesNotExist:
             return make_response(jsonify(errorMessage="name or password invalid"), 400)
+        except AttributeError:
+            return make_response(jsonify(errorMessage="invalid parameters"), 400)
+
         authorized = user.check_password(body.get('password'))
         if not authorized:
             return make_response(jsonify(errorMessage="name or password invalid"), 400)
@@ -48,15 +53,20 @@ class PasswordChangeApi(Resource):
     @jwt_required()
     def post(self):
         body = request.get_json()
-        new_password = body.get('password')
+        try:
+            new_password = body.get('password')
 
-        if current_user.isAdmin:
-            target_user = User.objects.get(name=body.get('name'))
-            target_user.change_password(new_password)
-            return make_response(jsonify(message="password change successful"), 200)
-        else:
-            if body.get('name') is not None:
-                return make_response(jsonify(errorMessage="forbidden interaction"), 403)
-            else:
-                current_user.change_password(new_password)
+            if current_user.isAdmin:
+                target_user = User.objects.get(name=body.get('name'))
+                target_user.change_password(new_password)
                 return make_response(jsonify(message="password change successful"), 200)
+            else:
+                if 'name' in body:
+                    return make_response(jsonify(errorMessage="forbidden interaction"), 403)
+                else:
+                    current_user.change_password(new_password)
+                    return make_response(jsonify(message="password change successful"), 200)
+        except ValidationError as e:
+            return make_response(jsonify(errorMessage=e.to_dict()), 400)
+        except AttributeError:
+            return make_response(jsonify(errorMessage="invalid parameters"), 400)
