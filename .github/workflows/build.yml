@@ -79,6 +79,7 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar
 
       - name: Analyze with Coverage
+        working-directory: ./Frontend
         run: ./gradlew build
         env:
           # Needed to get some information about the pull request, if any
