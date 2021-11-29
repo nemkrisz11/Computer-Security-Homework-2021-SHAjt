@@ -1,6 +1,9 @@
 import pytest
 from fixtures import client, token
 from io import BytesIO
+from mongoengine import connect
+from flaskapp.database.models import CaffFile
+import os
 
 
 @pytest.mark.username("testuser")
@@ -34,3 +37,7 @@ def test_caff_upload(client, token):
     assert resp.status_code == 201
 
     # TODO: Check if parsed data is correct
+
+    uploaded_caff = CaffFile.objects.get(caffName=data['name'])
+    print(uploaded_caff.creator)
+    assert uploaded_caff is not None

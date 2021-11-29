@@ -16,7 +16,8 @@ users = [
 db.user.insertMany(users);
 
 caffs = [
-    { "caffName" : "testcaff",
+    { "_id" : ObjectId("61a559807aa83d946960d4f2"),
+       "caffName" : "testcaff",
       "caffAnimationImage" : { "duration" : 1000, "width" : 1000, "height" : 667, "caption" : "Beautiful scenery", "tags" : [ "landscape", "sunset", "mountains" ] },
       "numOfCiffs" : 2,
       "creator" : "Test Creator",
