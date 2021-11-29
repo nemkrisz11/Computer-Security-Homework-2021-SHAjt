@@ -14,3 +14,17 @@ users = [
 ];
 
 db.user.insertMany(users);
+
+caffs = [
+    { "caffName" : "testcaff",
+      "caffAnimationImage" : { "duration" : 1000, "width" : 1000, "height" : 667, "caption" : "Beautiful scenery", "tags" : [ "landscape", "sunset", "mountains" ] },
+      "numOfCiffs" : 2,
+      "creator" : "Test Creator",
+      "creationDate" : ISODate("2020-07-02T14:50:00Z"),
+      "comments" : [],
+      "uploaderName" : "testuser",
+      "uploadDate" : ISODate("2021-11-29T22:40:46.350Z")
+    }
+]
+
+db.caff_file.insertMany(caffs)

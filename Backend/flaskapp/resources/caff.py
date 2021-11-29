@@ -12,17 +12,18 @@ from datetime import datetime, timedelta
 import numpy as np
 from math import ceil
 
-
 ALLOWED_EXTENSIONS = {'caff'}
+
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 def createPreviewCaffFile(file: CaffFile):
     caffParser = CaffParser()
 
     with open(os.path.join(os.environ.get('UPLOAD_FOLDER'), str(file.id)), "rb") as f:
-    #with open(os.path.join('./uploads/', str(file.id)), "rb") as f:
+        # with open(os.path.join('./uploads/', str(file.id)), "rb") as f:
         numpy_data = np.fromfile(f, np.dtype('B'))
 
     parsed_file = caffParser.parse(numpy_data)
@@ -73,7 +74,6 @@ class CaffDataApi(Resource):
 
         preview_file = createPreviewCaffFile(storedFile)
         return make_response(jsonify(preview_file), 200)
-
 
     @jwt_required()
     def delete(self, caff_id):
@@ -128,14 +128,14 @@ class CaffSearchApi(Resource):
             else:
                 query = Q(uploaderName__contains=uploadername)
         if creationdate != -1:
-            start = datetime.fromtimestamp(creationdate/1000)
+            start = datetime.fromtimestamp(creationdate / 1000)
             end = start + timedelta(days=1)
             if query:
                 query &= Q(creationDate__gte=start) & Q(creationDate__lt=end)
             else:
                 query = Q(creationDate__gte=start) & Q(creationDate__lt=end)
         if uploaddate != -1:
-            start = datetime.fromtimestamp(uploaddate/1000)
+            start = datetime.fromtimestamp(uploaddate / 1000)
             end = start + timedelta(days=1)
             if query:
                 query &= Q(uploadDate__gte=start) & Q(uploadDate__lt=end)
@@ -239,7 +239,7 @@ class CaffDownloadApi(Resource):
 
         filename = str(storedFile.id)
         filepath = os.path.join(os.environ.get('UPLOAD_FOLDER'), filename)
-        #filepath = os.path.join('./uploads/', filename)
+        # filepath = os.path.join('./uploads/', filename)
         if os.path.exists(filepath):
             return send_file(path_or_file=filepath, as_attachment=True, attachment_filename=storedFile.caffName)
         else:
