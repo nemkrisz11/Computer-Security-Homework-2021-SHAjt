@@ -23,8 +23,8 @@ services:
 
   flask:
     build:
-      context: flaskapp
-      dockerfile: Dockerfile
+      context: ./
+      dockerfile: flaskapp/Dockerfile
     container_name: flask
     restart: unless-stopped
     environment:

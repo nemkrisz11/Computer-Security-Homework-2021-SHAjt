@@ -11,7 +11,7 @@ class UsersListApi(Resource):
         page = int(request.args.get('page'))
         perpage = int(request.args.get('perpage'))
 
-        if page is None or perpage is None:
+        if page is None or page < 1 or perpage is None:
             return make_response(jsonify(errorMessage='incorrect arguments given'), 400)
 
         users = User.objects.skip((page - 1) * perpage).limit(perpage)
