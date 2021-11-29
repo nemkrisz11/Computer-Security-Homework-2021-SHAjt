@@ -42,7 +42,7 @@ class CaffAnimationImage(db.EmbeddedDocument):
     tags = db.ListField(db.StringField())
 
 class Comment(db.EmbeddedDocument):
-    username = db.StringField(required=True, unique=True)
+    username = db.StringField(required=True)
     comment = db.StringField(required=True)
     date = db.DateTimeField(required=True, default=datetime.datetime.utcnow)
 
