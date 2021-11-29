@@ -1,6 +1,5 @@
 from flask import request, jsonify, make_response
 from mongoengine import DoesNotExist
-
 from flaskapp.database.models import User
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, current_user
@@ -14,11 +13,11 @@ class CommentApi(Resource):
     @jwt_required()
     def post(self):
         body = request.get_json()
-        try:
-            caff_id = body.get('caffId')
-            comment = body.get('comment')
-        except AttributeError:
+        if body is None:
             return make_response(jsonify(errorId="300", errorMessage="comment cannot be empty"), 400)
+
+        caff_id = body.get('caffId')
+        comment = body.get('comment')
         if comment is None:
             return make_response(jsonify(errorId="300", errorMessage="comment cannot be empty"), 400)
         if caff_id is None:
@@ -27,7 +26,11 @@ class CommentApi(Resource):
         if len(comment) > 200:
             return make_response(jsonify(errorId="301 ", errorMessage="comment too long"), 400)
 
-        stored_file = CaffFile.objects.get(id=caff_id)
+        try:
+            stored_file = CaffFile.objects.get(id=caff_id)
+        except DoesNotExist:
+            return make_response(jsonify(errorId="299 ", errorMessage="caff does not exist"), 400)
+
         new_comment = Comment(
             username=current_user.name,
             comment=comment
