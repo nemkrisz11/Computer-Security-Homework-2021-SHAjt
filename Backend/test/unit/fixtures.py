@@ -36,4 +36,4 @@ def token(client, request):
     token = rv.json["token"]
     yield token
 
-    client.delete("/user/logout", headers={"Authorization": "Bearer " + token})
+    client.post("/user/logout", headers={"Authorization": "Bearer " + token})

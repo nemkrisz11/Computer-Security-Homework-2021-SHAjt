@@ -31,6 +31,7 @@ class User(db.Document):
     def change_password(self, password):
         self.password = password
         self.hash_password()
+        self.save()
 
 
 class CaffAnimationImage(db.EmbeddedDocument):
