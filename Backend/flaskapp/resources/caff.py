@@ -35,9 +35,9 @@ def createPreviewCaffFile(file: CaffFile):
     preview_file = {
         "id": str(file.id),
         "numOfCiffs": file.numOfCiffs,
-        "creationDate": datetime.timestamp(file.creationDate),
+        "creationDate": int(datetime.timestamp(file.creationDate) * 1000),
         "creator": file.creator,
-        "uploadDate": datetime.timestamp(file.uploadDate),
+        "uploadDate": int(datetime.timestamp(file.uploadDate) * 1000),
         "uploaderName": file.uploaderName,
         "caffName": file.caffName,
         "caffAnimationImage": {
@@ -128,14 +128,14 @@ class CaffSearchApi(Resource):
             else:
                 query = Q(uploaderName__contains=uploadername)
         if creationdate != -1:
-            start = datetime.fromtimestamp(creationdate)
+            start = datetime.fromtimestamp(creationdate/1000)
             end = start + timedelta(days=1)
             if query:
                 query &= Q(creationDate__gte=start) & Q(creationDate__lt=end)
             else:
                 query = Q(creationDate__gte=start) & Q(creationDate__lt=end)
         if uploaddate != -1:
-            start = datetime.fromtimestamp(uploaddate)
+            start = datetime.fromtimestamp(uploaddate/1000)
             end = start + timedelta(days=1)
             if query:
                 query &= Q(uploadDate__gte=start) & Q(uploadDate__lt=end)

@@ -19,10 +19,13 @@ class UsersListApi(Resource):
 
         users = User.objects.skip((page - 1) * perpage).limit(perpage)
 
-        return make_response(jsonify(
-            users=[{"username": u.name, "isAdmin": u.isAdmin, "regDate": datetime.timestamp(u.regDate)} for u in users],
-            totalPages=ceil(User.objects.count() / perpage)
-        ), 200)
+        return make_response(
+            jsonify(
+                users=[{"username": u.name,
+                        "isAdmin": u.isAdmin,
+                        "regDate": int(datetime.timestamp(u.regDate)*1000)} for u in users],
+                totalPages=ceil(User.objects.count() / perpage)
+            ), 200)
 
 
 class UserDataApi(Resource):
@@ -30,7 +33,12 @@ class UserDataApi(Resource):
     def get(self, username):
         try:
             user = User.objects.get(name=username)
-            return make_response(jsonify(username=user.name, isAdmin=user.isAdmin, regDate=datetime.timestamp(user.regDate)), 200)
+            return make_response(
+                jsonify(
+                    username=user.name,
+                    isAdmin=user.isAdmin,
+                    regDate=int(datetime.timestamp(user.regDate)*1000)
+                ), 200)
 
         except DoesNotExist:
             return make_response(jsonify(errorId="199", errorMessage='user not found'), 404)
