@@ -1,4 +1,6 @@
 from flask import request, jsonify, make_response
+from mongoengine import DoesNotExist
+
 from flaskapp.database.models import User
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, current_user
@@ -17,9 +19,9 @@ class CommentApi(Resource):
             comment = body.get('comment')
         except AttributeError:
             return make_response(jsonify(errorId="300", errorMessage="comment cannot be empty"), 400)
-        if not comment:
+        if comment is None:
             return make_response(jsonify(errorId="300", errorMessage="comment cannot be empty"), 400)
-        if not caff_id:
+        if caff_id is None:
             return make_response(jsonify(errorId="300", errorMessage="comment cannot be empty"), 400)
 
         if len(comment) > 200:
@@ -38,5 +40,25 @@ class CommentApi(Resource):
 
     @jwt_required()
     def delete(self):
-        # Params: caff_id, comment_id
-        pass
+        if current_user.isAdmin:
+            caff_id = request.args.get('caffId', type=str)
+            comment_id = request.args.get('commentId', type=int)
+            if caff_id is None:
+                return make_response(jsonify(errorId="399 ", errorMessage="caff id cannot be empty"), 400)
+            if comment_id is None:
+                return make_response(jsonify(errorId="399 ", errorMessage="comment id cannot be empty"), 400)
+
+
+            try:
+                stored_file = CaffFile.objects.get(id=caff_id)
+                _ = stored_file.comments[comment_id]
+                del stored_file.comments[comment_id]
+                stored_file.save()
+            except DoesNotExist:
+                return make_response(jsonify(errorId="399 ", errorMessage="comment not found"), 400)
+            except IndexError:
+                return make_response(jsonify(errorId="399 ", errorMessage="comment not found"), 400)
+
+            return make_response(jsonify(message='comment deleted successful'), 200)
+        else:
+            return make_response(jsonify(errorId="002", errorMessage='forbidden interaction'), 403)
