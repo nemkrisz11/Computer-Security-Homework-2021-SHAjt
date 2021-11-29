@@ -2,6 +2,7 @@ from flask import request, jsonify, make_response
 from flaskapp.database.models import User
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, current_user
+from mongoengine import DoesNotExist
 from math import ceil
 
 
@@ -11,7 +12,7 @@ class UsersListApi(Resource):
         page = int(request.args.get('page'))
         perpage = int(request.args.get('perpage'))
 
-        if page is None or page < 1 or perpage is None:
+        if page is None or page < 1 or perpage is None or perpage < 1:
             return make_response(jsonify(errorMessage='incorrect arguments given'), 400)
 
         users = User.objects.skip((page - 1) * perpage).limit(perpage)
@@ -25,12 +26,12 @@ class UsersListApi(Resource):
 class UserDataApi(Resource):
     @jwt_required()
     def get(self, username):
-        user = User.objects.get(name=username)
+        try:
+            user = User.objects.get(name=username)
+            return make_response(jsonify(username=user.name, isAdmin=user.isAdmin, regDate=user.regDate), 200)
 
-        if user is None:
+        except DoesNotExist:
             return make_response(jsonify(errorMessage='user not found'), 404)
-
-        return make_response(jsonify(username=user.name, idAdmin=user.isAdmin, regDate=user.regDate), 200)
 
     @jwt_required()
     def delete(self, username):
