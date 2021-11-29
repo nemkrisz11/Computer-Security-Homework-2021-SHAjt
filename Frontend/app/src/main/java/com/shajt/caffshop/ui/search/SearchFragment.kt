@@ -101,7 +101,11 @@ class SearchFragment : Fragment() {
         }
 
         searchViewModel.error.observe(viewLifecycleOwner, Observer {
-            DisplayMessage.displaySnackbar(binding.root, it.errorStringResourceId)
+            DisplayMessage.displaySnackbar(
+                binding.root,
+                it.errorStringResourceId,
+                binding.searchSheet
+            )
         })
     }
 

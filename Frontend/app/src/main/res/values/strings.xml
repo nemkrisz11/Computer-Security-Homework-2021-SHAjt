@@ -38,8 +38,7 @@
     <string name="error_invalid_caff_name">Caff name cannot be empty</string>
 
     <!-- Auth -->
-    <string name="auth_title_activity_login">LoginActivity</string>
-    <string name="auth_title_activity_auth">AuthActivity</string>
+    <string name="auth_title">Sign in or register</string>
     <string name="auth_action_login">Login</string>
     <string name="auth_action_register">Register</string>
     <string name="auth_action_sign_in">Sign in or register</string>
@@ -50,6 +49,7 @@
     <string name="auth_content_welcome">"Welcome %s!"</string>
 
     <!-- Home -->
+    <string name="home_title">Caff Shop</string>
     <string name="home_action_upload">Upload caff</string>
 
     <!-- Logout -->
@@ -70,6 +70,7 @@
     <string name="caff_list_content_ciff">Ciff preview</string>
 
     <!-- CaffDetails -->
+    <string name="caff_details_title">Caff details</string>
     <string name="caff_details_caff_animation_image">Caff animation image</string>
     <string name="caff_details_title_name">Name</string>
     <string name="caff_details_title_creator">Creator</string>
@@ -86,6 +87,7 @@
     <string name="comment_action_delete">Delete comment</string>
 
     <!-- Search -->
+    <string name="search_title">Search Caffs</string>
     <string name="search_title_filter">Filter</string>
     <string name="search_content_drag">Drag</string>
     <string name="search_content_search_term">Search term</string>
@@ -97,6 +99,7 @@
     <string name="search_action_clear">Clear all</string>
 
     <!-- UserDetails -->
+    <string name="user_details_title">User details</string>
     <string name="user_details_username">Username</string>
     <string name="user_details_is_admin">User is admin</string>
     <string name="user_details_reg_date">Registration date</string>
@@ -106,6 +109,9 @@
     <string name="user_details_sample_account_image_description">Account image</string>
     <string name="user_details_content_new_password">New password</string>
     <string name="user_details_content_new_password_again">New password again</string>
+
+    <!-- Users -->
+    <string name="users_title">Users</string>
 
     <!-- UserListItem -->
     <string name="user_list_item_is_admin">Is admin</string>

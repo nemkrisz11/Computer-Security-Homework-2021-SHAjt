@@ -14,7 +14,32 @@
         <!-- Customize your theme here. -->
         <item name="android:windowBackground">@color/dark_grey</item>
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.CaffShop.BottomSheetDialog</item>
+        <item name="extendedFloatingActionButtonStyle">@style/Theme.CaffShop.ExtendedFloatingActionButton</item>
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+    </style>
+
+    <style name="Theme.CaffShop.SplashScreen" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/grey</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
+        <item name="postSplashScreenTheme">@style/Theme.CaffShop</item>
+    </style>
+
+    <style name="Theme.CaffShop.CardView.Caff" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">4dp</item>
+        <item name="cardCornerRadius">4dp</item>
+        <item name="cardBackgroundColor">@color/grey</item>
+    </style>
+
+    <style name="Theme.CaffShop.CardView.Comment" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">4dp</item>
+        <item name="cardCornerRadius">4dp</item>
+        <item name="cardBackgroundColor">@color/grey</item>
+    </style>
+
+    <style name="Theme.CaffShop.CardView.User" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">4dp</item>
+        <item name="cardCornerRadius">4dp</item>
+        <item name="cardBackgroundColor">@color/grey</item>
     </style>
 
 </resources>

@@ -6,6 +6,8 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.shajt.caffshop.databinding.FragmentCaffDetailsBinding
 import android.view.*
+import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -87,6 +89,32 @@ class CaffDetailsFragment : Fragment() {
             loading.visibility = View.GONE
         })
 
+        var isFullScreen = false
+        var oldParams: ViewGroup.LayoutParams? = null
+        ciff.setOnClickListener {
+            isFullScreen = if (isFullScreen) {
+                ciff.layoutParams = oldParams
+                ciff.adjustViewBounds = true
+
+                commentInput.visibility = View.VISIBLE
+                send.visibility = View.VISIBLE
+
+                !isFullScreen
+            } else {
+                oldParams = ciff.layoutParams
+                ciff.layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT
+                )
+                ciff.scaleType = ImageView.ScaleType.FIT_CENTER
+
+                commentInput.visibility = View.INVISIBLE
+                send.visibility = View.INVISIBLE
+
+                !isFullScreen
+            }
+        }
+
         download.setOnClickListener {
             caffDetailsViewModel.downloadCaff(caffId, requireContext())
         }
@@ -143,7 +171,6 @@ class CaffDetailsFragment : Fragment() {
         }
 
         send.setOnClickListener {
-            //val trimmed = validateCommentText(commentInput.text.toString())
             val trimmed = validateCommentText(commentInput.editText!!.text.toString())
             if (trimmed != null) {
                 caffDetailsViewModel.postComment(caffId, trimmed)
@@ -152,7 +179,11 @@ class CaffDetailsFragment : Fragment() {
         }
 
         caffDetailsViewModel.error.observe(viewLifecycleOwner, Observer {
-            DisplayMessage.displaySnackbar(binding.root, it.errorStringResourceId)
+            DisplayMessage.displaySnackbar(
+                binding.root,
+                it.errorStringResourceId,
+                binding.commentInput
+            )
         })
     }
 

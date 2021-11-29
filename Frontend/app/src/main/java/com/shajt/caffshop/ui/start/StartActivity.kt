@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.shajt.caffshop.data.CaffShopRepository
 import com.shajt.caffshop.ui.auth.AuthActivity
 import com.shajt.caffshop.ui.home.HomeActivity
@@ -18,6 +19,8 @@ class StartActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        installSplashScreen()
 
         // If user logged in start home activity else auth activity
         if (caffShopRepository.isLoggedIn) {

@@ -16,7 +16,7 @@
     <dimen name="upload_item_margin">8dp</dimen>
 
     <!-- CaffList -->
-    <dimen name="caff_list_item_margin">4dp</dimen>
+    <dimen name="caff_list_item_margin">8dp</dimen>
     <dimen name="caff_list_layout_margin">6dp</dimen>
 
     <!-- CaffDetails -->

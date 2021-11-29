@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/user_text_margin"
             android:text="@string/placeholder"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
