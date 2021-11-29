@@ -40,6 +40,7 @@ class EnCryptor {
             )
                 .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+                .setUserAuthenticationRequired(true)
                 .build()
         )
         return keyGenerator.generateKey()
