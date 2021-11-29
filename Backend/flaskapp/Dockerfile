@@ -21,6 +21,9 @@ RUN python3 setup.py install
 
 WORKDIR /var/www/flaskapp
 
+RUN mkdir /var/www/uploads
+RUN chown www /var/www/uploads
+
 USER www
 
 EXPOSE 5000
