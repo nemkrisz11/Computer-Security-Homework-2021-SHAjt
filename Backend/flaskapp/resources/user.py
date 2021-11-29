@@ -4,13 +4,13 @@ from flask_restful import Resource
 from flask_jwt_extended import jwt_required, current_user
 from mongoengine import DoesNotExist
 from math import ceil
-
+from datetime import datetime
 
 class UsersListApi(Resource):
     @jwt_required()
     def get(self):
-        page = int(request.args.get('page'))
-        perpage = int(request.args.get('perpage'))
+        page = request.args.get('page', 1, type=int)
+        perpage = request.args.get('perpage', 20, type=int)
 
         if page is None or page < 1:
             return make_response(jsonify(errorId="003", errorMessage='incorrect arguments given'), 400)
@@ -20,7 +20,7 @@ class UsersListApi(Resource):
         users = User.objects.skip((page - 1) * perpage).limit(perpage)
 
         return make_response(jsonify(
-            users=[{"username": u.name, "isAdmin": u.isAdmin, "regDate": u.regDate} for u in users],
+            users=[{"username": u.name, "isAdmin": u.isAdmin, "regDate": datetime.timestamp(u.regDate)} for u in users],
             totalPages=ceil(User.objects.count() / perpage)
         ), 200)
 
@@ -30,7 +30,7 @@ class UserDataApi(Resource):
     def get(self, username):
         try:
             user = User.objects.get(name=username)
-            return make_response(jsonify(username=user.name, isAdmin=user.isAdmin, regDate=user.regDate), 200)
+            return make_response(jsonify(username=user.name, isAdmin=user.isAdmin, regDate=datetime.timestamp(user.regDate)), 200)
 
         except DoesNotExist:
             return make_response(jsonify(errorId="199", errorMessage='user not found'), 404)

@@ -88,7 +88,7 @@ class LoginApi(Resource):
             return make_response(jsonify(errorId="120", errorMessage="name or password invalid"), 400)
 
         access_token = create_access_token(identity=user, expires_delta=TOKEN_EXPIRES)
-        return make_response(jsonify(token=access_token), 200)
+        return make_response(jsonify(token=access_token, expire=TOKEN_EXPIRES.total_seconds()), 200)
 
 
 class LogoutApi(Resource):
