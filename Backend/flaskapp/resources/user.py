@@ -6,6 +6,7 @@ from mongoengine import DoesNotExist
 from math import ceil
 from datetime import datetime
 
+
 class UsersListApi(Resource):
     @jwt_required()
     def get(self):

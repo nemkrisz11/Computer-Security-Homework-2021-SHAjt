@@ -41,6 +41,7 @@ class CaffAnimationImage(db.EmbeddedDocument):
     caption = db.StringField()
     tags = db.ListField(db.StringField())
 
+
 class Comment(db.EmbeddedDocument):
     username = db.StringField(required=True)
     comment = db.StringField(required=True)

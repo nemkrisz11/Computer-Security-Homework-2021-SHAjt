@@ -168,11 +168,10 @@ class CaffUploadApi(Resource):
         if 'file' not in request.files:
             return make_response(jsonify(errorId="299", errorMessage="file not in request"), 400)
 
-        try:
-            name = request.form.get('name')
-            file = request.files['file']
-        except AttributeError:
-            return make_response(jsonify(errorId="299", errorMessage="invalid parameters"), 400)  # TODO: errorId
+        name = request.form.get('name')
+        file = request.files['file']
+        if name is None or file is None:
+            return make_response(jsonify(errorId="299", errorMessage="invalid parameters"), 400)
 
         if file.filename == '':
             return make_response(jsonify(errorId="299", errorMessage="no file selected for upload"), 400)
@@ -190,6 +189,7 @@ class CaffUploadApi(Resource):
             return make_response(jsonify(errorId="200", errorMessage="invalid file format"), 400)
 
         previewAnimationImage = parsed_file.animationImages[0]
+
         caffFile = CaffFile(
             caffName=name,
             numOfCiffs=parsed_file.header.numOfCiffs,

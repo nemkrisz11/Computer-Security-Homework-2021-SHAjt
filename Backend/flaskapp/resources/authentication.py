@@ -49,18 +49,20 @@ def password_policy(password):
 class RegisterApi(Resource):
     def post(self):
         body = request.get_json()
-        try:
-            name = body.get('username')
-        except AttributeError:
+        if body is None:
             return make_response(jsonify(errorId="101", errorMessage="username cannot be empty"), 400)
 
-        try:
-            password = body.get('password')
-            password_errors = password_policy(password)
-            if password_errors is not None:
-                return make_response(password_errors, 400)
-        except AttributeError:
+        name = body.get('username')
+        if name is None:
+            return make_response(jsonify(errorId="101", errorMessage="username cannot be empty"), 400)
+
+        password = body.get('password')
+        if password is None:
             return make_response(jsonify(errorId="111", errorMessage="password cannot be empty"), 400)
+
+        password_errors = password_policy(password)
+        if password_errors is not None:
+            return make_response(password_errors, 400)
 
         try:
             user = User(name=name, password=password)
@@ -69,23 +71,25 @@ class RegisterApi(Resource):
         except ValidationError as e:
             return make_response(jsonify(errorId="120", errorMessage=e.to_dict()), 400)
         except NotUniqueError as e:
-            return make_response(jsonify(errorId="104", errorMessage={"username": "Username already in use"}), 400)
+            return make_response(jsonify(errorId="104", errorMessage={"username": "username is already taken"}), 400)
+
         return make_response(jsonify(id=str(user.id)), 200)
 
 
 class LoginApi(Resource):
     def post(self):
         body = request.get_json()
+        if body is None:
+            return make_response(jsonify(errorId="101", errorMessage="username cannot be empty"), 400)
+
         try:
             user = User.objects.get(name=body.get('username'))
         except DoesNotExist:
-            return make_response(jsonify(errorId="120", errorMessage="name or password invalid"), 400)
-        except AttributeError:
-            return make_response(jsonify(errorId="120", errorMessage="invalid parameters"), 400)
+            return make_response(jsonify(errorId="120", errorMessage="invalid username or password"), 400)
 
         authorized = user.check_password(body.get('password'))
         if not authorized:
-            return make_response(jsonify(errorId="120", errorMessage="name or password invalid"), 400)
+            return make_response(jsonify(errorId="120", errorMessage="invalid username or password"), 400)
 
         access_token = create_access_token(identity=user, expires_delta=TOKEN_EXPIRES)
         return make_response(jsonify(token=access_token, expire=TOKEN_EXPIRES.total_seconds()), 200)
@@ -103,20 +107,36 @@ class PasswordChangeApi(Resource):
     @jwt_required()
     def post(self):
         body = request.get_json()
-        try:
-            new_password = body.get('password')
+        if body is None:
+            return make_response(jsonify(errorId="111", errorMessage="password cannot be empty"), 400)
 
-            if current_user.isAdmin:
-                target_user = User.objects.get(name=body.get('username'))
-                target_user.change_password(new_password)
-                return make_response(jsonify(message="password change successful"), 200)
-            else:
+        new_password = body.get('password')
+        if new_password is None:
+            return make_response(jsonify(errorId="111", errorMessage="password cannot be empty"), 400)
+
+        password_errors = password_policy(new_password)
+        if password_errors is not None:
+            return make_response(password_errors, 400)
+
+        if current_user.isAdmin:
+            try:
                 if 'username' in body:
-                    return make_response(jsonify(errorId="002", errorMessage="forbidden interaction"), 403)
+                    target_user = User.objects.get(name=body.get('username'))
+                    target_user.change_password(new_password)
                 else:
                     current_user.change_password(new_password)
-                    return make_response(jsonify(message="password change successful"), 200)
-        except ValidationError as e:
-            return make_response(jsonify(errorId="120", errorMessage=e.to_dict()), 400)
-        except AttributeError:
-            return make_response(jsonify(errorId="120", errorMessage="invalid parameters"), 400)
+            except ValidationError as e:
+                return make_response(jsonify(errorId="120", errorMessage=e.to_dict()), 400)
+
+            return make_response(jsonify(message="password change successful"), 200)
+
+        else:
+            if 'username' in body:
+                return make_response(jsonify(errorId="002", errorMessage="forbidden interaction"), 403)
+            else:
+                try:
+                    current_user.change_password(new_password)
+                except ValidationError as e:
+                    return make_response(jsonify(errorId="120", errorMessage=e.to_dict()), 400)
+
+                return make_response(jsonify(message="password change successful"), 200)
