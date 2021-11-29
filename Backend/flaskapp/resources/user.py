@@ -12,8 +12,10 @@ class UsersListApi(Resource):
         page = int(request.args.get('page'))
         perpage = int(request.args.get('perpage'))
 
-        if page is None or page < 1 or perpage is None or perpage < 1:
-            return make_response(jsonify(errorMessage='incorrect arguments given'), 400)
+        if page is None or page < 1:
+            return make_response(jsonify(errorId="003", errorMessage='incorrect arguments given'), 400)
+        elif perpage is None or perpage < 1:
+            return make_response(jsonify(errorId="004", errorMessage='incorrect arguments given'), 400)
 
         users = User.objects.skip((page - 1) * perpage).limit(perpage)
 
@@ -31,7 +33,7 @@ class UserDataApi(Resource):
             return make_response(jsonify(username=user.name, isAdmin=user.isAdmin, regDate=user.regDate), 200)
 
         except DoesNotExist:
-            return make_response(jsonify(errorMessage='user not found'), 404)
+            return make_response(jsonify(errorId="199", errorMessage='user not found'), 404)
 
     @jwt_required()
     def delete(self, username):
@@ -40,4 +42,4 @@ class UserDataApi(Resource):
             user.delete()
             return make_response(jsonify(message='user delete successful'), 200)
         else:
-            return make_response(jsonify(errorMessage='forbidden interaction'), 403)
+            return make_response(jsonify(errorId="002", errorMessage='forbidden interaction'), 403)

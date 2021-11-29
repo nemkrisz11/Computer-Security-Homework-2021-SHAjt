@@ -6,7 +6,7 @@ from flaskapp.database.models import User
 def test_valid_register(client):
     resp = client.post("/user/register",
                        json={"username": "thisisauniqueuser34958",
-                             "password": "12345678"
+                             "password": "12345678Asd&123ASD"
                              })
 
     assert resp.status_code == 200 and resp.is_json
@@ -21,9 +21,9 @@ def test_invalid_register(client):
 
     resp = client.post("/user/register", json=data)
     assert resp.status_code == 400 and resp.is_json
-    assert "too short" in resp.json["errorMessage"]["password"]
+    assert "too short" in resp.json["errorMessage"]
 
-    data["password"] = "12345678"
+    data["password"] = "12345678Asd&123ASD"
     data["username"] = "testuser"
     resp = client.post("/user/register", json=data)
     assert "already in use" in resp.json["errorMessage"]["username"]

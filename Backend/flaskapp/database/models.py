@@ -5,7 +5,7 @@ import datetime
 
 
 class User(db.Document):
-    name = db.StringField(required=True, unique=True)
+    name = db.StringField(required=True, unique=True, min_length=4)
     password = db.StringField(required=True, min_length=8)
     isAdmin = db.BooleanField(required=True, default=False)
     regDate = db.DateTimeField(required=True, default=datetime.datetime.utcnow)

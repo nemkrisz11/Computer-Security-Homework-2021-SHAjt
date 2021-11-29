@@ -36,18 +36,18 @@ class CaffUploadApi(Resource):
     @jwt_required()
     def post(self):
         if 'file' not in request.files:
-            return make_response(jsonify(errorMessage="file not in request"), 400)
+            return make_response(jsonify(errorId="299", errorMessage="file not in request"), 400)
 
         try:
             name = request.form.get('name')
             file = request.files['file']
         except AttributeError:
-            return make_response(jsonify(errorMessage="invalid parameters"), 400)
+            return make_response(jsonify(errorId="299", errorMessage="invalid parameters"), 400)  # TODO: errorId
 
         if file.filename == '':
-            return make_response(jsonify(errorMessage="no file selected for upload"), 400)
+            return make_response(jsonify(errorId="299", errorMessage="no file selected for upload"), 400)
         if not allowed_file(file.filename):
-            return make_response(jsonify(errorMessage="invalid file format"), 400)
+            return make_response(jsonify(errorId="200", errorMessage="invalid file format"), 400)
 
         uploader = get_current_user()
 
@@ -57,7 +57,7 @@ class CaffUploadApi(Resource):
         try:
             parsed_file = caffParser.parse([b for b in bytes])
         except ValueError:
-            return make_response(jsonify(errorMessage="invalid file format"), 400)
+            return make_response(jsonify(errorId="200", errorMessage="invalid file format"), 400)
 
         previewAnimationImage = parsed_file.animationImages[0]
         caffFile = CaffFile(
@@ -97,7 +97,6 @@ class CaffUploadApi(Resource):
         return make_response('', 201)
 
 
-
 class CaffDownloadApi(Resource):
     @jwt_required()
     def get(self, caff_id):
@@ -105,9 +104,9 @@ class CaffDownloadApi(Resource):
         try:
             storedFile = CaffFile.objects.get(id=caff_id)
         except DoesNotExist:
-            return make_response(jsonify(errorMessage="File does not exist", errorId=299), 404)
+            return make_response(jsonify(errorId="299", errorMessage="File does not exist"), 404)
         except ValidationError:
-            return make_response(jsonify(errorMessage="File does not exist", errorId=299), 404)
+            return make_response(jsonify(errorId="299", errorMessage="File does not exist"), 404)
 
         filename = str(storedFile.id)
         filepath = os.path.join(os.environ.get('UPLOAD_FOLDER'), filename)
@@ -115,5 +114,4 @@ class CaffDownloadApi(Resource):
         if os.path.exists(filepath):
             return send_file(path_or_file=filepath, as_attachment=True, attachment_filename=storedFile.caffName)
         else:
-            return make_response(jsonify(errorMessage="File does not exist", errorId=299), 404)
-
+            return make_response(jsonify(errorId="299", errorMessage="File does not exist"), 404)
