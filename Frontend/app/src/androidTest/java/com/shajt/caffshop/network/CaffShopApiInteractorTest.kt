@@ -297,6 +297,53 @@ class CaffShopApiInteractorTest {
     }
 
     @Test
+    fun testModifyPassword_successful() = runBlocking {
+        val expectedModifyPasswordResponse = true
+        val mockResponse = MockResponse()
+            .setResponseCode(HttpURLConnection.HTTP_OK)
+        mockWebServer.enqueue(mockResponse)
+
+        val token = "abcd"
+        val modifyPassword = ModifyPassword("test", "test")
+        val serverResult = caffShopApiInteractor.modifyPassword(token, modifyPassword)
+
+        assertNull(serverResult.error)
+        assertNotNull(serverResult.result)
+        assertEquals(expectedModifyPasswordResponse, serverResult.result)
+
+        val receivedRequest = mockWebServer.takeRequest()
+
+        assertEquals("POST", receivedRequest.method)
+        assertEquals("/user/password", receivedRequest.path)
+        assertEquals("Bearer $token", receivedRequest.getHeader("Authorization"))
+        assertEquals(Gson().toJson(modifyPassword), receivedRequest.body.readUtf8())
+    }
+
+    @Test
+    fun testModifyPassword_unsuccessful() = runBlocking {
+        val error = Error(1, "Invalid request")
+        val mockResponse = MockResponse()
+            .setResponseCode(HttpURLConnection.HTTP_BAD_REQUEST)
+            .setBody(Gson().toJson(error))
+        mockWebServer.enqueue(mockResponse)
+
+        val token = "abcd"
+        val modifyPassword = ModifyPassword("test", "test")
+        val serverResult = caffShopApiInteractor.modifyPassword(token, modifyPassword)
+
+        assertNotNull(serverResult.error)
+        assertNull(serverResult.result)
+        assertEquals(ErrorMessage.MODIFY_PASSWORD_FAILED, serverResult.error)
+
+        val receivedRequest = mockWebServer.takeRequest()
+
+        assertEquals("POST", receivedRequest.method)
+        assertEquals("/user/password", receivedRequest.path)
+        assertEquals("Bearer $token", receivedRequest.getHeader("Authorization"))
+        assertEquals(Gson().toJson(modifyPassword), receivedRequest.body.readUtf8())
+    }
+
+    @Test
     fun testGetCaff_successful() = runBlocking {
         val expectedGetCaffResponse = Caff(
             1, "caff", "creator", 1000,
@@ -562,7 +609,7 @@ class CaffShopApiInteractorTest {
         val receivedRequest = mockWebServer.takeRequest()
 
         assertEquals("DELETE", receivedRequest.method)
-        assertEquals("/comment/1/2", receivedRequest.path)
+        assertEquals("/comment?commentId=1&caffId=2", receivedRequest.path)
         assertEquals("Bearer $token", receivedRequest.getHeader("Authorization"))
     }
 
@@ -584,7 +631,7 @@ class CaffShopApiInteractorTest {
         val receivedRequest = mockWebServer.takeRequest()
 
         assertEquals("DELETE", receivedRequest.method)
-        assertEquals("/comment/1/2", receivedRequest.path)
+        assertEquals("/comment?commentId=1&caffId=2", receivedRequest.path)
         assertEquals("Bearer $token", receivedRequest.getHeader("Authorization"))
     }
 }
