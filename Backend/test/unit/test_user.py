@@ -64,12 +64,12 @@ def test_logout(client, token):
     assert "revoked" in resp.json["msg"]
 
 
-@pytest.mark.name("testuser")
+@pytest.mark.username("testuser")
 @pytest.mark.password("test1234")
 def test_password_change_self(client, token):
     resp = client.post("/user/password", headers={"Authorization": "Bearer " + token},
                        json={
-                           "name": "asdasd",
+                           "username": "asdasd",
                            "password": "test5678"})
     assert resp.status_code == 403 and resp.is_json and "forbidden" in resp.json["errorMessage"]
 
@@ -86,23 +86,23 @@ def test_password_change_self(client, token):
     assert resp.status_code == 200 and resp.is_json and "successful" in resp.json["message"]
 
 
-@pytest.mark.name("testadmin")
+@pytest.mark.username("testadmin")
 @pytest.mark.password("DLee7ono7LVT5qiH7bkAxWgDfeegMNSj")
 def test_password_change_admin(client, token):
     resp = client.post("/user/password", headers={"Authorization": "Bearer " + token},
                        json={
-                           "name": "testuser",
+                           "username": "testuser",
                            "password": "test5678"})
     assert resp.status_code == 200 and resp.is_json and "successful" in resp.json["message"]
 
     resp = client.post("/user/login", json={
-                           "name": "testuser",
+                           "username": "testuser",
                            "password": "test1234"})
     assert resp.status_code == 400 and resp.is_json
     assert "invalid" in resp.json["errorMessage"]
 
     resp = client.post("/user/login", json={
-                           "name": "testuser",
+                           "username": "testuser",
                            "password": "test5678"})
     assert resp.status_code == 200 and resp.is_json
     assert len(resp.json["token"]) > 20
