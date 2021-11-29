@@ -5,7 +5,7 @@ from flaskapp.database.models import User
 
 def test_valid_register(client):
     resp = client.post("/user/register",
-                       json={"name": "thisisauniqueuser34958",
+                       json={"username": "thisisauniqueuser34958",
                              "password": "12345678"
                              })
 
@@ -15,7 +15,7 @@ def test_valid_register(client):
 
 def test_invalid_register(client):
     data = {
-        "name": "thisisauniqueuser34958",
+        "username": "thisisauniqueuser34958",
         "password": "123"
     }
 
@@ -24,14 +24,14 @@ def test_invalid_register(client):
     assert "too short" in resp.json["errorMessage"]["password"]
 
     data["password"] = "12345678"
-    data["name"] = "testuser"
+    data["username"] = "testuser"
     resp = client.post("/user/register", json=data)
-    assert "already in use" in resp.json["errorMessage"]["name"]
+    assert "already in use" in resp.json["errorMessage"]["username"]
 
 
 def test_valid_login(client):
     resp = client.post("/user/login",
-                       json={"name": "testuser",
+                       json={"username": "testuser",
                              "password": "test1234"})
     assert resp.status_code == 200 and resp.is_json
     assert len(resp.json["token"]) > 20
@@ -39,7 +39,7 @@ def test_valid_login(client):
 
 def test_invalid_login(client):
     data = {
-        "name": "testuser",
+        "username": "testuser",
         "password": "qwertyasd"
     }
 
@@ -47,13 +47,13 @@ def test_invalid_login(client):
     assert resp.status_code == 400 and resp.is_json
     assert "invalid" in resp.json["errorMessage"]
 
-    data["name"] = "asd"
+    data["username"] = "asd"
     resp = client.post("/user/login", json=data)
     assert resp.status_code == 400 and resp.is_json
     assert "invalid" in resp.json["errorMessage"]
 
 
-@pytest.mark.name("testuser")
+@pytest.mark.username("testuser")
 @pytest.mark.password("test1234")
 def test_logout(client, token):
     resp = client.post("/user/logout", headers={"Authorization": "Bearer " + token})

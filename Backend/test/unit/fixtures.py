@@ -28,7 +28,7 @@ def token(client, request):
     yields an access token """
 
     rv = client.post("/user/login", json={
-        "name": request.node.get_closest_marker("name").args[0],
+        "username": request.node.get_closest_marker("username").args[0],
         "password": request.node.get_closest_marker("password").args[0]
     })
 

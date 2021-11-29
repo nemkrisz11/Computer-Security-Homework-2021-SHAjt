@@ -11,13 +11,13 @@ class RegisterApi(Resource):
     def post(self):
         body = request.get_json()
         try:
-            user = User(name=body.get('name'), password=body.get('password'))
+            user = User(name=body.get('username'), password=body.get('password'))
             user.hash_password()
             user.save()
         except ValidationError as e:
             return make_response(jsonify(errorMessage=e.to_dict()), 400)
         except NotUniqueError as e:
-            return make_response(jsonify(errorMessage={"name": "Username already in use"}), 400)
+            return make_response(jsonify(errorMessage={"username": "Username already in use"}), 400)
         except AttributeError:
             return make_response(jsonify(errorMessage="invalid parameters"), 400)
         return make_response(jsonify(id=str(user.id)), 200)
@@ -27,7 +27,7 @@ class LoginApi(Resource):
     def post(self):
         body = request.get_json()
         try:
-            user = User.objects.get(name=body.get('name'))
+            user = User.objects.get(name=body.get('username'))
         except DoesNotExist:
             return make_response(jsonify(errorMessage="name or password invalid"), 400)
         except AttributeError:
@@ -57,11 +57,11 @@ class PasswordChangeApi(Resource):
             new_password = body.get('password')
 
             if current_user.isAdmin:
-                target_user = User.objects.get(name=body.get('name'))
+                target_user = User.objects.get(name=body.get('username'))
                 target_user.change_password(new_password)
                 return make_response(jsonify(message="password change successful"), 200)
             else:
-                if 'name' in body:
+                if 'username' in body:
                     return make_response(jsonify(errorMessage="forbidden interaction"), 403)
                 else:
                     current_user.change_password(new_password)
