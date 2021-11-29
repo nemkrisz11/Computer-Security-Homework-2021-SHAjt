@@ -36,6 +36,7 @@
     <string name="error_invalid_password_again">Passwords must be the same</string>
     <string name="error_invalid_user_data">Please log out and log in again</string>
     <string name="error_invalid_caff_name">Caff name cannot be empty</string>
+    <string name="error_invalid_file_extension">Invalid file extension</string>
 
     <!-- Auth -->
     <string name="auth_title">Sign in or register</string>
