@@ -32,6 +32,9 @@ def create_app():
 
     application.config['PROPAGATE_EXCEPTIONS'] = True
 
+    # max file size is 50MB
+    application.config['MAX_CONTENT_LENGTH'] = 50 * 1000 * 1000
+
     initialize_db(application)
     initialize_routes(api)
     jwt.init_app(application)
