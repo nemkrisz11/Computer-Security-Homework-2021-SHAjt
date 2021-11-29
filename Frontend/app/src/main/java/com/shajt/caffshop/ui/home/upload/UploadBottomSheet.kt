@@ -65,8 +65,7 @@ class UploadBottomSheet : BottomSheetDialogFragment() {
             fileSelectionLauncher.launch(
                 Intent.createChooser(
                     Intent().apply {
-                        type = "*/*" // TODO remove, just for testing
-                        //type = "*/caff"
+                        type = "application/octet-stream"
                         action = Intent.ACTION_GET_CONTENT
                     },
                     getString(R.string.upload_title_select)
