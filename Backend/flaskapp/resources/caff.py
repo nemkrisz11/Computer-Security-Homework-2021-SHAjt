@@ -1,4 +1,6 @@
-from flask import request, jsonify, make_response
+from flask import request, jsonify, make_response, send_file
+from mongoengine import DoesNotExist, ValidationError
+
 from flaskapp.database.models import User, CaffFile, CaffAnimationImage
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required
@@ -99,4 +101,19 @@ class CaffUploadApi(Resource):
 class CaffDownloadApi(Resource):
     @jwt_required()
     def get(self, caff_id):
-        pass
+        storedFile = None
+        try:
+            storedFile = CaffFile.objects.get(id=caff_id)
+        except DoesNotExist:
+            return make_response(jsonify(errorMessage="File does not exist", errorId=299), 404)
+        except ValidationError:
+            return make_response(jsonify(errorMessage="File does not exist", errorId=299), 404)
+
+        filename = str(storedFile.id)
+        filepath = os.path.join(os.environ.get('UPLOAD_FOLDER'), filename)
+        #filepath = os.path.join('./uploads/', filename)
+        if os.path.exists(filepath):
+            return send_file(path_or_file=filepath, as_attachment=True, attachment_filename=storedFile.caffName)
+        else:
+            return make_response(jsonify(errorMessage="File does not exist", errorId=299), 404)
+
