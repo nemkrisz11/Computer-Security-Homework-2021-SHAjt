@@ -36,8 +36,13 @@ def test_caff_upload(client, token):
     print(resp.data)
     assert resp.status_code == 201
 
-    # TODO: Check if parsed data is correct
-
     uploaded_caff = CaffFile.objects.get(caffName=data['name'])
-    print(uploaded_caff.creator)
     assert uploaded_caff is not None
+    assert uploaded_caff.uploaderName == "testuser"
+
+
+@pytest.mark.username("testuser")
+@pytest.mark.password("test1234")
+def test_caff_download(client, token):
+    # TODO
+    pass
