@@ -64,6 +64,9 @@ def test_caff_search(client, token):
     resp = client.get("/caff/search?page=2", headers={"Authorization": "Bearer " + token})
     assert resp.status_code == 400
 
+    resp = client.get("/caff/search?page=1", headers={"Authorization": "Bearer " + token})
+    assert resp.status_code == 200
+
     resp = client.get("/caff/search?perpage=0", headers={"Authorization": "Bearer " + token})
     assert resp.status_code == 400
 
