@@ -26,7 +26,6 @@ def create_preview_caff_file(file: CaffFile):
     caff_parser = CaffParser()
 
     with open(os.path.join(os.environ.get('UPLOAD_FOLDER'), str(file.id)), "rb") as f:
-        # with open(os.path.join('./uploads/', str(file.id)), "rb") as f:
         numpy_data = np.fromfile(f, np.dtype('B'))
 
     parsed_file = caff_parser.parse(numpy_data)
@@ -96,9 +95,6 @@ class CaffDataApi(Resource):
                 return make_response(jsonify(RESPONSE_FILE_DOES_NOT_EXIST), 404)
 
             filepath = os.path.join(os.environ.get('UPLOAD_FOLDER'), str(stored_file.id))
-
-            # for local testing
-            # filepath = os.path.join('./uploads/', str(stored_file.id))
 
             if os.path.exists(filepath):
                 os.remove(filepath)
@@ -258,9 +254,6 @@ class CaffUploadApi(Resource):
         with open(os.path.join(os.environ.get('UPLOAD_FOLDER'), filename), 'wb+') as f:
             f.write(file_bytes)
 
-        # for local testing
-        # with open(os.path.join('./uploads/', filename), 'wb+') as f:
-        #     f.write(file_bytes)
         current_app.logger.setLevel(logging.INFO)
         current_app.logger.info('New CAFF file was uploaded with the following name: ' + str(name))
         return make_response('', 201)
@@ -279,7 +272,6 @@ class CaffDownloadApi(Resource):
 
         filename = str(stored_file.id)
         filepath = os.path.join(os.environ.get('UPLOAD_FOLDER'), filename)
-        # filepath = os.path.join('./uploads/', filename)
         if os.path.exists(filepath):
             current_app.logger.setLevel(logging.INFO)
             current_app.logger.info('CAFF file was downloaded with the following name: ' + str(stored_file.caffName))
