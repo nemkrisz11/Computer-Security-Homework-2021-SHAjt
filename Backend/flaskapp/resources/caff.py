@@ -1,6 +1,6 @@
 from flask import request, jsonify, make_response, send_file
 from mongoengine import DoesNotExist, ValidationError, Q
-
+from PIL import Image
 from flaskapp.database.models import User, CaffFile, CaffAnimationImage
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, current_user
@@ -22,8 +22,8 @@ def allowed_file(filename):
 def createPreviewCaffFile(file: CaffFile):
     caffParser = CaffParser()
 
-    with open(os.path.join(os.environ.get('UPLOAD_FOLDER'), str(file.id)), "rb") as f:
-        # with open(os.path.join('./uploads/', str(file.id)), "rb") as f:
+    #with open(os.path.join(os.environ.get('UPLOAD_FOLDER'), str(file.id)), "rb") as f:
+    with open(os.path.join('./uploads/', str(file.id)), "rb") as f:
         numpy_data = np.fromfile(f, np.dtype('B'))
 
     parsed_file = caffParser.parse(numpy_data)
@@ -32,6 +32,11 @@ def createPreviewCaffFile(file: CaffFile):
     height = file.caffAnimationImage.height
     pixel_array = np.array(parsed_file.animationImages[0].ciffImage.pixelValues, dtype=np.uint8)
     pixel_array.resize(height, width, 3)
+
+    preview = Image.fromarray(pixel_array)
+    preview.thumbnail((256, 256))
+
+    compressed_array = np.array(preview.convert('RGB'))
 
     preview_file = {
         "id": str(file.id),
@@ -48,7 +53,7 @@ def createPreviewCaffFile(file: CaffFile):
             "caption": file.caffAnimationImage.caption,
             "tags": file.caffAnimationImage.tags
         },
-        "pixelValues": pixel_array.tolist()
+        "pixelValues": compressed_array.tolist()
     }
 
     return preview_file
