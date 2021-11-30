@@ -8,8 +8,7 @@ from flaskapp.database.models import CaffFile, Comment
 class CommentApi(Resource):
     @jwt_required()
     def get(self):
-        body = request.get_json()
-        caff_id = body.get('caffid')
+        caff_id = request.args.get('caffId', type=str)
         stored_file = None
 
         try:
@@ -17,7 +16,7 @@ class CommentApi(Resource):
         except DoesNotExist:
             return make_response(jsonify(errorId="299", errorMessage="file does not exist"), 404)
 
-        if stored_file.comments is []:
+        if not stored_file.comments:
             return make_response(jsonify(errorId="399", errorMessage="comment not found"), 400)
         else:
             return make_response(jsonify(
