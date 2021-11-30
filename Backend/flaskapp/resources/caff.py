@@ -22,8 +22,8 @@ def allowed_file(filename):
 def createPreviewCaffFile(file: CaffFile):
     caffParser = CaffParser()
 
-    #with open(os.path.join(os.environ.get('UPLOAD_FOLDER'), str(file.id)), "rb") as f:
-    with open(os.path.join('./uploads/', str(file.id)), "rb") as f:
+    with open(os.path.join(os.environ.get('UPLOAD_FOLDER'), str(file.id)), "rb") as f:
+    #with open(os.path.join('./uploads/', str(file.id)), "rb") as f:
         numpy_data = np.fromfile(f, np.dtype('B'))
 
     parsed_file = caffParser.parse(numpy_data)
