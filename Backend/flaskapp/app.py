@@ -1,6 +1,7 @@
 import os
 from flask import Flask
 from flask_restful import Api
+from flask_wtf import CSRFProtect
 from flaskapp.database.db import initialize_db
 from flaskapp.resources.routes import initialize_routes
 from flaskapp.authorization import jwt, TOKEN_EXPIRES
@@ -16,6 +17,8 @@ from flask_limiter.util import get_remote_address
 # Configure routes
 def create_app():
     application = Flask(__name__)
+    csrf = CSRFProtect()
+    csrf.init_app(application)
     api = Api(application)
     limiter = Limiter(
         application,
@@ -35,7 +38,7 @@ def create_app():
     #     'host': 'mongodb://localhost:27017/CaffDatabase'
     # }
 
-    application.config['JWT_SECRET_KEY'] = "nMZSrZeLKofMnfJ7csa2zXwdvXWEqV7CBM327b2EVBGLwbioFYXjf3DAeZhdm7YL"
+    application.config['SECRET_KEY'] = "nMZSrZeLKofMnfJ7csa2zXwdvXWEqV7CBM327b2EVBGLwbioFYXjf3DAeZhdm7YL"
     application.config['JWT_ACCESS_TOKEN_EXPIRES'] = TOKEN_EXPIRES
 
     application.config['PROPAGATE_EXCEPTIONS'] = True
