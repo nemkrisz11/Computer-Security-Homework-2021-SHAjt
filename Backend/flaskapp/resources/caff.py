@@ -23,13 +23,13 @@ def allowed_file(filename):
 
 # Apply CAFF parser and extract features into JSON format
 def create_preview_caff_file(file: CaffFile):
-    caffParser = CaffParser()
+    caff_parser = CaffParser()
 
     with open(os.path.join(os.environ.get('UPLOAD_FOLDER'), str(file.id)), "rb") as f:
         # with open(os.path.join('./uploads/', str(file.id)), "rb") as f:
         numpy_data = np.fromfile(f, np.dtype('B'))
 
-    parsed_file = caffParser.parse(numpy_data)
+    parsed_file = caff_parser.parse(numpy_data)
 
     width = file.caffAnimationImage.width
     height = file.caffAnimationImage.height
