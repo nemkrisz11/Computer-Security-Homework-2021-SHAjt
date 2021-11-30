@@ -25,6 +25,8 @@ import com.shajt.caffshop.utils.DeCryptor
 import com.shajt.caffshop.utils.EnCryptor
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -78,7 +80,7 @@ class CaffShopRepository @Inject constructor(
         val userData = userDataServerResult.result!!
 
         /* // For testing
-        val userData = UserData(userCredentials.username, false, 1000)
+        val userData = UserData(userCredentials.username, true, 1000)
         val loginResult = LoginResult("abcd", 1000)
          */
 
@@ -206,7 +208,7 @@ class CaffShopRepository @Inject constructor(
         return DeleteUserResult(success = true)
     }
 
-    suspend fun getCaff(caffId: Int): GetCaffResult {
+    suspend fun getCaff(caffId: String): GetCaffResult {
         if (localUser == null) {
             return GetCaffResult(error = ErrorMessage.INVALID_USER_DATA)
         }
@@ -218,7 +220,7 @@ class CaffShopRepository @Inject constructor(
         return GetCaffResult(success = result.result)
     }
 
-    suspend fun deleteCaff(caffId: Int): DeleteCaffResult {
+    suspend fun deleteCaff(caffId: String): DeleteCaffResult {
         if (localUser == null) {
             return DeleteCaffResult(error = ErrorMessage.INVALID_USER_DATA)
         }
@@ -253,11 +255,23 @@ class CaffShopRepository @Inject constructor(
         return SearchCaffsResult(success = result.result)
     }
 
-    suspend fun uploadCaff(uri: Uri, name: String): UploadCaffResult {
+    suspend fun uploadCaff(uri: Uri, name: String, context: Context): UploadCaffResult {
         if (localUser == null) {
             return UploadCaffResult(error = ErrorMessage.INVALID_USER_DATA)
         }
-        val file = File(uri.path)
+
+        val descriptor = context.contentResolver.openFileDescriptor(uri, "r")
+        if (descriptor == null) {
+            return UploadCaffResult(error = ErrorMessage.INVALID_USER_DATA)
+        }
+        val bytes = FileInputStream(descriptor.fileDescriptor).readBytes()
+        val file = File(context.cacheDir, "${System.currentTimeMillis()}.caff")
+        FileOutputStream(file).apply {
+            write(bytes)
+            flush()
+            close()
+        }
+
         val result = apiInteractor.uploadCaff(localUser!!.token, name, file)
         val check = checkServerResult(result, ErrorMessage.CAFF_UPLOAD_FAILED)
         if (check != null) {
@@ -266,14 +280,14 @@ class CaffShopRepository @Inject constructor(
         return UploadCaffResult(success = true)
     }
 
-    suspend fun downloadCaff(caffId: Int, context: Context) {
+    suspend fun downloadCaff(caffId: String, context: Context) {
         if (localUser == null) {
             return
         }
         apiInteractor.enqueueDownload(localUser!!.token, caffId, context)
     }
 
-    suspend fun getComments(caffId: Int, page: Int = 1, perpage: Int = 20): GetCommentsResult {
+    suspend fun getComments(caffId: String, page: Int = 1, perpage: Int = 20): GetCommentsResult {
         if (localUser == null) {
             return GetCommentsResult(error = ErrorMessage.INVALID_USER_DATA)
         }
@@ -297,7 +311,7 @@ class CaffShopRepository @Inject constructor(
         return PostCommentResult(success = true)
     }
 
-    suspend fun deleteComment(commentId: Int, caffId: Int): DeleteCommentResult {
+    suspend fun deleteComment(commentId: Int, caffId: String): DeleteCommentResult {
         if (localUser == null) {
             return DeleteCommentResult(error = ErrorMessage.INVALID_USER_DATA)
         }

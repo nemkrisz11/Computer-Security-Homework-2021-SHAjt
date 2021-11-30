@@ -156,7 +156,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun onCaffSelect(caffId: Int) {
+    private fun onCaffSelect(caffId: String) {
         startActivity(
             Intent(context, CaffDetailsActivity::class.java).apply {
                 putExtra(CaffDetailsActivity.ARG_CAFF_ID, caffId)

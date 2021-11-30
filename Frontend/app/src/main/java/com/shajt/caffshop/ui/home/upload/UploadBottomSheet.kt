@@ -79,7 +79,7 @@ class UploadBottomSheet : BottomSheetDialogFragment() {
                 if (text == null) {
                     name.error = getString(R.string.error_invalid_caff_name)
                 } else {
-                    homeViewModel.uploadCaff(it, text)
+                    homeViewModel.uploadCaff(it, text, requireContext())
                     dismiss()
                 }
             }

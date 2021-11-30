@@ -27,10 +27,10 @@ class CaffDetailsFragment : Fragment() {
         private const val ARG_CAFF_ID = "caffId"
 
         @JvmStatic
-        fun newInstance(caffId: Int) =
+        fun newInstance(caffId: String) =
             CaffDetailsFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(ARG_CAFF_ID, caffId)
+                    putString(ARG_CAFF_ID, caffId)
                 }
             }
     }
@@ -40,12 +40,12 @@ class CaffDetailsFragment : Fragment() {
 
     private lateinit var caffDetailsViewModel: CaffDetailsViewModel
 
-    private var caffId: Int = -1
+    private var caffId: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            caffId = it.getInt(ARG_CAFF_ID)
+            caffId = it.getString(ARG_CAFF_ID, "")
         }
     }
 

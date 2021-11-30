@@ -54,12 +54,18 @@ class AuthActivity : AppCompatActivity() {
             // Show errors
             if (authState.usernameError != null) {
                 username.error = getString(authState.usernameError.errorStringResourceId)
+            } else {
+                username.error = null
             }
             if (authState.passwordError != null) {
                 password.error = getString(authState.passwordError.errorStringResourceId)
+            } else {
+                password.error = null
             }
             if (authState.passwordAgainError != null) {
                 passwordAgain.error = getString(authState.passwordAgainError.errorStringResourceId)
+            } else {
+                passwordAgain.error = null
             }
         })
 

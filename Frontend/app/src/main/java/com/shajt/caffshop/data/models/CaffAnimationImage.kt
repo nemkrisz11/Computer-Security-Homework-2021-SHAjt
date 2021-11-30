@@ -6,5 +6,5 @@ data class CaffAnimationImage(
     val height: Int,
     val caption: String,
     val tags: List<String>,
-    val pixelValues: List<Int>
+    val pixelValues: List<List<List<Int>>>
 )

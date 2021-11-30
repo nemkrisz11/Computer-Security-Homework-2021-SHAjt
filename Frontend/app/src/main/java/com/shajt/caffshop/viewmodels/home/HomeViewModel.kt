@@ -1,5 +1,6 @@
 package com.shajt.caffshop.viewmodels.home
 
+import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -60,9 +61,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun uploadCaff(uri: Uri, name: String) {
+    fun uploadCaff(uri: Uri, name: String, context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
-            val uploadCaffResult = caffShopRepository.uploadCaff(uri, name)
+            val uploadCaffResult = caffShopRepository.uploadCaff(uri, name, context)
             if (uploadCaffResult.success) {
                 _uploadSuccess.postValue(true)
             } else {

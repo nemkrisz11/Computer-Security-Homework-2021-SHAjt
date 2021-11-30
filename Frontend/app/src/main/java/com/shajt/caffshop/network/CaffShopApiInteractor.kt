@@ -10,6 +10,7 @@ import com.shajt.caffshop.data.models.auth.LoginResult
 import com.shajt.caffshop.data.models.auth.UserCredentials
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
+import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -20,8 +21,16 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
+import java.security.KeyStore
+import java.security.SecureRandom
+import java.security.cert.CertificateException
+import java.security.cert.X509Certificate
 import javax.inject.Singleton
-import kotlin.Error
+import javax.net.ssl.HostnameVerifier
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.TrustManagerFactory
+import javax.net.ssl.X509TrustManager
 
 @Singleton
 class CaffShopApiInteractor(
@@ -35,9 +44,12 @@ class CaffShopApiInteractor(
             level = HttpLoggingInterceptor.Level.BODY
         }
 
-        val httpClient = OkHttpClient.Builder()
-            .addInterceptor(logging)
-            .build()
+        val httpClient =
+            getUnsafeOkHttpClient(logging)
+                ?: OkHttpClient.Builder()
+                    .addInterceptor(logging)
+                    .build()
+
 
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrl)
@@ -48,6 +60,61 @@ class CaffShopApiInteractor(
         this.caffShopApi = retrofit.create(CaffShopApi::class.java)
     }
 
+    // Should be removed completely if the server is signed with a non self signed certificate
+    private fun getUnsafeOkHttpClient(interceptor: Interceptor): OkHttpClient? {
+        return try {
+            // Create a trust manager that does not validate certificate chains
+            val trustAllCerts = arrayOf<TrustManager>(
+                object : X509TrustManager {
+
+                    @Throws(CertificateException::class)
+                    override fun checkClientTrusted(
+                        chain: Array<X509Certificate?>?,
+                        authType: String?
+                    ) {
+                    }
+
+                    @Throws(CertificateException::class)
+                    override fun checkServerTrusted(
+                        chain: Array<X509Certificate?>?,
+                        authType: String?
+                    ) {
+                    }
+
+                    override fun getAcceptedIssuers(): Array<X509Certificate?>? {
+                        return arrayOf()
+                    }
+                }
+            )
+
+            // Install the all-trusting trust manager
+            val sslContext = SSLContext.getInstance("SSL")
+            sslContext.init(null, trustAllCerts, SecureRandom())
+            // Create an ssl socket factory with our all-trusting manager
+            val sslSocketFactory = sslContext.socketFactory
+            val trustManagerFactory: TrustManagerFactory =
+                TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
+            trustManagerFactory.init(null as KeyStore?)
+            val trustManagers: Array<TrustManager> =
+                trustManagerFactory.trustManagers
+            check(!(trustManagers.size != 1 || trustManagers[0] !is X509TrustManager)) {
+                "Unexpected default trust managers:" + trustManagers.contentToString()
+            }
+
+            val trustManager =
+                trustManagers[0] as X509TrustManager
+
+
+            val builder = OkHttpClient.Builder()
+            builder.addInterceptor(interceptor)
+            builder.sslSocketFactory(sslSocketFactory, trustManager)
+            builder.hostnameVerifier(HostnameVerifier { _, _ -> true })
+            builder.build()
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
+    }
+
 
     suspend fun getUsers(
         token: String,
@@ -56,7 +123,7 @@ class CaffShopApiInteractor(
     ): ServerResult<UserList, ErrorMessage> {
         return try {
             val response = caffShopApi.getUsers(createAuthHeaderFromToken(token), page, perpage)
-            checkResponse(response)
+            checkResponse(response, ErrorMessage.USER_LIST_REQUEST_FAILED)
         } catch (e: Exception) {
             ServerResult(error = ErrorMessage.USER_LIST_REQUEST_FAILED)
         }
@@ -68,7 +135,7 @@ class CaffShopApiInteractor(
     ): ServerResult<UserData, ErrorMessage> {
         return try {
             val response = caffShopApi.getUser(createAuthHeaderFromToken(token), username)
-            checkResponse(response)
+            checkResponse(response, ErrorMessage.USER_REQUEST_FAILED)
         } catch (e: Exception) {
             ServerResult(error = ErrorMessage.USER_REQUEST_FAILED)
         }
@@ -112,7 +179,7 @@ class CaffShopApiInteractor(
     ): ServerResult<LoginResult, ErrorMessage> {
         return try {
             val response = caffShopApi.login(userCredentials)
-            checkResponse(response)
+            checkResponse(response, ErrorMessage.LOGIN_FAILED)
         } catch (e: Exception) {
             ServerResult(error = ErrorMessage.LOGIN_FAILED)
         }
@@ -153,11 +220,11 @@ class CaffShopApiInteractor(
 
     suspend fun getCaff(
         token: String,
-        id: Int
+        id: String
     ): ServerResult<Caff, ErrorMessage> {
         return try {
             val response = caffShopApi.getCaff(createAuthHeaderFromToken(token), id)
-            checkResponse(response)
+            checkResponse(response, ErrorMessage.CAFF_REQUEST_FAILED)
         } catch (e: Exception) {
             ServerResult(error = ErrorMessage.CAFF_REQUEST_FAILED)
         }
@@ -165,7 +232,7 @@ class CaffShopApiInteractor(
 
     suspend fun deleteCaff(
         token: String,
-        id: Int
+        id: String
     ): ServerResult<Boolean, ErrorMessage> {
         return try {
             caffShopApi.deleteCaff(createAuthHeaderFromToken(token), id)
@@ -201,7 +268,7 @@ class CaffShopApiInteractor(
                 page,
                 perpage
             )
-            checkResponse(response)
+            checkResponse(response, ErrorMessage.CAFF_SEARCH_FAILED)
         } catch (e: Exception) {
             ServerResult(error = ErrorMessage.CAFF_SEARCH_FAILED)
         }
@@ -229,11 +296,11 @@ class CaffShopApiInteractor(
 
     suspend fun downloadCaff(
         token: String,
-        id: Int
+        id: String
     ): ServerResult<CaffRaw, ErrorMessage> {
         return try {
             val response = caffShopApi.downloadCaff(createAuthHeaderFromToken(token), id)
-            checkResponse(response)
+            checkResponse(response, ErrorMessage.CAFF_DOWNLOAD_FAILED)
         } catch (e: Exception) {
             ServerResult(error = ErrorMessage.CAFF_DOWNLOAD_FAILED)
         }
@@ -241,7 +308,7 @@ class CaffShopApiInteractor(
 
     suspend fun enqueueDownload(
         token: String,
-        id: Int,
+        id: String,
         context: Context
     ): Long {
         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
@@ -254,13 +321,14 @@ class CaffShopApiInteractor(
 
     suspend fun getComments(
         token: String,
-        caffId: Int,
+        caffId: String,
         page: Int = 1,
         perpage: Int = 20,
     ): ServerResult<CommentList, ErrorMessage> {
         return try {
-            val response = caffShopApi.getComments(createAuthHeaderFromToken(token), caffId, page, perpage)
-            checkResponse(response)
+            val response =
+                caffShopApi.getComments(createAuthHeaderFromToken(token), caffId, page, perpage)
+            checkResponse(response, ErrorMessage.COMMENT_LIST_REQUEST_FAILED)
         } catch (e: Exception) {
             ServerResult(error = ErrorMessage.COMMENT_LIST_REQUEST_FAILED)
         }
@@ -286,7 +354,7 @@ class CaffShopApiInteractor(
     suspend fun deleteComment(
         token: String,
         commentId: Int,
-        caffId: Int
+        caffId: String
     ): ServerResult<Boolean, ErrorMessage> {
         return try {
             caffShopApi.deleteComment(createAuthHeaderFromToken(token), commentId, caffId)
@@ -304,12 +372,13 @@ class CaffShopApiInteractor(
     private fun createAuthHeaderFromToken(token: String) = "Bearer $token"
 
     private fun <R> checkResponse(
-        response: Response<R>
+        response: Response<R>,
+        defaultErrorMessage: ErrorMessage = ErrorMessage.NETWORK_ERROR
     ): ServerResult<R, ErrorMessage> {
         return if (response.isSuccessful && response.body() != null) {
             ServerResult(result = response.body()!!)
         } else {
-            createErrorMessage(response.errorBody().toString())
+            createErrorMessage(response.errorBody().toString(), defaultErrorMessage)
         }
     }
 
@@ -320,10 +389,16 @@ class CaffShopApiInteractor(
         if (errorBody.isNullOrBlank()) {
             return ServerResult(error = defaultErrorMessage)
         }
-        val error = Gson().fromJson(errorBody, Error::class.java)
-        // TODO specify error
 
-        return ServerResult(error = defaultErrorMessage)
+        var error = defaultErrorMessage
+        try {
+            val serverError = Gson().fromJson(errorBody, Error::class.java)
+            error = ServerErrorMapper.mapServerError(serverError.errorId, defaultErrorMessage)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return ServerResult(error = error)
     }
 
 }

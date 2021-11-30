@@ -56,13 +56,13 @@ interface CaffShopApi {
     @GET("/caff/{id}")
     suspend fun getCaff(
         @Header("Authorization") authHeader: String,
-        @Path("id") id: Int
+        @Path("id") id: String
     ): Response<Caff>
 
     @DELETE("/caff/{id}")
     suspend fun deleteCaff(
         @Header("Authorization") authHeader: String,
-        @Path("id") id: Int
+        @Path("id") id: String
     )
 
     @GET("/caff/search")
@@ -88,13 +88,13 @@ interface CaffShopApi {
     @GET("/caff/download/{id}")
     suspend fun downloadCaff(
         @Header("Authorization") authHeader: String,
-        @Path("id") id: Int
+        @Path("id") id: String
     ): Response<CaffRaw>
 
     @GET("/comment")
     suspend fun getComments(
         @Header("Authorization") authHeader: String,
-        @Query("caffId") caffId: Int,
+        @Query("caffId") caffId: String,
         @Query("page") page: Int,
         @Query("perpage") perpage: Int
     ): Response<CommentList>
@@ -109,6 +109,6 @@ interface CaffShopApi {
     suspend fun deleteComment(
         @Header("Authorization") authHeader: String,
         @Query("commentId") commentId: Int,
-        @Query("caffId") caffId: Int
+        @Query("caffId") caffId: String
     )
 }

@@ -346,7 +346,7 @@ class CaffShopApiInteractorTest {
     @Test
     fun testGetCaff_successful() = runBlocking {
         val expectedGetCaffResponse = Caff(
-            1, "caff", "creator", 1000,
+            "id", "caff", "creator", 1000,
             "creator", 1000, 1,
             CaffAnimationImage(
                 1, 1, 1, "caption", emptyList(), emptyList()
@@ -358,7 +358,7 @@ class CaffShopApiInteractorTest {
         mockWebServer.enqueue(mockResponse)
 
         val token = "abcd"
-        val serverResult = caffShopApiInteractor.getCaff(token, 1)
+        val serverResult = caffShopApiInteractor.getCaff(token, "id")
 
         assertNull(serverResult.error)
         assertNotNull(serverResult.result)
@@ -367,7 +367,7 @@ class CaffShopApiInteractorTest {
         val receivedRequest = mockWebServer.takeRequest()
 
         assertEquals("GET", receivedRequest.method)
-        assertEquals("/caff/1", receivedRequest.path)
+        assertEquals("/caff/id", receivedRequest.path)
         assertEquals("Bearer $token", receivedRequest.getHeader("Authorization"))
     }
 
@@ -380,7 +380,7 @@ class CaffShopApiInteractorTest {
         mockWebServer.enqueue(mockResponse)
 
         val token = "abcd"
-        val serverResult = caffShopApiInteractor.getCaff(token, 1)
+        val serverResult = caffShopApiInteractor.getCaff(token, "id")
 
         assertNotNull(serverResult.error)
         assertNull(serverResult.result)
@@ -389,7 +389,7 @@ class CaffShopApiInteractorTest {
         val receivedRequest = mockWebServer.takeRequest()
 
         assertEquals("GET", receivedRequest.method)
-        assertEquals("/caff/1", receivedRequest.path)
+        assertEquals("/caff/id", receivedRequest.path)
         assertEquals("Bearer $token", receivedRequest.getHeader("Authorization"))
     }
 
@@ -402,7 +402,7 @@ class CaffShopApiInteractorTest {
         mockWebServer.enqueue(mockResponse)
 
         val token = "abcd"
-        val serverResult = caffShopApiInteractor.deleteCaff(token, 1)
+        val serverResult = caffShopApiInteractor.deleteCaff(token, "id")
 
         assertNull(serverResult.error)
         assertNotNull(serverResult.result)
@@ -411,7 +411,7 @@ class CaffShopApiInteractorTest {
         val receivedRequest = mockWebServer.takeRequest()
 
         assertEquals("DELETE", receivedRequest.method)
-        assertEquals("/caff/1", receivedRequest.path)
+        assertEquals("/caff/id", receivedRequest.path)
         assertEquals("Bearer $token", receivedRequest.getHeader("Authorization"))
     }
 
@@ -424,7 +424,7 @@ class CaffShopApiInteractorTest {
         mockWebServer.enqueue(mockResponse)
 
         val token = "abcd"
-        val serverResult = caffShopApiInteractor.deleteCaff(token, 1)
+        val serverResult = caffShopApiInteractor.deleteCaff(token, "id")
 
         assertNotNull(serverResult.error)
         assertNull(serverResult.result)
@@ -433,7 +433,7 @@ class CaffShopApiInteractorTest {
         val receivedRequest = mockWebServer.takeRequest()
 
         assertEquals("DELETE", receivedRequest.method)
-        assertEquals("/caff/1", receivedRequest.path)
+        assertEquals("/caff/id", receivedRequest.path)
         assertEquals("Bearer $token", receivedRequest.getHeader("Authorization"))
     }
 
@@ -442,7 +442,7 @@ class CaffShopApiInteractorTest {
         val expectedSearchCaffResponse = CaffList(
             listOf(
                 Caff(
-                    1, "caff", "creator", 1000,
+                    "id", "caff", "creator", 1000,
                     "creator", 1000, 1,
                     CaffAnimationImage(
                         1, 1, 1, "caption", emptyList(), emptyList()
@@ -500,7 +500,7 @@ class CaffShopApiInteractorTest {
     fun testGetComments_successful() = runBlocking {
         val expectedGetCommentsResponse = CommentList(
             listOf(
-                Comment(1, 1, "test", "test", 1000)
+                Comment(1, "caffId", "test", "test", 1000)
             ),
             1
         )
@@ -510,7 +510,7 @@ class CaffShopApiInteractorTest {
         mockWebServer.enqueue(mockResponse)
 
         val token = "abcd"
-        val serverResult = caffShopApiInteractor.getComments(token, 1)
+        val serverResult = caffShopApiInteractor.getComments(token, "caffId")
 
         assertNull(serverResult.error)
         assertNotNull(serverResult.result)
@@ -519,7 +519,7 @@ class CaffShopApiInteractorTest {
         val receivedRequest = mockWebServer.takeRequest()
 
         assertEquals("GET", receivedRequest.method)
-        assertEquals("/comment?caffId=1&page=1&perpage=20", receivedRequest.path)
+        assertEquals("/comment?caffId=caffId&page=1&perpage=20", receivedRequest.path)
         assertEquals("Bearer $token", receivedRequest.getHeader("Authorization"))
     }
 
@@ -532,7 +532,7 @@ class CaffShopApiInteractorTest {
         mockWebServer.enqueue(mockResponse)
 
         val token = "abcd"
-        val serverResult = caffShopApiInteractor.getComments(token, 1)
+        val serverResult = caffShopApiInteractor.getComments(token, "caffId")
 
         assertNotNull(serverResult.error)
         assertNull(serverResult.result)
@@ -541,7 +541,7 @@ class CaffShopApiInteractorTest {
         val receivedRequest = mockWebServer.takeRequest()
 
         assertEquals("GET", receivedRequest.method)
-        assertEquals("/comment?caffId=1&page=1&perpage=20", receivedRequest.path)
+        assertEquals("/comment?caffId=caffId&page=1&perpage=20", receivedRequest.path)
         assertEquals("Bearer $token", receivedRequest.getHeader("Authorization"))
     }
 
@@ -553,7 +553,7 @@ class CaffShopApiInteractorTest {
         mockWebServer.enqueue(mockResponse)
 
         val token = "abcd"
-        val commentToCreate = CommentToCreate(1, "test")
+        val commentToCreate = CommentToCreate("id", "test")
         val serverResult = caffShopApiInteractor.postComment(token, commentToCreate)
 
         assertNull(serverResult.error)
@@ -577,7 +577,7 @@ class CaffShopApiInteractorTest {
         mockWebServer.enqueue(mockResponse)
 
         val token = "abcd"
-        val commentToCreate = CommentToCreate(1, "test")
+        val commentToCreate = CommentToCreate("id", "test")
         val serverResult = caffShopApiInteractor.postComment(token, commentToCreate)
 
         assertNotNull(serverResult.error)
@@ -600,7 +600,7 @@ class CaffShopApiInteractorTest {
         mockWebServer.enqueue(mockResponse)
 
         val token = "abcd"
-        val serverResult = caffShopApiInteractor.deleteComment(token, 1, 2)
+        val serverResult = caffShopApiInteractor.deleteComment(token, 1, "caffId")
 
         assertNull(serverResult.error)
         assertNotNull(serverResult.result)
@@ -609,7 +609,7 @@ class CaffShopApiInteractorTest {
         val receivedRequest = mockWebServer.takeRequest()
 
         assertEquals("DELETE", receivedRequest.method)
-        assertEquals("/comment?commentId=1&caffId=2", receivedRequest.path)
+        assertEquals("/comment?commentId=1&caffId=caffId", receivedRequest.path)
         assertEquals("Bearer $token", receivedRequest.getHeader("Authorization"))
     }
 
@@ -622,7 +622,7 @@ class CaffShopApiInteractorTest {
         mockWebServer.enqueue(mockResponse)
 
         val token = "abcd"
-        val serverResult = caffShopApiInteractor.deleteComment(token, 1, 2)
+        val serverResult = caffShopApiInteractor.deleteComment(token, 1, "caffId")
 
         assertNotNull(serverResult.error)
         assertNull(serverResult.result)
@@ -631,7 +631,7 @@ class CaffShopApiInteractorTest {
         val receivedRequest = mockWebServer.takeRequest()
 
         assertEquals("DELETE", receivedRequest.method)
-        assertEquals("/comment?commentId=1&caffId=2", receivedRequest.path)
+        assertEquals("/comment?commentId=1&caffId=caffId", receivedRequest.path)
         assertEquals("Bearer $token", receivedRequest.getHeader("Authorization"))
     }
 }

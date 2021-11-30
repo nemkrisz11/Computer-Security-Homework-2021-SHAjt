@@ -7,7 +7,7 @@ import com.shajt.caffshop.data.models.Caff
 import com.shajt.caffshop.databinding.ViewCaffListItemBinding
 
 class CaffsRecyclerViewAdapter(
-    private val selected: (caffId: Int) -> Unit
+    private val selected: (caffId: String) -> Unit
 ) : GenericRecyclerViewAdapter<Caff, CaffsRecyclerViewAdapter.CaffsListItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CaffsListItemViewHolder {

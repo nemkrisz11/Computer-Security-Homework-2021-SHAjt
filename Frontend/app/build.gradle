@@ -30,12 +30,12 @@ android {
     buildTypes {
         def BACKEND_URL = "BACKEND_URL"
         debug {
-            buildConfigField "String", BACKEND_URL, "\"http://localhost:8080/api/\""
+            buildConfigField "String", BACKEND_URL, "\"https://192.168.1.4:8080/\""
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField "String", BACKEND_URL, "\"http://localhost:8080/api/\""
+            buildConfigField "String", BACKEND_URL, "\"https://localhost:8080/\""
         }
     }
     compileOptions {

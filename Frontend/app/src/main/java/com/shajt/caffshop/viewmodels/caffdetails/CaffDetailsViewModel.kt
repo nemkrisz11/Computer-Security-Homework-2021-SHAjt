@@ -38,7 +38,7 @@ class CaffDetailsViewModel @Inject constructor(
         get() = caffShopRepository.localUser?.isAdmin!!
 
 
-    fun getCaffDetails(caffId: Int) {
+    fun getCaffDetails(caffId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val caffResult = caffShopRepository.getCaff(caffId)
             if (caffResult.success != null) {
@@ -50,7 +50,7 @@ class CaffDetailsViewModel @Inject constructor(
         getMoreComments(caffId)
     }
 
-    fun getMoreComments(caffId: Int) {
+    fun getMoreComments(caffId: String) {
         if (actualPage >= totalPages) {
             return
         }
@@ -73,13 +73,13 @@ class CaffDetailsViewModel @Inject constructor(
         }
     }
 
-    fun downloadCaff(caffId: Int, context: Context) {
+    fun downloadCaff(caffId: String, context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
             caffShopRepository.downloadCaff(caffId, context)
         }
     }
 
-    fun deleteCaff(caffId: Int) {
+    fun deleteCaff(caffId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val deleteCaffResult = caffShopRepository.deleteCaff(caffId)
             if (deleteCaffResult.success) {
@@ -90,7 +90,7 @@ class CaffDetailsViewModel @Inject constructor(
         }
     }
 
-    fun postComment(caffId: Int, text: String) {
+    fun postComment(caffId: String, text: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val postCommentResult = caffShopRepository.postComment(CommentToCreate(caffId, text))
             if (postCommentResult.success) {

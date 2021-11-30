@@ -1,7 +1,7 @@
 package com.shajt.caffshop.data.models
 
 data class Caff(
-    val id: Int,
+    val id: String,
     val caffName: String,
     val creator: String,
     val creationDate: Long,

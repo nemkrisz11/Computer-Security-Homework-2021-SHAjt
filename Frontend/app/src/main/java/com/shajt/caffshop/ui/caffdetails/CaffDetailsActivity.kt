@@ -20,7 +20,7 @@ class CaffDetailsActivity : AppCompatActivity() {
                 .replace(
                     R.id.container,
                     CaffDetailsFragment.newInstance(
-                        intent.getIntExtra(ARG_CAFF_ID, -1)
+                        intent.getStringExtra(ARG_CAFF_ID) ?: ""
                     )
                 )
                 .commitNow()
