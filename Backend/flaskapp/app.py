@@ -7,11 +7,17 @@ from flaskapp.authorization import jwt, TOKEN_EXPIRES
 from flaskapp.database.models import User, CaffFile
 # from flask_cors import CORS
 import logging
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 
 def create_app():
     application = Flask(__name__)
     api = Api(application)
+    limiter = Limiter(
+        application,
+        key_func=get_remote_address)
+
 
     logging.basicConfig(filename='/tmp/debug.log', level=logging.DEBUG)
 
@@ -36,7 +42,7 @@ def create_app():
     application.config['MAX_CONTENT_LENGTH'] = 50 * 1000 * 1000
 
     initialize_db(application)
-    initialize_routes(api)
+    initialize_routes(api,limiter)
     jwt.init_app(application)
     # cors = CORS(application, resources={r"/*": {"origins": "*"}})
 
