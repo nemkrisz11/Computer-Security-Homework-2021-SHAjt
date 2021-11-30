@@ -23,7 +23,7 @@ def allowed_file(filename):
 
 
 # Apply CAFF parser and extract features into JSON format
-def createPreviewCaffFile(file: CaffFile):
+def create_preview_caff_file(file: CaffFile):
     caffParser = CaffParser()
 
     with open(os.path.join(os.environ.get('UPLOAD_FOLDER'), str(file.id)), "rb") as f:
@@ -64,10 +64,10 @@ def createPreviewCaffFile(file: CaffFile):
     return preview_file
 
 
-def createPreviewCaffFileList(files):
+def create_preview_caff_file_list(files):
     file_list = []
     for file in files:
-        file_list.append(createPreviewCaffFile(file))
+        file_list.append(create_preview_caff_file(file))
 
     return file_list
 
@@ -77,7 +77,7 @@ class CaffDataApi(Resource):
     @jwt_required()
     def get(self, caff_id):
         try:
-            storedFile = CaffFile.objects.get(id=caff_id)
+            stored_file = CaffFile.objects.get(id=caff_id)
         except DoesNotExist:
             current_app.logger.setLevel(logging.ERROR)
             current_app.logger.error('CAFF file does not exist with following id: ' + str(caff_id))
@@ -87,14 +87,14 @@ class CaffDataApi(Resource):
             current_app.logger.error('CAFF file does not exist with following id: ' + str(caff_id))
             return make_response(jsonify(errorId="299", errorMessage="File does not exist"), 404)
 
-        preview_file = createPreviewCaffFile(storedFile)
+        preview_file = create_preview_caff_file(stored_file)
         return make_response(jsonify(preview_file), 200)
 
     @jwt_required()
     def delete(self, caff_id):
         if current_user.isAdmin:
             try:
-                storedFile = CaffFile.objects.get(id=caff_id)
+                stored_file = CaffFile.objects.get(id=caff_id)
             except DoesNotExist:
                 current_app.logger.setLevel(logging.ERROR)
                 current_app.logger.error('CAFF file does not exist with following id: ' + str(caff_id))
@@ -104,13 +104,16 @@ class CaffDataApi(Resource):
                 current_app.logger.error('CAFF file does not exist with following id: ' + str(caff_id))
                 return make_response(jsonify(errorId="299", errorMessage="File does not exist"), 404)
 
-            filepath = os.path.join(os.environ.get('UPLOAD_FOLDER'), str(storedFile.id))
-            # filepath = os.path.join('./uploads/', str(storedFile.id))
+            filepath = os.path.join(os.environ.get('UPLOAD_FOLDER'), str(stored_file.id))
+
+            # for local testing
+            # filepath = os.path.join('./uploads/', str(stored_file.id))
+
             if os.path.exists(filepath):
                 os.remove(filepath)
-            storedFile.delete()
+            stored_file.delete()
             current_app.logger.setLevel(logging.INFO)
-            current_app.logger.info('CAFF file was deleted with the following name: ' + str(storedFile.caffName))
+            current_app.logger.info('CAFF file was deleted with the following name: ' + str(stored_file.caffName))
             return make_response(jsonify(message='CaffFile delete successful'), 200)
         else:
             current_app.logger.setLevel(logging.ERROR)
@@ -182,7 +185,7 @@ class CaffSearchApi(Resource):
             return make_response(jsonify(errorId="003", errorMessage="Invalid page number"), 400)
 
         if len(files.items) != 0:
-            preview_file_list = createPreviewCaffFileList(files.items)
+            preview_file_list = create_preview_caff_file_list(files.items)
         else:
             preview_file_list = []
 
@@ -216,19 +219,19 @@ class CaffUploadApi(Resource):
 
         uploader = get_current_user()
 
-        caffParser = CaffParser()
-        bytes = file.stream.read()
+        caff_parser = CaffParser()
+        file_bytes = file.stream.read()
 
         try:
-            parsed_file = caffParser.parse([b for b in bytes])
+            parsed_file = caff_parser.parse([b for b in file_bytes])
         except ValueError:
             current_app.logger.setLevel(logging.ERROR)
             current_app.logger.error('Invalid file format cannot be parsed')
             return make_response(jsonify(errorId="200", errorMessage="invalid file format"), 400)
 
-        previewAnimationImage = parsed_file.animationImages[0]
+        preview_animation_image = parsed_file.animationImages[0]
 
-        caffFile = CaffFile(
+        caff_file = CaffFile(
             caffName=name,
             numOfCiffs=parsed_file.header.numOfCiffs,
             creator=parsed_file.credits.creator,
@@ -242,25 +245,25 @@ class CaffUploadApi(Resource):
             comments=[],
             uploaderName=uploader.name,
             caffAnimationImage=CaffAnimationImage(
-                duration=previewAnimationImage.duration,
-                width=previewAnimationImage.ciffImage.header.width,
-                height=previewAnimationImage.ciffImage.header.height,
-                caption=previewAnimationImage.ciffImage.header.caption,
-                tags=previewAnimationImage.ciffImage.header.tags
+                duration=preview_animation_image.duration,
+                width=preview_animation_image.ciffImage.header.width,
+                height=preview_animation_image.ciffImage.header.height,
+                caption=preview_animation_image.ciffImage.header.caption,
+                tags=preview_animation_image.ciffImage.header.tags
             )
         )
 
-        caffFile.save()
+        caff_file.save()
 
-        filename = str(caffFile.id)
+        filename = str(caff_file.id)
 
         # for docker
         with open(os.path.join(os.environ.get('UPLOAD_FOLDER'), filename), 'wb+') as f:
-            f.write(bytes)
+            f.write(file_bytes)
 
         # for local testing
         # with open(os.path.join('./uploads/', filename), 'wb+') as f:
-        #     f.write(bytes)
+        #     f.write(file_bytes)
         current_app.logger.setLevel(logging.INFO)
         current_app.logger.info('New CAFF file was uploaded with the following name: ' + str(name))
         return make_response('', 201)
@@ -271,7 +274,7 @@ class CaffDownloadApi(Resource):
     @jwt_required()
     def get(self, caff_id):
         try:
-            storedFile = CaffFile.objects.get(id=caff_id)
+            stored_file = CaffFile.objects.get(id=caff_id)
         except DoesNotExist:
             current_app.logger.setLevel(logging.ERROR)
             current_app.logger.error('CAFF file does not exist with following id: ' + str(caff_id))
@@ -281,13 +284,13 @@ class CaffDownloadApi(Resource):
             current_app.logger.error('CAFF file does not exist with following id: ' + str(caff_id))
             return make_response(jsonify(errorId="299", errorMessage="File does not exist"), 404)
 
-        filename = str(storedFile.id)
+        filename = str(stored_file.id)
         filepath = os.path.join(os.environ.get('UPLOAD_FOLDER'), filename)
         # filepath = os.path.join('./uploads/', filename)
         if os.path.exists(filepath):
             current_app.logger.setLevel(logging.INFO)
-            current_app.logger.info('CAFF file was downloaded with the following name: ' + str(storedFile.caffName))
-            return send_file(path_or_file=filepath, as_attachment=True, download_name=storedFile.caffName)
+            current_app.logger.info('CAFF file was downloaded with the following name: ' + str(stored_file.caffName))
+            return send_file(path_or_file=filepath, as_attachment=True, download_name=stored_file.caffName)
         else:
             current_app.logger.setLevel(logging.ERROR)
             current_app.logger.error('CAFF file does not exist with following id: ' + str(caff_id))
