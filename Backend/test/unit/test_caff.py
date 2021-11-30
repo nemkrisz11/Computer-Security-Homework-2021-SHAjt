@@ -110,10 +110,19 @@ def test_caff_search(client, token):
 @pytest.mark.username("testuser")
 @pytest.mark.password("test1234")
 def test_caff_preview(client, token):
-    pass  # TODO
+    resp = client.get("/caff/61a559807aa83d946960d4f2", headers={"Authorization": "Bearer " + token})
+    assert resp.status_code == 200 and resp.json is not None
+
+    resp = client.get("/caff/00a000807aa83d946960d4f2", headers={"Authorization": "Bearer " + token})
+    assert resp.status_code == 404 and resp.json and resp.is_json and "File does not exist" in resp.json["errorMessage"]
 
 
 @pytest.mark.username("testadmin")
 @pytest.mark.password("DLee7ono7LVT5qiH7bkAxWgDfeegMNSj")
 def test_caff_delete(client, token):
-    pass  # TODO
+    resp = client.delete("/caff/00a000807aa83d946960d4f2", headers={"Authorization": "Bearer " + token})
+    assert resp.status_code == 404 and resp.json and resp.is_json and "File does not exist" in resp.json["errorMessage"]
+
+    resp = client.delete("/caff/61a559807aa83d946960d4f2", headers={"Authorization": "Bearer " + token})
+    assert resp.status_code == 200 and resp.json and "CaffFile delete successful" in resp.json["message"]
+
