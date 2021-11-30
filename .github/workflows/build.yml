@@ -66,10 +66,14 @@ jobs:
         working-directory: ./Backend/
         run: |
           docker-compose up -d
+      - name: Set test launch script permission
+        working-directory: ./Backend/test
+        run: |
+          chmod +x run_tests.sh
       - name: Run pytest for flaskapp
         working-directory: ./Backend/flaskapp
         run: |
-          docker exec -u www -it flask /var/www/test/run_tests.sh --cov
+          docker exec flask /var/www/test/run_tests.sh --cov
           docker cp flask:/var/www/flaskapp/htmlcov ./
       - uses: actions/upload-artifact@v2
         with:
