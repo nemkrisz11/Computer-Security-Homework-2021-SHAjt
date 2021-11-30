@@ -69,11 +69,12 @@ jobs:
       - name: Run pytest for flaskapp
         working-directory: ./Backend/flaskapp
         run: |
-          docker exec -it flask /var/www/test/run_tests.sh
+          docker exec flask /var/www/test/run_tests.sh
+          docker cp flask:/var/www/flaskapp/htmlcov ./
       - uses: actions/upload-artifact@v2
         with:
           name: code-coverage
-          path: htmlcov
+          path: ./Backend/flaskapp/htmlcov
       - name: SonarCloud Scan
         working-directory: ./Backend/flaskapp
         env:
