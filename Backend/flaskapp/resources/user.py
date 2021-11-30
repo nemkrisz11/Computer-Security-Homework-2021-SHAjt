@@ -24,7 +24,7 @@ class UsersListApi(Resource):
         try:
             users = User.objects.paginate(page, perpage).items
         except:
-            return make_response(jsonify(errorId="003", errorMessage="Invalid page number"), 400)
+            return make_response(jsonify(errorId="003", errorMessage="invalid page number"), 400)
 
         return make_response(
             jsonify(
