@@ -6,15 +6,15 @@ from flaskapp.resources.comment import CommentApi
 
 # Defining Per-IP request-rate limits and register endpoints
 def initialize_routes(api, limiter):
-    RegisterApi.decorators.append(limiter.limit('10/hour', methods=['POST']))
-    LoginApi.decorators.append(limiter.limit('30/minute', methods=['POST']))
-    PasswordChangeApi.decorators.append(limiter.limit('5/day', methods=['POST']))
-    CaffSearchApi.decorators.append(limiter.limit('1/second', methods=['GET']))
-    CaffDownloadApi.decorators.append(limiter.limit('10/minute', methods=['GET']))
-    CaffUploadApi.decorators.append(limiter.limit('10/minute', methods=['POST']))
-    CommentApi.decorators.append(limiter.limit('10/minute', methods=['POST']))
-    UserDataApi.decorators.append(limiter.limit('30/minute', methods=['DELETE']))
-    CaffDataApi.decorators.append(limiter.limit('30/minute', methods=['DELETE']))
+    RegisterApi.decorators = [limiter.limit('10/hour', methods=['POST'])]
+    LoginApi.decorators = [limiter.limit('30/minute', methods=['POST'])]
+    PasswordChangeApi.decorators = [limiter.limit('5/day', methods=['POST'])]
+    CaffSearchApi.decorators = [limiter.limit('1/second', methods=['GET'])]
+    CaffDownloadApi.decorators = [limiter.limit('10/minute', methods=['GET'])]
+    CaffUploadApi.decorators = [limiter.limit('10/minute', methods=['POST'])]
+    CommentApi.decorators = [limiter.limit('10/minute', methods=['POST'])]
+    UserDataApi.decorators = [limiter.limit('30/minute', methods=['DELETE'])]
+    CaffDataApi.decorators = [limiter.limit('30/minute', methods=['DELETE'])]
 
     api.add_resource(RegisterApi, '/user/register')
     api.add_resource(LoginApi, '/user/login')

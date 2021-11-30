@@ -1,3 +1,4 @@
+from flask import jsonify, make_response
 from flask_jwt_extended import JWTManager
 from flaskapp.database.models import User
 import redis
@@ -44,3 +45,8 @@ def check_if_token_is_revoked(_jwt_header, jwt_payload):
     jti = jwt_payload["jti"]
     token_in_redis = jwt_redis_blocklist.get(jti)
     return token_in_redis is not None
+
+
+@jwt.expired_token_loader
+def my_expired_token_callback(_jwt_header, _jwt_payload):
+    return make_response(jsonify(errorId="001", errorMessage="Token expired"), 401)

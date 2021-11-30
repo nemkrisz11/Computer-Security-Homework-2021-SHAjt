@@ -105,3 +105,15 @@ def test_caff_search(client, token):
     # 2021-11-26 23:00:14
     resp = client.get("/caff/search?uploadDate=1637964014000", headers={"Authorization": "Bearer " + token})
     assert resp.status_code == 200 and len(resp.json['caffs']) == 0
+
+
+@pytest.mark.username("testuser")
+@pytest.mark.password("test1234")
+def test_caff_preview(client, token):
+    pass  # TODO
+
+
+@pytest.mark.username("testadmin")
+@pytest.mark.password("DLee7ono7LVT5qiH7bkAxWgDfeegMNSj")
+def test_caff_delete(client, token):
+    pass  # TODO
