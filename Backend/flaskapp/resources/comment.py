@@ -29,9 +29,9 @@ class CommentApi(Resource):
             return make_response(jsonify(errorId="299", errorMessage="file does not exist"), 404)
 
         if not stored_file.comments:
-            current_app.logger.setLevel(logging.ERROR)
-            current_app.logger.error('Comments do not exist for CAFF id: ' + str(caff_id))
-            return make_response(jsonify(errorId="399", errorMessage="comment not found"), 400)
+            current_app.logger.setLevel(logging.INFO)
+            current_app.logger.info('Empty comment list returned for CAFF id: ' + str(caff_id))
+            return make_response(jsonify(comments=[], totalPages=0), 200)
         else:
             total_comment_count = len(stored_file.comments)
             comment_list = [{
@@ -57,7 +57,7 @@ class CommentApi(Resource):
             if total_comment_count > page*perpage:
                 paginated_comment_list = comment_list[(page - 1) * perpage: (page * perpage)]
 
-            return make_response(jsonify(comments=paginated_comment_list, totalPages=ceil(total_comment_count / perpage)))
+            return make_response(jsonify(comments=paginated_comment_list, totalPages=ceil(total_comment_count / perpage)), 200)
 
     # Uploading new comments with restrictions regarding length (between 0 and 200 chars)
     @jwt_required()
