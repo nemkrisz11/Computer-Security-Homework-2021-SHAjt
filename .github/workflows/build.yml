@@ -73,8 +73,8 @@ jobs:
       - name: Run pytest for flaskapp
         working-directory: ./Backend/flaskapp
         run: |
-          docker exec flask /var/www/test/run_tests.sh --cov
-          docker cp flask:/var/www/flaskapp/htmlcov ./
+          docker exec -u root flask /var/www/test/run_tests.sh --cov
+          docker cp flask:/tmp/htmlcov ./
       - uses: actions/upload-artifact@v2
         with:
           name: code-coverage
