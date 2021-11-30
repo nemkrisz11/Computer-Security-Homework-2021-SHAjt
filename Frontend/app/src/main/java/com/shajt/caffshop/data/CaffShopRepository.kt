@@ -3,16 +3,14 @@ package com.shajt.caffshop.data
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
+import android.os.Environment
 import android.util.Base64
 import androidx.core.content.edit
 import com.shajt.caffshop.data.enums.ErrorMessage
 import com.shajt.caffshop.data.models.*
 import com.shajt.caffshop.data.models.auth.AuthResult
 import com.shajt.caffshop.data.models.auth.UserCredentials
-import com.shajt.caffshop.data.models.caff.DeleteCaffResult
-import com.shajt.caffshop.data.models.caff.GetCaffResult
-import com.shajt.caffshop.data.models.caff.SearchCaffsResult
-import com.shajt.caffshop.data.models.caff.UploadCaffResult
+import com.shajt.caffshop.data.models.caff.*
 import com.shajt.caffshop.data.models.comment.DeleteCommentResult
 import com.shajt.caffshop.data.models.comment.GetCommentsResult
 import com.shajt.caffshop.data.models.comment.PostCommentResult
@@ -27,6 +25,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.io.InputStream
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -119,7 +118,7 @@ class CaffShopRepository @Inject constructor(
             val ivText = getString("iv", null)
 
             if (username == null || encryptedTokenText == null || expire == -1L || regDate == -1L || ivText == null) {
-                return null
+                return null // TODO change expire check
             }
 
             val encryptedToken = Base64.decode(encryptedTokenText, Base64.DEFAULT)
@@ -280,11 +279,37 @@ class CaffShopRepository @Inject constructor(
         return UploadCaffResult(success = true)
     }
 
-    suspend fun downloadCaff(caffId: String, context: Context) {
+    suspend fun downloadCaff(caffId: String, fileName: String): DownloadCaffResult {
         if (localUser == null) {
-            return
+            return DownloadCaffResult(error = ErrorMessage.INVALID_USER_DATA)
         }
-        apiInteractor.enqueueDownload(localUser!!.token, caffId, context)
+        val result = apiInteractor.downloadCaff(localUser!!.token, caffId)
+        val check = checkServerResult(result, ErrorMessage.CAFF_DOWNLOAD_FAILED)
+        if (check != null) {
+            return DownloadCaffResult(error = check)
+        }
+        val fullName = "$fileName-${System.currentTimeMillis()}.caff"
+        var stream: InputStream? = null
+        try {
+            stream = result.result!!.byteStream()
+            val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
+            val file = File(path, fullName)
+            val fos = FileOutputStream(file)
+            fos.use { output ->
+                val buffer = ByteArray(4 * 1024) // or other buffer size
+                var read: Int
+                while (stream.read(buffer).also { read = it } != -1) {
+                    output.write(buffer, 0, read)
+                }
+                output.flush()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return DownloadCaffResult(error = ErrorMessage.CAFF_DOWNLOAD_FAILED)
+        } finally {
+            stream?.close()
+        }
+        return DownloadCaffResult(success = fullName)
     }
 
     suspend fun getComments(caffId: String, page: Int = 1, perpage: Int = 20): GetCommentsResult {

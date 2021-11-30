@@ -102,6 +102,7 @@
     <string name="caff_details_action_download">Download</string>
     <string name="caff_details_action_delete">Delete</string>
     <string name="caff_details_content_post_comment">Comment</string>
+    <string name="caff_details_content_download_success">File downloaded: %s</string>
 
     <!-- Comment -->
     <string name="comment_content_expand">Expand comment</string>
@@ -130,6 +131,7 @@
     <string name="user_details_sample_account_image_description">Account image</string>
     <string name="user_details_content_new_password">New password</string>
     <string name="user_details_content_new_password_again">New password again</string>
+    <string name="user_details_content_password_change_success">Successful password modification</string>
 
     <!-- Users -->
     <string name="users_title">Users</string>

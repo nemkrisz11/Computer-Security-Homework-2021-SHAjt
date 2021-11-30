@@ -119,6 +119,10 @@ class DetailedUserFragment : Fragment() {
             }
         }
 
+        detailedUserViewModel.modifyPasswordResult.observe(viewLifecycleOwner, Observer {
+            DisplayMessage.displaySnackbar(binding.root, R.string.user_details_content_password_change_success)
+        })
+
         newPasswordInput.editText!!.doAfterTextChanged {
             newPasswordInput.error = null
         }

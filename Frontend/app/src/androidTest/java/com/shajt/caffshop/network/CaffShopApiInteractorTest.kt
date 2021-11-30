@@ -59,7 +59,7 @@ class CaffShopApiInteractorTest {
 
     @Test
     fun testGetUsers_unsuccessful() = runBlocking {
-        val error = Error(1, "Invalid request")
+        val error = Error("001", "Invalid token")
         val mockResponse = MockResponse()
             .setResponseCode(HttpURLConnection.HTTP_BAD_REQUEST)
             .setBody(Gson().toJson(error))
@@ -70,7 +70,7 @@ class CaffShopApiInteractorTest {
 
         assertNotNull(serverResult.error)
         assertNull(serverResult.result)
-        assertEquals(ErrorMessage.USER_LIST_REQUEST_FAILED, serverResult.error)
+        assertEquals(ErrorMessage.INVALID_TOKEN, serverResult.error)
 
         val receivedRequest = mockWebServer.takeRequest()
 
@@ -103,7 +103,7 @@ class CaffShopApiInteractorTest {
 
     @Test
     fun testGetUser_unsuccessful() = runBlocking {
-        val error = Error(1, "Invalid request")
+        val error = Error("000", "Invalid request")
         val mockResponse = MockResponse()
             .setResponseCode(HttpURLConnection.HTTP_BAD_REQUEST)
             .setBody(Gson().toJson(error))
@@ -146,7 +146,7 @@ class CaffShopApiInteractorTest {
 
     @Test
     fun testDeleteUser_unsuccessful() = runBlocking {
-        val error = Error(1, "Invalid request")
+        val error = Error("002", "Authorization failed")
         val mockResponse = MockResponse()
             .setResponseCode(HttpURLConnection.HTTP_BAD_REQUEST)
             .setBody(Gson().toJson(error))
@@ -157,7 +157,7 @@ class CaffShopApiInteractorTest {
 
         assertNotNull(serverResult.error)
         assertNull(serverResult.result)
-        assertEquals(ErrorMessage.USER_DELETE_FAILED, serverResult.error)
+        assertEquals(ErrorMessage.AUTHORIZATION_FAILED, serverResult.error)
 
         val receivedRequest = mockWebServer.takeRequest()
 
@@ -189,7 +189,7 @@ class CaffShopApiInteractorTest {
 
     @Test
     fun testRegister_unsuccessful() = runBlocking {
-        val error = Error(2, "Username already taken")
+        val error = Error("104", "Username already taken")
         val mockResponse = MockResponse()
             .setResponseCode(HttpURLConnection.HTTP_BAD_REQUEST)
             .setBody(Gson().toJson(error))
@@ -200,7 +200,7 @@ class CaffShopApiInteractorTest {
 
         assertNotNull(serverResult.error)
         assertNull(serverResult.result)
-        assertEquals(ErrorMessage.REGISTRATION_FAILED, serverResult.error)
+        assertEquals(ErrorMessage.USERNAME_IS_ALREADY_TAKEN, serverResult.error)
 
         val receivedRequest = mockWebServer.takeRequest()
 
@@ -233,7 +233,7 @@ class CaffShopApiInteractorTest {
 
     @Test
     fun testLogin_unsuccessful() = runBlocking {
-        val error = Error(3, "Invalid username or password")
+        val error = Error("120", "Invalid username or password")
         val mockResponse = MockResponse()
             .setResponseCode(HttpURLConnection.HTTP_BAD_REQUEST)
             .setBody(Gson().toJson(error))
@@ -244,7 +244,7 @@ class CaffShopApiInteractorTest {
 
         assertNotNull(serverResult.error)
         assertNull(serverResult.result)
-        assertEquals(ErrorMessage.LOGIN_FAILED, serverResult.error)
+        assertEquals(ErrorMessage.INVALID_USERNAME_OR_PASSWORD, serverResult.error)
 
         val receivedRequest = mockWebServer.takeRequest()
 
@@ -276,7 +276,7 @@ class CaffShopApiInteractorTest {
 
     @Test
     fun testLogout_unsuccessful() = runBlocking {
-        val error = Error(1, "Invalid request")
+        val error = Error("001", "Invalid token")
         val mockResponse = MockResponse()
             .setResponseCode(HttpURLConnection.HTTP_BAD_REQUEST)
             .setBody(Gson().toJson(error))
@@ -287,7 +287,7 @@ class CaffShopApiInteractorTest {
 
         assertNotNull(serverResult.error)
         assertNull(serverResult.result)
-        assertEquals(ErrorMessage.LOGOUT_FAILED, serverResult.error)
+        assertEquals(ErrorMessage.INVALID_TOKEN, serverResult.error)
 
         val receivedRequest = mockWebServer.takeRequest()
 
@@ -321,7 +321,7 @@ class CaffShopApiInteractorTest {
 
     @Test
     fun testModifyPassword_unsuccessful() = runBlocking {
-        val error = Error(1, "Invalid request")
+        val error = Error("114", "Password too weak")
         val mockResponse = MockResponse()
             .setResponseCode(HttpURLConnection.HTTP_BAD_REQUEST)
             .setBody(Gson().toJson(error))
@@ -333,7 +333,7 @@ class CaffShopApiInteractorTest {
 
         assertNotNull(serverResult.error)
         assertNull(serverResult.result)
-        assertEquals(ErrorMessage.MODIFY_PASSWORD_FAILED, serverResult.error)
+        assertEquals(ErrorMessage.PASSWORD_TOO_WEAK, serverResult.error)
 
         val receivedRequest = mockWebServer.takeRequest()
 
@@ -373,7 +373,7 @@ class CaffShopApiInteractorTest {
 
     @Test
     fun testGetCaff_unsuccessful() = runBlocking {
-        val error = Error(1, "Invalid request")
+        val error = Error("299", "Caff not found")
         val mockResponse = MockResponse()
             .setResponseCode(HttpURLConnection.HTTP_BAD_REQUEST)
             .setBody(Gson().toJson(error))
@@ -384,7 +384,7 @@ class CaffShopApiInteractorTest {
 
         assertNotNull(serverResult.error)
         assertNull(serverResult.result)
-        assertEquals(ErrorMessage.CAFF_REQUEST_FAILED, serverResult.error)
+        assertEquals(ErrorMessage.CAFF_NOT_FOUND, serverResult.error)
 
         val receivedRequest = mockWebServer.takeRequest()
 
@@ -417,7 +417,7 @@ class CaffShopApiInteractorTest {
 
     @Test
     fun testDeleteCaff_unsuccessful() = runBlocking {
-        val error = Error(1, "Invalid request")
+        val error = Error("001", "Invalid token")
         val mockResponse = MockResponse()
             .setResponseCode(HttpURLConnection.HTTP_BAD_REQUEST)
             .setBody(Gson().toJson(error))
@@ -428,7 +428,7 @@ class CaffShopApiInteractorTest {
 
         assertNotNull(serverResult.error)
         assertNull(serverResult.result)
-        assertEquals(ErrorMessage.CAFF_DELETE_FAILED, serverResult.error)
+        assertEquals(ErrorMessage.INVALID_TOKEN, serverResult.error)
 
         val receivedRequest = mockWebServer.takeRequest()
 
@@ -472,7 +472,7 @@ class CaffShopApiInteractorTest {
 
     @Test
     fun testSearchCaffs_unsuccessful() = runBlocking {
-        val error = Error(1, "Invalid request")
+        val error = Error("001", "Invalid token")
         val mockResponse = MockResponse()
             .setResponseCode(HttpURLConnection.HTTP_BAD_REQUEST)
             .setBody(Gson().toJson(error))
@@ -483,7 +483,7 @@ class CaffShopApiInteractorTest {
 
         assertNotNull(serverResult.error)
         assertNull(serverResult.result)
-        assertEquals(ErrorMessage.CAFF_SEARCH_FAILED, serverResult.error)
+        assertEquals(ErrorMessage.INVALID_TOKEN, serverResult.error)
 
         val receivedRequest = mockWebServer.takeRequest()
 
@@ -491,10 +491,6 @@ class CaffShopApiInteractorTest {
         assertEquals("/caff/search?searchTerm=test&page=1&perpage=20", receivedRequest.path)
         assertEquals("Bearer $token", receivedRequest.getHeader("Authorization"))
     }
-
-
-    // TODO upload caff, download caff
-
 
     @Test
     fun testGetComments_successful() = runBlocking {
@@ -525,7 +521,7 @@ class CaffShopApiInteractorTest {
 
     @Test
     fun testGetComments_unsuccessful() = runBlocking {
-        val error = Error(1, "Invalid request")
+        val error = Error("399", "Comment not found")
         val mockResponse = MockResponse()
             .setResponseCode(HttpURLConnection.HTTP_BAD_REQUEST)
             .setBody(Gson().toJson(error))
@@ -536,7 +532,7 @@ class CaffShopApiInteractorTest {
 
         assertNotNull(serverResult.error)
         assertNull(serverResult.result)
-        assertEquals(ErrorMessage.COMMENT_LIST_REQUEST_FAILED, serverResult.error)
+        assertEquals(ErrorMessage.COMMENT_NOT_FOUND, serverResult.error)
 
         val receivedRequest = mockWebServer.takeRequest()
 
@@ -570,7 +566,7 @@ class CaffShopApiInteractorTest {
 
     @Test
     fun testPostComment_unsuccessful() = runBlocking {
-        val error = Error(1, "Invalid request")
+        val error = Error("301", "Comment too long")
         val mockResponse = MockResponse()
             .setResponseCode(HttpURLConnection.HTTP_BAD_REQUEST)
             .setBody(Gson().toJson(error))
@@ -582,7 +578,7 @@ class CaffShopApiInteractorTest {
 
         assertNotNull(serverResult.error)
         assertNull(serverResult.result)
-        assertEquals(ErrorMessage.COMMENT_POST_FAILED, serverResult.error)
+        assertEquals(ErrorMessage.COMMENT_TOO_LONG, serverResult.error)
 
         val receivedRequest = mockWebServer.takeRequest()
 
@@ -615,7 +611,7 @@ class CaffShopApiInteractorTest {
 
     @Test
     fun testDeleteComment_unsuccessful() = runBlocking {
-        val error = Error(1, "Invalid request")
+        val error = Error("001", "Invalid token")
         val mockResponse = MockResponse()
             .setResponseCode(HttpURLConnection.HTTP_BAD_REQUEST)
             .setBody(Gson().toJson(error))
@@ -626,7 +622,7 @@ class CaffShopApiInteractorTest {
 
         assertNotNull(serverResult.error)
         assertNull(serverResult.result)
-        assertEquals(ErrorMessage.COMMENT_DELETE_FAILED, serverResult.error)
+        assertEquals(ErrorMessage.INVALID_TOKEN, serverResult.error)
 
         val receivedRequest = mockWebServer.takeRequest()
 

@@ -51,6 +51,7 @@ class CaffDetailsCommentsRecyclerViewAdapter(
                         resize(holder, true)
                     }
                     setOnClickListener {
+                        resize(holder, false)
                         deleteComment(item)
                     }
                 }

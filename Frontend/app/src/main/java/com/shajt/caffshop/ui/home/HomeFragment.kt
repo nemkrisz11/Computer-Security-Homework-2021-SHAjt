@@ -78,6 +78,9 @@ class HomeFragment : Fragment() {
             })
 
             setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+                if (listAdapter.itemCount == 0) {
+                    return@setOnScrollChangeListener
+                }
                 if (gridLayoutManager.findLastVisibleItemPosition() == listAdapter.itemCount - 1) {
                     homeViewModel.getMoreCaffs()
                 }

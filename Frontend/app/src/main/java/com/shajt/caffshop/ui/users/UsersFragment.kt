@@ -59,6 +59,9 @@ class UsersFragment : Fragment() {
             })
 
             setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+                if (listAdapter.itemCount == 0) {
+                    return@setOnScrollChangeListener
+                }
                 if (linearLayoutManager.findLastVisibleItemPosition() == listAdapter.itemCount - 1) {
                     usersViewModel.getMoreUsers()
                 }

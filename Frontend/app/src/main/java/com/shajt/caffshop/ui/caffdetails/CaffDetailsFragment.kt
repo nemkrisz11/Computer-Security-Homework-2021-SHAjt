@@ -10,12 +10,17 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.shajt.caffshop.R
 import com.shajt.caffshop.data.models.CaffAnimationImage
+import com.shajt.caffshop.ui.commons.CreateCiff
 import com.shajt.caffshop.ui.commons.DisplayMessage
 import com.shajt.caffshop.ui.home.HomeActivity
 import com.shajt.caffshop.viewmodels.caffdetails.CaffDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -87,6 +92,7 @@ class CaffDetailsFragment : Fragment() {
             upload.text = SimpleDateFormat.getDateInstance().format(Date(it.uploadDate))
             numOfCiffs.text = it.numOfCiffs.toString()
             loading.visibility = View.GONE
+            createCiffImage(it.caffAnimationImage)
         })
 
         var isFullScreen = false
@@ -116,8 +122,16 @@ class CaffDetailsFragment : Fragment() {
         }
 
         download.setOnClickListener {
-            caffDetailsViewModel.downloadCaff(caffId, requireContext())
+            caffDetailsViewModel.downloadCaff(caffId, name.text.toString().replace("\"", ""))
         }
+
+        caffDetailsViewModel.downloadCaffResult.observe(viewLifecycleOwner, Observer {
+            DisplayMessage.displaySnackbar(
+                binding.root,
+                getString(R.string.caff_details_content_download_success, it),
+                binding.commentInput
+            )
+        })
 
         with(delete) {
             if (caffDetailsViewModel.userIsAdmin) {
@@ -156,6 +170,9 @@ class CaffDetailsFragment : Fragment() {
             })
 
             setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+                if (listAdapter.itemCount == 0) {
+                    return@setOnScrollChangeListener
+                }
                 if (linearLayoutManager.findLastVisibleItemPosition() == listAdapter.itemCount - 1) {
                     caffDetailsViewModel.getMoreComments(caffId)
                 }
@@ -188,7 +205,12 @@ class CaffDetailsFragment : Fragment() {
     }
 
     private fun createCiffImage(caffAnimationImage: CaffAnimationImage) {
-        // TODO
+        lifecycleScope.launch(Dispatchers.IO) {
+            val bitmap = CreateCiff.createCiff(caffAnimationImage.pixelValues)
+            binding.ciff.post {
+                binding.ciff.setImageBitmap(bitmap)
+            }
+        }
     }
 
     private fun validateCommentText(text: String): String? {

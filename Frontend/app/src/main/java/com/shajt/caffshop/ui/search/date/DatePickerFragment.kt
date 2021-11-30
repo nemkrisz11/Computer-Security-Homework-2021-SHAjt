@@ -11,7 +11,7 @@ import java.util.*
 
 class DatePickerFragment(
     private var textView: TextView,
-    private var outDate: Long?
+    private var outDate: (Long) -> Unit
 ) : DialogFragment(), DatePickerDialog.OnDateSetListener {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -26,7 +26,7 @@ class DatePickerFragment(
     override fun onDateSet(view: DatePicker, year: Int, month: Int, dayOfMonth: Int) {
         val date  = GregorianCalendar(year, month, dayOfMonth)
         textView.text = SimpleDateFormat.getDateInstance().format(date.time)
-        outDate = date.timeInMillis
+        outDate(date.timeInMillis)
     }
 
 }

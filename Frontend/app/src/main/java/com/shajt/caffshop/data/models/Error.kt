@@ -1,6 +1,6 @@
 package com.shajt.caffshop.data.models
 
 data class Error(
-    val errorId: Int,
+    val errorId: String,
     val errorMessage: String
 )

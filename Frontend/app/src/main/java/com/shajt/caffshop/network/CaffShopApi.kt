@@ -4,6 +4,7 @@ import com.shajt.caffshop.data.models.*
 import com.shajt.caffshop.data.models.auth.LoginResult
 import com.shajt.caffshop.data.models.auth.UserCredentials
 import okhttp3.MultipartBody
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -85,11 +86,12 @@ interface CaffShopApi {
         @Part file: MultipartBody.Part
     )
 
+    @Streaming
     @GET("/caff/download/{id}")
     suspend fun downloadCaff(
         @Header("Authorization") authHeader: String,
         @Path("id") id: String
-    ): Response<CaffRaw>
+    ): Response<ResponseBody>
 
     @GET("/comment")
     suspend fun getComments(

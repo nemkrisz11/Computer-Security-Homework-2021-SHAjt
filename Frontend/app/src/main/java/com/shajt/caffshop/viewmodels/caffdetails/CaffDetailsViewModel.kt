@@ -1,6 +1,5 @@
 package com.shajt.caffshop.viewmodels.caffdetails
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +11,7 @@ import com.shajt.caffshop.data.models.Comment
 import com.shajt.caffshop.data.models.CommentToCreate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,6 +25,9 @@ class CaffDetailsViewModel @Inject constructor(
 
     private var _caff = MutableLiveData<Caff>()
     val caff: LiveData<Caff> = _caff
+
+    private var _downloadCaffResult = MutableLiveData<String>()
+    val downloadCaffResult: LiveData<String> = _downloadCaffResult
 
     private var _deleteCaffResult = MutableLiveData<Boolean>()
     val deleteCaffResult: LiveData<Boolean> = _deleteCaffResult
@@ -73,9 +76,14 @@ class CaffDetailsViewModel @Inject constructor(
         }
     }
 
-    fun downloadCaff(caffId: String, context: Context) {
+    fun downloadCaff(caffId: String, fileName: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            caffShopRepository.downloadCaff(caffId, context)
+            val downloadResult = caffShopRepository.downloadCaff(caffId, fileName)
+            if (downloadResult.success != null) {
+                _downloadCaffResult.postValue(downloadResult.success!!)
+            } else {
+                _error.postValue(downloadResult.error!!)
+            }
         }
     }
 
@@ -94,7 +102,9 @@ class CaffDetailsViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val postCommentResult = caffShopRepository.postComment(CommentToCreate(caffId, text))
             if (postCommentResult.success) {
-                // TODO post should return comment id
+                _comments.postValue(emptyList())
+                actualPage = 0
+                getMoreComments(caffId)
             } else {
                 _error.postValue(postCommentResult.error!!)
             }
@@ -103,6 +113,7 @@ class CaffDetailsViewModel @Inject constructor(
 
     fun deleteComment(comment: Comment) {
         viewModelScope.launch(Dispatchers.IO) {
+            delay(5000)
             val deleteResult = caffShopRepository.deleteComment(comment.id, comment.caffId)
             if (deleteResult.success) {
                 if (comments.value != null) {

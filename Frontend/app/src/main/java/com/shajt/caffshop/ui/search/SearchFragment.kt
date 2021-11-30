@@ -67,6 +67,9 @@ class SearchFragment : Fragment() {
             })
 
             setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+                if (listAdapter.itemCount == 0) {
+                    return@setOnScrollChangeListener
+                }
                 if (gridLayoutManager.findLastVisibleItemPosition() == listAdapter.itemCount - 1) {
                     searchViewModel.searchCaffs(searchCaffQuery)
                 }
@@ -74,11 +77,21 @@ class SearchFragment : Fragment() {
         }
 
         creationDate.setOnClickListener {
-            DatePickerFragment(creationDate, selectedCreationDate).show(childFragmentManager, null)
+            DatePickerFragment(creationDate) { date ->
+                selectedCreationDate = date
+            }.show(
+                childFragmentManager,
+                null
+            )
         }
 
         uploadDate.setOnClickListener {
-            DatePickerFragment(uploadDate, selectedUploadDate).show(childFragmentManager, null)
+            DatePickerFragment(uploadDate) { date ->
+                selectedUploadDate = date
+            }.show(
+                childFragmentManager,
+                null
+            )
         }
 
         clear.setOnClickListener {
@@ -86,7 +99,9 @@ class SearchFragment : Fragment() {
             creator.editText!!.text.clear()
             uploader.editText!!.text.clear()
             creationDate.text = null
+            selectedCreationDate = null
             uploadDate.text = null
+            selectedUploadDate = null
         }
 
         search.setOnClickListener {

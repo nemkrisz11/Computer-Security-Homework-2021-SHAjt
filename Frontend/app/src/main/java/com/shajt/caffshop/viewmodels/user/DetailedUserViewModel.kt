@@ -26,6 +26,9 @@ class DetailedUserViewModel @Inject constructor(
     private var _deleteUserResult = MutableLiveData<Boolean>()
     val deleteUserResult: LiveData<Boolean> = _deleteUserResult
 
+    private var _modifyPasswordResult = MutableLiveData<Boolean>()
+    val modifyPasswordResult: LiveData<Boolean> = _modifyPasswordResult
+
     val userIsAdmin: Boolean
         get() = caffShopRepository.localUser?.isAdmin!!
 
@@ -34,8 +37,7 @@ class DetailedUserViewModel @Inject constructor(
 
     fun getUserDetails(username: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            if(username.isBlank())
-            {
+            if (username.isBlank()) {
                 val localUser = UserData(
                     username = caffShopRepository.localUser?.username!!,
                     isAdmin = caffShopRepository.localUser?.isAdmin!!,
@@ -43,6 +45,7 @@ class DetailedUserViewModel @Inject constructor(
                 )
 
                 _user.postValue(localUser)
+                return@launch
             }
             val userResult = caffShopRepository.getUser(username)
             if (userResult.success != null) {
@@ -66,8 +69,19 @@ class DetailedUserViewModel @Inject constructor(
 
     fun changePassword(newPassword: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val modifyPasswordResult = caffShopRepository.modifyPassword(ModifyPassword(user.value?.username!!, newPassword))
-            if (!modifyPasswordResult.success) {
+            val modifyPasswordResult = caffShopRepository.modifyPassword(
+                ModifyPassword(
+                    if (currentUsername == user.value?.username!!) {
+                        null
+                    } else {
+                        user.value?.username
+                    },
+                    newPassword
+                )
+            )
+            if (modifyPasswordResult.success) {
+                _modifyPasswordResult.postValue(true)
+            } else {
                 _error.postValue(modifyPasswordResult.error!!)
             }
         }

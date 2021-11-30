@@ -5,6 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.shajt.caffshop.data.models.Caff
 import com.shajt.caffshop.databinding.ViewCaffListItemBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class CaffsRecyclerViewAdapter(
     private val selected: (caffId: String) -> Unit
@@ -27,6 +30,13 @@ class CaffsRecyclerViewAdapter(
             selected(item.id)
         }
         holder.name.text = item.caffName
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val bitmap = CreateCiff.createCiff(item.caffAnimationImage.pixelValues)
+            holder.ciff.post {
+                holder.ciff.setImageBitmap(bitmap)
+            }
+        }
     }
 
     inner class CaffsListItemViewHolder(binding: ViewCaffListItemBinding) :
