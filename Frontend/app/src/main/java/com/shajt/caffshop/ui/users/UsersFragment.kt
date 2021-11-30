@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shajt.caffshop.databinding.FragmentUsersBinding
@@ -45,6 +46,7 @@ class UsersFragment : Fragment() {
 
         val users = binding.usersList
         val loading = binding.loading
+        val emptyMarker = binding.emptyMarker
 
         with(users) {
             val linearLayoutManager = LinearLayoutManager(context)
@@ -56,6 +58,7 @@ class UsersFragment : Fragment() {
             usersViewModel.users.observe(viewLifecycleOwner, Observer {
                 listAdapter.submitList(it)
                 loading.visibility = View.GONE
+                emptyMarker.isVisible = it.isEmpty()
             })
 
             setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->

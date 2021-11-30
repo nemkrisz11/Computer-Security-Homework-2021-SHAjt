@@ -30,6 +30,12 @@ class CaffDetailsFragment : Fragment() {
     companion object {
 
         private const val ARG_CAFF_ID = "caffId"
+        private const val CALLBACK_ID_LOAD_DETAILS = 1
+        private const val CALLBACK_ID_LOAD_COMMENTS = 2
+        private const val CALLBACK_ID_POST_COMMENT = 3
+        private const val CALLBACK_ID_DELETE_COMMENT = 4
+        private const val CALLBACK_ID_DOWNLOAD_CAFF = 5
+        private const val CALLBACK_ID_DELETE_CAFF = 6
 
         @JvmStatic
         fun newInstance(caffId: String) =
@@ -67,7 +73,8 @@ class CaffDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         caffDetailsViewModel = ViewModelProvider(this)[CaffDetailsViewModel::class.java]
 
-        caffDetailsViewModel.getCaffDetails(caffId)
+        caffDetailsViewModel.getCaffDetails(caffId, CALLBACK_ID_LOAD_DETAILS)
+        caffDetailsViewModel.getMoreComments(caffId, CALLBACK_ID_LOAD_COMMENTS)
 
         val ciff = binding.ciff
         val name = binding.name
@@ -122,7 +129,10 @@ class CaffDetailsFragment : Fragment() {
         }
 
         download.setOnClickListener {
-            caffDetailsViewModel.downloadCaff(caffId, name.text.toString().replace("\"", ""))
+            caffDetailsViewModel.downloadCaff(
+                caffId, name.text.toString().replace("\"", ""),
+                CALLBACK_ID_DOWNLOAD_CAFF
+            )
         }
 
         caffDetailsViewModel.downloadCaffResult.observe(viewLifecycleOwner, Observer {
@@ -137,12 +147,13 @@ class CaffDetailsFragment : Fragment() {
             if (caffDetailsViewModel.userIsAdmin) {
                 visibility = View.VISIBLE
                 setOnClickListener {
-                    caffDetailsViewModel.deleteCaff(caffId)
+                    caffDetailsViewModel.deleteCaff(caffId, CALLBACK_ID_DELETE_CAFF)
                 }
             }
         }
 
         caffDetailsViewModel.deleteCaffResult.observe(viewLifecycleOwner, Observer {
+            DisplayMessage.displayToast(requireContext(), R.string.caff_details_content_caff_delete_success)
             startActivity(
                 Intent(requireContext(), HomeActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -174,7 +185,7 @@ class CaffDetailsFragment : Fragment() {
                     return@setOnScrollChangeListener
                 }
                 if (linearLayoutManager.findLastVisibleItemPosition() == listAdapter.itemCount - 1) {
-                    caffDetailsViewModel.getMoreComments(caffId)
+                    caffDetailsViewModel.getMoreComments(caffId, CALLBACK_ID_LOAD_COMMENTS)
                 }
             }
 
@@ -190,15 +201,22 @@ class CaffDetailsFragment : Fragment() {
         send.setOnClickListener {
             val trimmed = validateCommentText(commentInput.editText!!.text.toString())
             if (trimmed != null) {
-                caffDetailsViewModel.postComment(caffId, trimmed)
+                caffDetailsViewModel.postComment(caffId, trimmed, CALLBACK_ID_POST_COMMENT)
                 commentInput.editText!!.text.clear()
             }
         }
 
         caffDetailsViewModel.error.observe(viewLifecycleOwner, Observer {
+            when (it.second) {
+                CALLBACK_ID_LOAD_DETAILS -> {
+                    loading.visibility = View.GONE
+                    commentsLoading.visibility = View.GONE
+                }
+                CALLBACK_ID_LOAD_COMMENTS -> commentsLoading.visibility = View.GONE
+            }
             DisplayMessage.displaySnackbar(
                 binding.root,
-                it.errorStringResourceId,
+                it.first.errorStringResourceId,
                 binding.commentInput
             )
         })

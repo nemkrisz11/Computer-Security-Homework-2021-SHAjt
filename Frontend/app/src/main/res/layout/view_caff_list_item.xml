@@ -18,7 +18,7 @@
             android:layout_height="150dp"
             android:contentDescription="@string/caff_list_content_ciff"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_launcher_background"
+            android:src="@drawable/ic_round_android_24"
             app:layout_constraintBottom_toTopOf="@id/name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

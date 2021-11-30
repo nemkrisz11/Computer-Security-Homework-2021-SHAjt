@@ -117,7 +117,10 @@ class CaffShopRepository @Inject constructor(
             val isAdmin = getBoolean("isAdmin", false)
             val ivText = getString("iv", null)
 
-            if (username == null || encryptedTokenText == null || expire == -1L || regDate == -1L || ivText == null) {
+            if (username == null || encryptedTokenText == null || expire == -1L ||
+                expire - System.currentTimeMillis() < 1_000_000 || regDate == -1L ||
+                ivText == null
+            ) {
                 return null // TODO change expire check
             }
 

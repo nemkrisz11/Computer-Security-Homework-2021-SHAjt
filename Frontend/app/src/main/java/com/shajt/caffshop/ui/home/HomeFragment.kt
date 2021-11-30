@@ -97,6 +97,7 @@ class HomeFragment : Fragment() {
         }
 
         homeViewModel.uploadSuccess.observe(viewLifecycleOwner, Observer {
+            loading.visibility = View.VISIBLE
             DisplayMessage.displaySnackbar(binding.root, R.string.upload_content_successful, upload)
         })
 

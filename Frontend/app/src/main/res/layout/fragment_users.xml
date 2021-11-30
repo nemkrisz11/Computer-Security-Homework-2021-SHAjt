@@ -16,6 +16,19 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/fragment_users_user_list_item" />
 
+    <TextView
+        android:id="@+id/emptyMarker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/users_content_empty_users"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
     <ProgressBar
         android:id="@+id/loading"
         android:layout_width="wrap_content"

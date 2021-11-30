@@ -93,6 +93,7 @@ class DetailedUserFragment : Fragment() {
         }
 
         detailedUserViewModel.deleteUserResult.observe(viewLifecycleOwner, Observer {
+            DisplayMessage.displayToast(requireContext(), R.string.user_details_content_user_delete_success)
             startActivity(
                 Intent(requireContext(), HomeActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

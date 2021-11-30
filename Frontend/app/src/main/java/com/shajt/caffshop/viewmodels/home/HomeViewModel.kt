@@ -61,10 +61,17 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun refreshCaffs() {
+        _caffs.postValue(emptyList())
+        actualPage = 0
+        getMoreCaffs()
+    }
+
     fun uploadCaff(uri: Uri, name: String, context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
             val uploadCaffResult = caffShopRepository.uploadCaff(uri, name, context)
             if (uploadCaffResult.success) {
+                refreshCaffs()
                 _uploadSuccess.postValue(true)
             } else {
                 _error.postValue(uploadCaffResult.error!!)

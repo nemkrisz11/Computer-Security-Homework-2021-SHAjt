@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.shajt.caffshop.data.models.caff.SearchCaffQuery
@@ -45,6 +46,7 @@ class SearchFragment : Fragment() {
         searchViewModel = ViewModelProvider(this)[SearchViewModel::class.java]
 
         val caffs = binding.caffs
+        val emptyMarker = binding.emptyMarker
         val searchTerm = binding.searchTerm
         val creator = binding.creator
         val uploader = binding.uploader
@@ -64,6 +66,7 @@ class SearchFragment : Fragment() {
             searchViewModel.caffs.observe(viewLifecycleOwner, Observer {
                 listAdapter.submitList(it)
                 loading.visibility = View.GONE
+                emptyMarker.isVisible = it.isEmpty()
             })
 
             setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
@@ -112,7 +115,7 @@ class SearchFragment : Fragment() {
                 selectedCreationDate,
                 selectedUploadDate
             )
-            searchViewModel.searchCaffs(searchCaffQuery)
+            loading.isVisible = searchViewModel.searchCaffs(searchCaffQuery)
         }
 
         searchViewModel.error.observe(viewLifecycleOwner, Observer {

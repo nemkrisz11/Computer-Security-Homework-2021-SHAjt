@@ -20,8 +20,8 @@ class CaffDetailsViewModel @Inject constructor(
     private val caffShopRepository: CaffShopRepository
 ) : ViewModel() {
 
-    private var _error = MutableLiveData<ErrorMessage>()
-    val error: LiveData<ErrorMessage> = _error
+    private var _error = MutableLiveData<Pair<ErrorMessage, Int>>()
+    val error: LiveData<Pair<ErrorMessage, Int>> = _error
 
     private var _caff = MutableLiveData<Caff>()
     val caff: LiveData<Caff> = _caff
@@ -41,19 +41,18 @@ class CaffDetailsViewModel @Inject constructor(
         get() = caffShopRepository.localUser?.isAdmin!!
 
 
-    fun getCaffDetails(caffId: String) {
+    fun getCaffDetails(caffId: String, callbackId: Int = -1) {
         viewModelScope.launch(Dispatchers.IO) {
             val caffResult = caffShopRepository.getCaff(caffId)
             if (caffResult.success != null) {
                 _caff.postValue(caffResult.success!!)
             } else {
-                _error.postValue(caffResult.error!!)
+                _error.postValue(Pair(caffResult.error!!, callbackId))
             }
         }
-        getMoreComments(caffId)
     }
 
-    fun getMoreComments(caffId: String) {
+    fun getMoreComments(caffId: String, callbackId: Int = -1) {
         if (actualPage >= totalPages) {
             return
         }
@@ -71,34 +70,34 @@ class CaffDetailsViewModel @Inject constructor(
                     _comments.postValue(commentList.success.comments)
                 }
             } else {
-                _error.postValue(commentList.error!!)
+                _error.postValue(Pair(commentList.error!!, callbackId))
             }
         }
     }
 
-    fun downloadCaff(caffId: String, fileName: String) {
+    fun downloadCaff(caffId: String, fileName: String, callbackId: Int = -1) {
         viewModelScope.launch(Dispatchers.IO) {
             val downloadResult = caffShopRepository.downloadCaff(caffId, fileName)
             if (downloadResult.success != null) {
                 _downloadCaffResult.postValue(downloadResult.success!!)
             } else {
-                _error.postValue(downloadResult.error!!)
+                _error.postValue(Pair(downloadResult.error!!, callbackId))
             }
         }
     }
 
-    fun deleteCaff(caffId: String) {
+    fun deleteCaff(caffId: String, callbackId: Int = -1) {
         viewModelScope.launch(Dispatchers.IO) {
             val deleteCaffResult = caffShopRepository.deleteCaff(caffId)
             if (deleteCaffResult.success) {
                 _deleteCaffResult.postValue(true)
             } else {
-                _error.postValue(deleteCaffResult.error!!)
+                _error.postValue(Pair(deleteCaffResult.error!!, callbackId))
             }
         }
     }
 
-    fun postComment(caffId: String, text: String) {
+    fun postComment(caffId: String, text: String, callbackId: Int = -1) {
         viewModelScope.launch(Dispatchers.IO) {
             val postCommentResult = caffShopRepository.postComment(CommentToCreate(caffId, text))
             if (postCommentResult.success) {
@@ -106,12 +105,12 @@ class CaffDetailsViewModel @Inject constructor(
                 actualPage = 0
                 getMoreComments(caffId)
             } else {
-                _error.postValue(postCommentResult.error!!)
+                _error.postValue(Pair(postCommentResult.error!!, callbackId))
             }
         }
     }
 
-    fun deleteComment(comment: Comment) {
+    fun deleteComment(comment: Comment, callbackId: Int = -1) {
         viewModelScope.launch(Dispatchers.IO) {
             delay(5000)
             val deleteResult = caffShopRepository.deleteComment(comment.id, comment.caffId)
@@ -123,7 +122,7 @@ class CaffDetailsViewModel @Inject constructor(
                     _comments.postValue(comments)
                 }
             } else {
-                _error.postValue(deleteResult.error!!)
+                _error.postValue(Pair(deleteResult.error!!, callbackId))
             }
         }
     }

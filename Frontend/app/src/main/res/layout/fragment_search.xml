@@ -13,12 +13,23 @@
         android:layout_marginBottom="75dp"
         tools:listitem="@layout/view_caff_list_item" />
 
+    <TextView
+        android:id="@+id/emptyMarker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="75dp"
+        android:text="@string/search_content_no_items"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
+        android:visibility="gone" />
+
     <ProgressBar
         android:id="@+id/loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|center"
-        android:layout_marginTop="100dp" />
+        android:layout_marginTop="100dp"
+        android:visibility="gone" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/searchSheet"

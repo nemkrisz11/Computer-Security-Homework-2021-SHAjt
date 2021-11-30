@@ -103,6 +103,7 @@
     <string name="caff_details_action_delete">Delete</string>
     <string name="caff_details_content_post_comment">Comment</string>
     <string name="caff_details_content_download_success">File downloaded: %s</string>
+    <string name="caff_details_content_caff_delete_success">Caff deleted successfully</string>
 
     <!-- Comment -->
     <string name="comment_content_expand">Expand comment</string>
@@ -119,6 +120,7 @@
     <string name="search_content_upload_date">Upload date</string>
     <string name="search_action_search">Search</string>
     <string name="search_action_clear">Clear all</string>
+    <string name="search_content_no_items">No matching items</string>
 
     <!-- UserDetails -->
     <string name="user_details_title">User details</string>
@@ -132,9 +134,11 @@
     <string name="user_details_content_new_password">New password</string>
     <string name="user_details_content_new_password_again">New password again</string>
     <string name="user_details_content_password_change_success">Successful password modification</string>
+    <string name="user_details_content_user_delete_success">User deleted successfully</string>
 
     <!-- Users -->
     <string name="users_title">Users</string>
+    <string name="users_content_empty_users">No users</string>
 
     <!-- UserListItem -->
     <string name="user_list_item_is_admin">Is admin</string>

@@ -17,7 +17,7 @@
         android:contentDescription="@string/caff_details_caff_animation_image"
         android:maxHeight="200dp"
         android:scaleType="centerInside"
-        android:src="@drawable/ic_launcher_background"
+        android:src="@drawable/ic_round_android_24"
         app:layout_constraintBottom_toTopOf="@id/details"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

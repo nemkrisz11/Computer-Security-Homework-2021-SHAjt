@@ -30,10 +30,10 @@ class SearchViewModel @Inject constructor(
     private lateinit var prevSearchCaffQuery: SearchCaffQuery
 
 
-    fun searchCaffs(searchCaffQuery: SearchCaffQuery) {
+    fun searchCaffs(searchCaffQuery: SearchCaffQuery): Boolean {
         if (::prevSearchCaffQuery.isInitialized) {
             if (prevSearchCaffQuery == searchCaffQuery && actualPage >= totalPages) {
-                return
+                return false
             } else if (prevSearchCaffQuery != searchCaffQuery) {
                 actualPage = 0
                 totalPages = 1
@@ -62,5 +62,6 @@ class SearchViewModel @Inject constructor(
                 _error.postValue(searchCaffResult.error!!)
             }
         }
+        return true
     }
 }
