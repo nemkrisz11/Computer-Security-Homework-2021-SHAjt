@@ -118,10 +118,7 @@ class CaffSearchApi(Resource):
 
         query = None
         if searchterm:
-            if query:
-                query &= Q(caffName__contains=searchterm)
-            else:
-                query = Q(name__contains=searchterm)
+            query = Q(caffName__contains=searchterm)
         if creator:
             if query:
                 query &= Q(creator__contains=creator)
