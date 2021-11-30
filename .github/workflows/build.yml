@@ -66,15 +66,27 @@ jobs:
         working-directory: ./Backend/
         run: |
           docker-compose up -d
+      - name: Set test launch script permission
+        working-directory: ./Backend/test
+        run: |
+          chmod +x run_tests.sh
       - name: Run pytest for flaskapp
         working-directory: ./Backend/flaskapp
         run: |
-          docker exec flask /var/www/test/run_tests.sh
-          docker cp flask:/var/www/flaskapp/htmlcov ./
+          docker exec -u root flask /var/www/test/run_tests.sh --cov
+          docker cp flask:/tmp/htmlcov ./
       - uses: actions/upload-artifact@v2
         with:
           name: code-coverage
           path: ./Backend/flaskapp/htmlcov
+      - name: Download and set up sonar-scanner
+        env:
+          SONAR_SCANNER_DOWNLOAD_URL: https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ env.SONAR_SCANNER_VERSION }}-linux.zip
+        run: |
+          mkdir -p $HOME/.sonar
+          curl -sSLo $HOME/.sonar/sonar-scanner.zip ${{ env.SONAR_SCANNER_DOWNLOAD_URL }} 
+          unzip -o $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
+          echo "$HOME/.sonar/sonar-scanner-${{ env.SONAR_SCANNER_VERSION }}-linux/bin" >> $GITHUB_PATH
       - name: SonarCloud Scan
         working-directory: ./Backend/flaskapp
         env:
