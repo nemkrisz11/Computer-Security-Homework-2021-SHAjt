@@ -12,7 +12,7 @@ def test_comments(client, token):
     assert resp.status_code == 404 and resp.is_json and "file does not exist" in resp.json["errorMessage"]
 
     resp = client.get("/comment?caffId=61a559807aa83d946960d4f2", headers={"Authorization": "Bearer " + token})
-    assert resp.status_code == 400 and resp.is_json and "comment not found" in resp.json["errorMessage"]
+    assert resp.status_code == 200 and len(resp.json["comments"]) == 0
 
     resp = client.post("/comment?caffId=61a559807aa83d946960d4f2", headers={"Authorization": "Bearer " + token})
     assert resp.status_code == 400 and resp.is_json and "body cannot be empty" in resp.json["errorMessage"]
