@@ -1,15 +1,19 @@
+from math import ceil
+
 from flask import request, jsonify, make_response
 from mongoengine import DoesNotExist
 from flaskapp.database.models import User
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, current_user
 from flaskapp.database.models import CaffFile, Comment
+from datetime import datetime
 
 class CommentApi(Resource):
     @jwt_required()
     def get(self):
         caff_id = request.args.get('caffId', type=str)
-        stored_file = None
+        page = request.args.get('page', 1, type=int)
+        perpage = request.args.get('perpage', 20, type=int)
 
         try:
             stored_file = CaffFile.objects.get(id=caff_id)
@@ -19,15 +23,31 @@ class CommentApi(Resource):
         if not stored_file.comments:
             return make_response(jsonify(errorId="399", errorMessage="comment not found"), 400)
         else:
-            return make_response(jsonify(
-                [{
-                    "id": idx,
-                    "caffId": stored_file.caff_id,
-                    "username": c.username,
-                    "comment": c,
-                    "date": c.date
-                } for idx, c in enumerate(stored_file.comments)]           
-            ))
+            total_comment_count = len(stored_file.comments)
+            comment_list = [{
+                "id": idx,
+                "caffId": str(stored_file.id),
+                "username": c.username,
+                "comment": c.comment,
+                "date": int(datetime.timestamp(c.date) * 1000)
+            } for idx, c in enumerate(stored_file.comments)]
+
+            # given page doesn't have any elements
+            if total_comment_count <= (page-1)*perpage:
+                paginated_comment_list = []
+
+            # given page is the last page
+            if (page - 1)*perpage < total_comment_count and total_comment_count <= page*perpage:
+                if total_comment_count == 1:
+                    paginated_comment_list = comment_list
+                else:
+                    paginated_comment_list = comment_list[(page - 1) * perpage:]
+
+            # given page not the last page
+            if total_comment_count > page*perpage:
+                paginated_comment_list = comment_list[(page - 1) * perpage: (page * perpage)]
+
+            return make_response(jsonify(comments=paginated_comment_list, totalPages=ceil(total_comment_count / perpage)))
 
     @jwt_required()
     def post(self):
