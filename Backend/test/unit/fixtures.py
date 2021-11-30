@@ -13,7 +13,7 @@ def client():
     Supports standard werkzeug stuff, e.g.:
     https://werkzeug.palletsprojects.com/en/2.0.x/test/
     """
-    app = create_app()
+    app = create_app(limiter_enabled=False)
     with app.test_client() as client:
         with app.app_context():
             init('mongodb://' + os.environ['MONGODB_USERNAME'] + ':' + os.environ[

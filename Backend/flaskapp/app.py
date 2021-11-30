@@ -15,7 +15,7 @@ from flask_limiter.util import get_remote_address
 # Init Flask application
 # Configure database and JWT token properties
 # Configure routes
-def create_app():
+def create_app(limiter_enabled):
     application = Flask(__name__)
     # csrf = CSRFProtect()
     # csrf.init_app(application)
@@ -23,6 +23,7 @@ def create_app():
     limiter = Limiter(
         application,
         key_func=get_remote_address)
+    limiter.enabled = limiter_enabled
     if application.logger.handlers:
         application.logger.handlers = []
     handler = FileHandler('/var/log/flask/info.log')
@@ -72,7 +73,7 @@ def create_app():
 
 
 if __name__ == "__main__":
-    application = create_app()
+    application = create_app(limiter_enabled=True)
     ENV_DEBUG = os.environ.get("APP_DEBUG", True)
     ENV_PORT = os.environ.get("APP_PORT", 5000)
 
