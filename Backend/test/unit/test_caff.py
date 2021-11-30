@@ -46,6 +46,9 @@ def test_caff_download(client, token):
     resp = client.get("/caff/download/1", headers={"Authorization": "Bearer " + token})
     assert resp.status_code == 404 and resp.is_json and "File does not exist" in resp.json["errorMessage"]
 
+    resp = client.get("/caff/download/61a559807ab83d946960d412", headers={"Authorization": "Bearer " + token})
+    assert resp.status_code == 404 and resp.is_json and "File does not exist" in resp.json["errorMessage"]
+
     resp = client.get("/caff/download/61a559807aa83d946960d4f2", headers={"Authorization": "Bearer " + token})
     assert resp.status_code == 200
 
@@ -60,21 +63,38 @@ def test_caff_search(client, token):
     assert resp.status_code == 400
 
     resp = client.get("/caff/search?page=1", headers={"Authorization": "Bearer " + token})
-    assert resp.status_code == 200
+    assert resp.status_code == 200 and len(resp.json['caffs']) == 1
 
     resp = client.get("/caff/search?perpage=0", headers={"Authorization": "Bearer " + token})
     assert resp.status_code == 400
 
+    resp = client.get("/caff/search?searchTerm=test", headers={"Authorization": "Bearer " + token})
+    assert resp.status_code == 200 and len(resp.json['caffs']) == 1
+
     resp = client.get("/caff/search?username=Test Creator", headers={"Authorization": "Bearer " + token})
-    assert resp.status_code == 200
+    assert resp.status_code == 200 and len(resp.json['caffs']) == 1
 
     resp = client.get("/caff/search?uploaderName=testuser", headers={"Authorization": "Bearer " + token})
-    assert resp.status_code == 200
+    assert resp.status_code == 200 and len(resp.json['caffs']) == 1
 
-    resp = client.get("/caff/search?creationDate=" + str(datetime(2020, 7, 2, 14, 50, 0, 0)),
-                      headers={"Authorization": "Bearer " + token})
-    assert resp.status_code == 200
+    resp = client.get("/caff/search?uploaderName=testuser&username=Test Creator", headers={"Authorization": "Bearer " + token})
+    assert resp.status_code == 200 and len(resp.json['caffs']) == 1
 
-    resp = client.get("/caff/search?uploadDate=" + str(datetime(2021, 11, 29, 22, 40, 46, 35)),
-                      headers={"Authorization": "Bearer " + token})
-    assert resp.status_code == 200
+    resp = client.get("/caff/search?uploaderName=testuser&username=asd", headers={"Authorization": "Bearer " + token})
+    assert resp.status_code == 200 and len(resp.json['caffs']) == 0
+
+    # 2020-07-02 13:14:14
+    resp = client.get("/caff/search?creationDate=1593688454000", headers={"Authorization": "Bearer " + token})
+    assert resp.status_code == 200 and len(resp.json['caffs']) == 1
+
+    # 2020-07-4 00:00:00
+    resp = client.get("/caff/search?creationDate=1593813600000", headers={"Authorization": "Bearer " + token})
+    assert resp.status_code == 200 and len(resp.json['caffs']) == 0
+
+    # 2021-11-29 23:00:14
+    resp = client.get("/caff/search?uploadDate=1638223214000", headers={"Authorization": "Bearer " + token})
+    assert resp.status_code == 200 and len(resp.json['caffs']) == 1
+
+    # 2021-11-26 23:00:14
+    resp = client.get("/caff/search?uploadDate=1637964014000", headers={"Authorization": "Bearer " + token})
+    assert resp.status_code == 200 and len(resp.json['caffs']) == 0

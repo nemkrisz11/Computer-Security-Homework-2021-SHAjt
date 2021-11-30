@@ -23,6 +23,19 @@ def test_invalid_register(client):
     assert resp.status_code == 400 and resp.is_json
     assert "too short" in resp.json["errorMessage"]
 
+    data["password"] = "password1234"
+    resp = client.post("/user/register", json=data)
+    assert resp.status_code == 400 and resp.is_json
+    assert "too weak" in resp.json["errorMessage"]
+
+    resp = client.post("/user/register", json={"username": "tim123"})
+    assert resp.status_code == 400 and resp.is_json
+    assert "password cannot be empty" in resp.json["errorMessage"]
+
+    resp = client.post("/user/register", json={"password": "asdasdasdasd1231ASD@äđĐ"})
+    assert resp.status_code == 400 and resp.is_json
+    assert "username cannot be empty" in resp.json["errorMessage"]
+
     data["password"] = "12345678Asd&123ASD"
     data["username"] = "testuser"
     resp = client.post("/user/register", json=data)
@@ -112,6 +125,17 @@ def test_password_change_admin(client, token):
                            "password": "test5678ASD&@"})
     assert resp.status_code == 200 and resp.is_json
     assert len(resp.json["token"]) > 20
+
+    resp = client.post("/user/password", headers={"Authorization": "Bearer " + token},
+                       json={"password": "test5678ASD&@"})
+    assert resp.status_code == 200 and resp.is_json and "successful" in resp.json["message"]
+
+    resp = client.post("/user/login", json={
+                           "username": "testadmin",
+                           "password": "test5678ASD&@"})
+    assert resp.status_code == 200 and resp.is_json
+    assert len(resp.json["token"]) > 20
+
 
 
 @pytest.mark.username("testuser")
