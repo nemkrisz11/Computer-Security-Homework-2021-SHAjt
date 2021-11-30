@@ -7,8 +7,11 @@ from flaskapp.database.models import CaffFile, Comment
 
 class CommentApi(Resource):
     @jwt_required()
-    def get(self, caff_id):
+    def get(self):
+        body = request.get_json()
+        caff_id = body.get('caffid')
         stored_file = None
+
         try:
             stored_file = CaffFile.objects.get(id=caff_id)
         except DoesNotExist:
