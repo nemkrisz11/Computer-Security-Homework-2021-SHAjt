@@ -18,8 +18,6 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 # Configure database and JWT token properties
 def create_app(limiter_enabled):
     application = Flask(__name__)
-    # csrf = CSRFProtect()
-    # csrf.init_app(application)
     api = Api(application)
     application.wsgi_app = ProxyFix(application.wsgi_app, x_for=1)
     limiter = Limiter(
