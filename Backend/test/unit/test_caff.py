@@ -1,12 +1,8 @@
-from datetime import datetime
-
 import pytest
-
+from datetime import datetime
 from fixtures import client, token
 from io import BytesIO
-from mongoengine import connect
 from flaskapp.database.models import CaffFile
-import os
 
 
 @pytest.mark.username("testuser")

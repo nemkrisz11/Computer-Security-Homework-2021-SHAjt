@@ -246,6 +246,6 @@ class CaffDownloadApi(Resource):
         filepath = os.path.join(os.environ.get('UPLOAD_FOLDER'), filename)
         # filepath = os.path.join('./uploads/', filename)
         if os.path.exists(filepath):
-            return send_file(path_or_file=filepath, as_attachment=True, attachment_filename=storedFile.caffName)
+            return send_file(path_or_file=filepath, as_attachment=True, download_name=storedFile.caffName)
         else:
             return make_response(jsonify(errorId="299", errorMessage="File does not exist"), 404)
