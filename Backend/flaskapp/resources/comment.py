@@ -66,7 +66,7 @@ class CommentApi(Resource):
         if body is None:
             current_app.logger.setLevel(logging.ERROR)
             current_app.logger.error('Body in request is empty')
-            return make_response(jsonify(errorId="300", errorMessage="comment cannot be empty"), 400)
+            return make_response(jsonify(errorId="300", errorMessage="body cannot be empty"), 400)
 
         caff_id = body.get('caffId')
         comment = body.get('comment')
@@ -77,7 +77,7 @@ class CommentApi(Resource):
         if caff_id is None:
             current_app.logger.setLevel(logging.ERROR)
             current_app.logger.error('CAFF id for comment in request is empty')
-            return make_response(jsonify(errorId="300", errorMessage="comment cannot be empty"), 400)
+            return make_response(jsonify(errorId="300", errorMessage="caffId cannot be empty"), 400)
 
         if len(comment) > 200:
             current_app.logger.setLevel(logging.ERROR)
@@ -136,5 +136,5 @@ class CommentApi(Resource):
             return make_response(jsonify(message='comment deleted successful'), 200)
         else:
             current_app.logger.setLevel(logging.ERROR)
-            current_app.logger.error('User not allowed to delete comment: ' + str(current_user.username))
+            current_app.logger.error('User not allowed to delete comment: ' + str(current_user.name))
             return make_response(jsonify(errorId="002", errorMessage='forbidden interaction'), 403)
