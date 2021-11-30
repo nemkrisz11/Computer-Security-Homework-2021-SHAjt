@@ -63,9 +63,11 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Build backend
+        working-directory: ./Backend/
         run: |
           docker-compose up -d
       - name: Run pytest for flaskapp
+        working-directory: ./Backend/flaskapp
         run: |
           docker exec -it flask /var/www/test/run_tests.sh
       - uses: actions/upload-artifact@v2
