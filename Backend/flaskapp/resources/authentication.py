@@ -47,7 +47,7 @@ def password_policy(password):
         return jsonify(errorId="114", errorMessage="password too weak")
 
 
-# Api for registration post method
+# API for registration post method
 # Username and password will be get from request body
 class RegisterApi(Resource):
 
@@ -81,7 +81,8 @@ class RegisterApi(Resource):
 
         return make_response(jsonify(id=str(user.id)), 200)
 
-# Api for log in post method
+
+# API for log in post method
 # With existing password and username access token will be generated
 class LoginApi(Resource):
     def post(self):
@@ -103,7 +104,8 @@ class LoginApi(Resource):
         access_token = create_access_token(identity=user, expires_delta=TOKEN_EXPIRES)
         return make_response(jsonify(token=access_token, expire=TOKEN_EXPIRES.total_seconds()), 200)
 
-# Api for log out post method
+
+# API for log out post method
 # With correct JWT authentication user will be logged out
 class LogoutApi(Resource):
     @jwt_required()
@@ -112,7 +114,8 @@ class LogoutApi(Resource):
         jwt_redis_blocklist.set(jti, "", ex=TOKEN_EXPIRES)
         return make_response(jsonify(message="successful logout"), 200)
 
-# Api for password changing via post method
+
+# API for password changing via post method
 # Username and new password in body required besides the JWT token
 class PasswordChangeApi(Resource):
     @jwt_required()

@@ -74,11 +74,14 @@ jobs:
         working-directory: ./Backend/flaskapp
         run: |
           docker exec -u root flask /var/www/test/run_tests.sh --cov
-          docker cp flask:/tmp/htmlcov ./
+          mkdir /tmp/coverage-reports
+          docker cp flask:/tmp/htmlcov /tmp/coverage-reports/
+          docker cp flask:/tmp/coverage.xml /tmp/coverage-reports/
+          ls -la /tmp/coverage-reports/
       - uses: actions/upload-artifact@v2
         with:
           name: code-coverage
-          path: ./Backend/flaskapp/htmlcov
+          path: /tmp/coverage-reports/htmlcov
       - name: Download and set up sonar-scanner
         env:
           SONAR_SCANNER_DOWNLOAD_URL: https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ env.SONAR_SCANNER_VERSION }}-linux.zip

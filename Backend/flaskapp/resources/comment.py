@@ -10,7 +10,9 @@ from datetime import datetime
 from flask import current_app
 import logging
 
-# Api for fetching, removing and uploading comments
+# API for fetching, removing and uploading comments
+
+
 class CommentApi(Resource):
     # Fetching comments for CAFF file based on file id
     @jwt_required()
@@ -41,7 +43,7 @@ class CommentApi(Resource):
                 paginated_comment_list = []
 
             # given page is the last page
-            if (page - 1)*perpage < total_comment_count and total_comment_count <= page*perpage:
+            if (page - 1)*perpage < total_comment_count <= page*perpage:
                 if total_comment_count == 1:
                     paginated_comment_list = comment_list
                 else:
@@ -85,7 +87,6 @@ class CommentApi(Resource):
         current_app.logger.setLevel(logging.INFO)
         current_app.logger.info('Comment was successfully posted with the following username: ' + str(current_user.name) + ' for CAFF file with id: ' + str(caff_id))
         return make_response(jsonify(message='comment created successful'), 200)
-
 
     # Only admin can remove comments belonging to a CAFF file with file and comment id
     @jwt_required()

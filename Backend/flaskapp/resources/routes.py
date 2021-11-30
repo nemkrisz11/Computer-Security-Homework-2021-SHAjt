@@ -4,8 +4,6 @@ from flaskapp.resources.caff import CaffUploadApi, CaffDownloadApi, CaffDataApi,
 from flaskapp.resources.comment import CommentApi
 
 
-
-# API endpoints
 # Defining Per-IP request-rate limits and register endpoints
 def initialize_routes(api, limiter):
     RegisterApi.method_decorators.append(limiter.limit('10/hour', methods=['POST']))
