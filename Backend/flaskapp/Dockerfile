@@ -25,6 +25,9 @@ RUN mkdir /var/www/uploads
 RUN chown www /var/www/uploads
 ADD parser/TestFiles/1.caff /var/www/uploads/61a559807aa83d946960d4f2
 
+RUN mkdir /var/log/flask
+RUN chown www /var/log/flask
+
 USER www
 
 EXPOSE 5000
