@@ -25,14 +25,14 @@ def create_app():
         key_func=get_remote_address)
     if application.logger.handlers:
         application.logger.handlers = []
-    handler = FileHandler('info.log')
+    handler = FileHandler('/var/log/flask/info.log')
     handler.setLevel(logging.INFO)
     handler.setFormatter(logging.Formatter(
         '[%(asctime)s] %(levelname)s in %(module)s: %(message)s'
     ))
 
     application.logger.addHandler(handler)
-    handler_err = FileHandler('error.log')
+    handler_err = FileHandler('/var/log/flask/error.log')
     handler_err.setLevel(logging.ERROR)
     handler_err.setFormatter(logging.Formatter(
         '[%(asctime)s] %(levelname)s in %(module)s: %(message)s'

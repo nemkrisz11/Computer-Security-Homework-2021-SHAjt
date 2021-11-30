@@ -23,7 +23,7 @@ def test_caff_upload(client, token):
                        data=data)
     assert resp.status_code == 400 and resp.is_json and "invalid file format" in resp.json["errorMessage"]
 
-    data["file"] = (BytesIO(b"12345678" * 1024 * 1024 * 60), "1")
+    data["file"] = (BytesIO(b"a" * 1024 * 1024 * 60), "1")
     resp = client.post("/caff/upload", headers={"Authorization": "Bearer " + token}, content_type='multipart/form-data',
                        data=data)
     assert resp.status_code == 413

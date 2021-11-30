@@ -152,8 +152,7 @@ def test_user_list(client, token):
     assert resp.json["totalPages"] > 0
 
     resp = client.get("/user/", headers={"Authorization": "Bearer " + token}, query_string={"page": 4, "perpage": 10})
-    assert resp.status_code == 200 and resp.is_json
-    assert len(resp.json["users"]) == 0
+    assert resp.status_code == 400 and resp.is_json and "invalid page number" in resp.json["errorMessage"]
 
     resp = client.get("/user/", headers={"Authorization": "Bearer " + token}, query_string={"page": 1, "perpage": -1})
     assert resp.status_code == 400 and resp.is_json

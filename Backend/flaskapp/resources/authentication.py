@@ -8,6 +8,7 @@ from mongoengine import ValidationError, NotUniqueError, DoesNotExist
 import re
 from flask import current_app
 import logging
+from datetime import datetime
 
 def password_policy(password):
     """
@@ -102,7 +103,8 @@ class LoginApi(Resource):
             return make_response(jsonify(errorId="120", errorMessage="invalid username or password"), 400)
 
         access_token = create_access_token(identity=user, expires_delta=TOKEN_EXPIRES)
-        return make_response(jsonify(token=access_token, expire=TOKEN_EXPIRES.total_seconds()), 200)
+        expiration_date_milliseconds = int((datetime.now()+TOKEN_EXPIRES).timestamp()*1000)
+        return make_response(jsonify(token=access_token, expire=expiration_date_milliseconds), 200)
 
 
 # API for log out post method
