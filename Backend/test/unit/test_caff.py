@@ -53,7 +53,6 @@ def test_caff_download(client, token):
 @pytest.mark.username("testuser")
 @pytest.mark.password("test1234")
 def test_caff_search(client, token):
-
     resp = client.get("/caff/search?page=0", headers={"Authorization": "Bearer " + token})
     assert resp.status_code == 400
 
@@ -72,8 +71,10 @@ def test_caff_search(client, token):
     resp = client.get("/caff/search?uploaderName=testuser", headers={"Authorization": "Bearer " + token})
     assert resp.status_code == 200
 
-    resp = client.get("/caff/search?creationDate=" + str(datetime(2020, 7, 2, 14, 50, 0, 0)), headers={"Authorization": "Bearer " + token})
+    resp = client.get("/caff/search?creationDate=" + str(datetime(2020, 7, 2, 14, 50, 0, 0)),
+                      headers={"Authorization": "Bearer " + token})
     assert resp.status_code == 200
 
-    resp = client.get("/caff/search?uploadDate=" + str(datetime(2021,11, 29, 22, 40, 46, 35)), headers={"Authorization": "Bearer " + token})
+    resp = client.get("/caff/search?uploadDate=" + str(datetime(2021, 11, 29, 22, 40, 46, 35)),
+                      headers={"Authorization": "Bearer " + token})
     assert resp.status_code == 200

@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - master
-      - CaffParser
+      - Backend
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
@@ -38,17 +38,44 @@ jobs:
           unzip -o $HOME/.sonar/build-wrapper-linux-x86.zip -d $HOME/.sonar/
           echo "$HOME/.sonar/build-wrapper-linux-x86" >> $GITHUB_PATH
       - name: Run build-wrapper
-        working-directory: ./Parser
+        working-directory: ./Backend/parser
         run: |
           build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} make build test
       - name: Run test to generate coverage reports
-        working-directory: ./Parser
+        working-directory: ./Backend/parser
         run: |
           ./ParserTest
       - name: Run sonar-scanner
-        working-directory: ./Parser
+        working-directory: ./Backend/parser
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           sonar-scanner --define sonar.host.url="${{ env.SONAR_SERVER_URL }}" --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}"
+  Backend_CI:
+    name: Backend CI
+    runs-on: ubuntu-latest
+    env:
+      SONAR_SCANNER_VERSION: 4.4.0.2170
+      SONAR_SERVER_URL: "https://sonarcloud.io"
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Build backend
+        run: |
+          docker-compose up -d
+      - name: Run pytest for flaskapp
+        run: |
+          docker exec -it flask /var/www/test/run_tests.sh
+      - uses: actions/upload-artifact@v2
+        with:
+          name: code-coverage
+          path: htmlcov
+      - name: SonarCloud Scan
+        working-directory: ./Backend/flaskapp
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          sonar-scanner --define sonar.host.url="${{ env.SONAR_SERVER_URL }}"
