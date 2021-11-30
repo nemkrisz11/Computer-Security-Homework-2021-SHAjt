@@ -8,6 +8,7 @@ from datetime import datetime
 from flask import current_app
 import logging
 
+
 class UsersListApi(Resource):
     # Fetching the list of users
     @jwt_required()
@@ -20,13 +21,16 @@ class UsersListApi(Resource):
         elif perpage is None or perpage < 1:
             return make_response(jsonify(errorId="004", errorMessage='incorrect arguments given'), 400)
 
-        users = User.objects.skip((page - 1) * perpage).limit(perpage)
+        try:
+            users = User.objects.paginate(page, perpage).items
+        except:
+            return make_response(jsonify(errorId="003", errorMessage="Invalid page number"), 400)
 
         return make_response(
             jsonify(
                 users=[{"username": u.name,
                         "isAdmin": u.isAdmin,
-                        "regDate": int(datetime.timestamp(u.regDate)*1000)} for u in users],
+                        "regDate": int(datetime.timestamp(u.regDate) * 1000)} for u in users],
                 totalPages=ceil(User.objects.count() / perpage)
             ), 200)
 
@@ -41,7 +45,7 @@ class UserDataApi(Resource):
                 jsonify(
                     username=user.name,
                     isAdmin=user.isAdmin,
-                    regDate=int(datetime.timestamp(user.regDate)*1000)
+                    regDate=int(datetime.timestamp(user.regDate) * 1000)
                 ), 200)
 
         except DoesNotExist:
