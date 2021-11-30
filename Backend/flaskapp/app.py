@@ -10,16 +10,16 @@ import logging
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
-#Init Flask application
-#Configure database and JWT token properties
-#Configure routes
+
+# Init Flask application
+# Configure database and JWT token properties
+# Configure routes
 def create_app():
     application = Flask(__name__)
     api = Api(application)
     limiter = Limiter(
         application,
         key_func=get_remote_address)
-
 
     logging.basicConfig(filename='/tmp/debug.log', level=logging.DEBUG)
 
@@ -44,7 +44,7 @@ def create_app():
     application.config['MAX_CONTENT_LENGTH'] = 50 * 1000 * 1000
 
     initialize_db(application)
-    initialize_routes(api,limiter)
+    initialize_routes(api, limiter)
     jwt.init_app(application)
     # cors = CORS(application, resources={r"/*": {"origins": "*"}})
 

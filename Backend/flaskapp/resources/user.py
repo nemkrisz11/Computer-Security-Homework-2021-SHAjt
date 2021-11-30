@@ -6,8 +6,8 @@ from mongoengine import DoesNotExist
 from math import ceil
 from datetime import datetime
 
-# Fetching list of users with valid JWT
 class UsersListApi(Resource):
+    # Fetching the list of users
     @jwt_required()
     def get(self):
         page = request.args.get('page', 1, type=int)

@@ -3,6 +3,7 @@ from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError, VerificationError, InvalidHash
 import datetime
 
+
 # Model of a stored user
 class User(db.Document):
     name = db.StringField(required=True, unique=True, min_length=4)
@@ -12,6 +13,7 @@ class User(db.Document):
     meta = {
         "collection": "user"
     }
+
     # Password's hash are stored
     def hash_password(self):
         self.validate()
@@ -28,11 +30,13 @@ class User(db.Document):
             return True
         except (VerifyMismatchError, VerificationError, InvalidHash):
             return False
+
     # In case of password's change the hash will be stored
     def change_password(self, password):
         self.password = password
         self.hash_password()
         self.save()
+
 
 # Model of an animated CAFF file in the database
 class CaffAnimationImage(db.EmbeddedDocument):
@@ -42,11 +46,13 @@ class CaffAnimationImage(db.EmbeddedDocument):
     caption = db.StringField()
     tags = db.ListField(db.StringField())
 
+
 # Model of a comment in the database
 class Comment(db.EmbeddedDocument):
     username = db.StringField(required=True)
     comment = db.StringField(required=True)
     date = db.DateTimeField(required=True, default=datetime.datetime.utcnow)
+
 
 # Model of a CAFF file in the database
 class CaffFile(db.Document):
