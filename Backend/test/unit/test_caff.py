@@ -18,10 +18,17 @@ def test_caff_upload(client, token):
                        data=data)
     assert resp.status_code == 400 and resp.is_json and "invalid file format" in resp.json["errorMessage"]
 
-    data["file"] = (BytesIO(b"asdasdasdasdasdasdasdasdas"), "1")
     resp = client.post("/caff/upload", headers={"Authorization": "Bearer " + token}, content_type='multipart/form-data',
-                       data=data)
-    assert resp.status_code == 400 and resp.is_json and "invalid file format" in resp.json["errorMessage"]
+                       data={'file': (BytesIO(b"asdasdasdasdasdasdasdasdas"), "1.caff")})
+    assert resp.status_code == 400 and resp.is_json and "invalid parameters" in resp.json["errorMessage"]
+
+    resp = client.post("/caff/upload", headers={"Authorization": "Bearer " + token}, content_type='multipart/form-data',
+                       data={'name': 'something', 'file': (BytesIO(b"asdasdasdasdasdasdasdasdas"), "")})
+    assert resp.status_code == 400 and resp.is_json and "no file selected" in resp.json["errorMessage"]
+
+    resp = client.post("/caff/upload", headers={"Authorization": "Bearer " + token}, content_type='multipart/form-data',
+                       data={'file': (b"", "1.caff")})
+    assert resp.status_code == 400 and resp.is_json and "invalid parameters" in resp.json["errorMessage"]
 
     data["file"] = (BytesIO(b"a" * 1024 * 1024 * 60), "1")
     resp = client.post("/caff/upload", headers={"Authorization": "Bearer " + token}, content_type='multipart/form-data',
