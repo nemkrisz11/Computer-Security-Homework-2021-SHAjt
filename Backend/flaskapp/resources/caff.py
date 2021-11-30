@@ -11,6 +11,8 @@ import os
 from datetime import datetime, timedelta
 import numpy as np
 from math import ceil
+from flask import current_app
+import logging
 
 ALLOWED_EXTENSIONS = {'caff'}
 
@@ -55,7 +57,8 @@ def createPreviewCaffFile(file: CaffFile):
             "pixelValues": compressed_array.tolist()
         }
     }
-
+    current_app.logger.setLevel(logging.INFO)
+    current_app.logger.info('CAFF file was parsed with the following name: ' + str(file.caffName))
     return preview_file
 
 
@@ -95,6 +98,8 @@ class CaffDataApi(Resource):
             if os.path.exists(filepath):
                 os.remove(filepath)
             storedFile.delete()
+            current_app.logger.setLevel(logging.INFO)
+            current_app.logger.info('CAFF file was deleted with the following name: ' + str(storedFile.caffName))
             return make_response(jsonify(message='CaffFile delete successful'), 200)
         else:
             return make_response(jsonify(errorId="002", errorMessage='forbidden interaction'), 403)
@@ -225,7 +230,8 @@ class CaffUploadApi(Resource):
         # for local testing
         # with open(os.path.join('./uploads/', filename), 'wb+') as f:
         #     f.write(bytes)
-
+        current_app.logger.setLevel(logging.INFO)
+        current_app.logger.info('New CAFF file was uploaded with the following name: ' + str(name))
         return make_response('', 201)
 
 # Api for download CAFF file based on file id
@@ -243,6 +249,8 @@ class CaffDownloadApi(Resource):
         filepath = os.path.join(os.environ.get('UPLOAD_FOLDER'), filename)
         # filepath = os.path.join('./uploads/', filename)
         if os.path.exists(filepath):
+            current_app.logger.setLevel(logging.INFO)
+            current_app.logger.info('CAFF file was downloaded with the following name: ' + str(storedFile.caffName))
             return send_file(path_or_file=filepath, as_attachment=True, download_name=storedFile.caffName)
         else:
             return make_response(jsonify(errorId="299", errorMessage="File does not exist"), 404)

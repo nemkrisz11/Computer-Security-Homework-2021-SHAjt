@@ -5,6 +5,8 @@ from flask_jwt_extended import jwt_required, current_user
 from mongoengine import DoesNotExist
 from math import ceil
 from datetime import datetime
+from flask import current_app
+import logging
 
 # Fetching list of users with valid JWT
 class UsersListApi(Resource):
@@ -51,6 +53,8 @@ class UserDataApi(Resource):
         if current_user.isAdmin:
             user = User.objects.get(name=username)
             user.delete()
+            current_app.logger.setLevel(logging.INFO)
+            current_app.logger.info('User was deleted with the following username: ' + str(username))
             return make_response(jsonify(message='user delete successful'), 200)
         else:
             return make_response(jsonify(errorId="002", errorMessage='forbidden interaction'), 403)

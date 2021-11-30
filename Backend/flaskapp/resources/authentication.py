@@ -6,7 +6,8 @@ from flask_jwt_extended import create_access_token, get_jwt, current_user
 from flask_jwt_extended import jwt_required
 from mongoengine import ValidationError, NotUniqueError, DoesNotExist
 import re
-
+from flask import current_app
+import logging
 
 def password_policy(password):
     """
@@ -49,6 +50,7 @@ def password_policy(password):
 # Api for registration post method
 # Username and password will be get from request body
 class RegisterApi(Resource):
+
     def post(self):
         body = request.get_json()
         if body is None:
@@ -70,6 +72,8 @@ class RegisterApi(Resource):
             user = User(name=name, password=password)
             user.hash_password()
             user.save()
+            current_app.logger.setLevel(logging.INFO)
+            current_app.logger.info('New user was registered with the following name: ' + str(name))
         except ValidationError as e:
             return make_response(jsonify(errorId="120", errorMessage=e.to_dict()), 400)
         except NotUniqueError as e:
@@ -87,6 +91,8 @@ class LoginApi(Resource):
 
         try:
             user = User.objects.get(name=body.get('username'))
+            current_app.logger.setLevel(logging.INFO)
+            current_app.logger.info('Login attempt was made with the following username: ' + str(body.get('username')))
         except DoesNotExist:
             return make_response(jsonify(errorId="120", errorMessage="invalid username or password"), 400)
 
@@ -130,6 +136,8 @@ class PasswordChangeApi(Resource):
                     target_user.change_password(new_password)
                 else:
                     current_user.change_password(new_password)
+                current_app.logger.setLevel(logging.INFO)
+                current_app.logger.info('Password changed successfully for the following user: ' + str(body.get('username')))
             except ValidationError as e:
                 return make_response(jsonify(errorId="120", errorMessage=e.to_dict()), 400)
 
@@ -141,6 +149,8 @@ class PasswordChangeApi(Resource):
             else:
                 try:
                     current_user.change_password(new_password)
+                    current_app.logger.setLevel(logging.INFO)
+                    current_app.logger.info('Password changed successfully for the following user: ' + str(body.get('username')))
                 except ValidationError as e:
                     return make_response(jsonify(errorId="120", errorMessage=e.to_dict()), 400)
 

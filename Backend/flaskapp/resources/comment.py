@@ -7,6 +7,8 @@ from flask_restful import Resource
 from flask_jwt_extended import jwt_required, current_user
 from flaskapp.database.models import CaffFile, Comment
 from datetime import datetime
+from flask import current_app
+import logging
 
 # Api for fetching, removing and uploading comments
 class CommentApi(Resource):
@@ -80,6 +82,8 @@ class CommentApi(Resource):
 
         stored_file.comments.append(new_comment)
         stored_file.save()
+        current_app.logger.setLevel(logging.INFO)
+        current_app.logger.info('Comment was successfully posted with the following username: ' + str(current_user.name) + ' for CAFF file with id: ' + str(caff_id))
         return make_response(jsonify(message='comment created successful'), 200)
 
 
@@ -104,7 +108,8 @@ class CommentApi(Resource):
                 return make_response(jsonify(errorId="399 ", errorMessage="comment not found"), 400)
             except IndexError:
                 return make_response(jsonify(errorId="399 ", errorMessage="comment not found"), 400)
-
+            current_app.logger.setLevel(logging.INFO)
+            current_app.logger.info('Comment with id: '+ str(comment_id)+' was successfully removed by the following user: ' + str(current_user.name) + ' for CAFF file with id: ' + str(caff_id))
             return make_response(jsonify(message='comment deleted successful'), 200)
         else:
             return make_response(jsonify(errorId="002", errorMessage='forbidden interaction'), 403)
