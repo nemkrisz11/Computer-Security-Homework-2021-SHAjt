@@ -38,11 +38,6 @@ def create_app():
         '[%(asctime)s] %(levelname)s in %(module)s: %(message)s'
     ))
     application.logger.addHandler(handler_err)
-    # application.logger.addHandler(handler)
-    # application.logger.addHandler(file_handler)
-    # application.logger.info('first test message...')
-
-
 
     # For docker
     application.config['MONGODB_DB'] = os.environ['MONGODB_DATABASE']
