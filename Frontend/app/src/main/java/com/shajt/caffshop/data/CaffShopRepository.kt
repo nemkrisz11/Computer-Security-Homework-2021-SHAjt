@@ -121,7 +121,7 @@ class CaffShopRepository @Inject constructor(
                 expire - System.currentTimeMillis() < 1_000_000 || regDate == -1L ||
                 ivText == null
             ) {
-                return null // TODO change expire check
+                return null
             }
 
             val encryptedToken = Base64.decode(encryptedTokenText, Base64.DEFAULT)
@@ -241,7 +241,7 @@ class CaffShopRepository @Inject constructor(
         creationDate: Long? = null,
         uploadDate: Long? = null,
         page: Int = 1,
-        perpage: Int = 20
+        perpage: Int = 5
     ): SearchCaffsResult {
         if (localUser == null) {
             return SearchCaffsResult(error = ErrorMessage.INVALID_USER_DATA)
