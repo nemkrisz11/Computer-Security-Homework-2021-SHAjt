@@ -6,6 +6,7 @@ from flaskapp.resources.comment import CommentApi
 
 
 # API endpoints
+# Defining Per-IP request-rate limits and register endpoints
 def initialize_routes(api, limiter):
     RegisterApi.method_decorators.append(limiter.limit('10/hour', methods=['POST']))
     LoginApi.method_decorators.append(limiter.limit('30/minute', methods=['POST']))

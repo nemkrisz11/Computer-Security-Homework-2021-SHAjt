@@ -14,11 +14,11 @@ from math import ceil
 
 ALLOWED_EXTENSIONS = {'caff'}
 
-
+# Checking for correct file format (CAFF)
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-
+# Apply CAFF parser and extract features into JSON format
 def createPreviewCaffFile(file: CaffFile):
     caffParser = CaffParser()
 
@@ -66,7 +66,7 @@ def createPreviewCaffFileList(files):
 
     return file_list
 
-
+# Api for fetching or removing stored CAFF files based on file id
 class CaffDataApi(Resource):
     @jwt_required()
     def get(self, caff_id):
@@ -99,7 +99,7 @@ class CaffDataApi(Resource):
         else:
             return make_response(jsonify(errorId="002", errorMessage='forbidden interaction'), 403)
 
-
+# Api for browsing in the available CAFF files based on some features
 class CaffSearchApi(Resource):
     @jwt_required()
     def get(self):
@@ -163,7 +163,7 @@ class CaffSearchApi(Resource):
 
         return make_response(jsonify(caffs=preview_file_list, totalPages=ceil(caff_files_total_count / perpage)), 200)
 
-
+# Api for uploading new CAFF file via POST method
 class CaffUploadApi(Resource):
     @jwt_required()
     def post(self):
@@ -228,7 +228,7 @@ class CaffUploadApi(Resource):
 
         return make_response('', 201)
 
-
+# Api for download CAFF file based on file id
 class CaffDownloadApi(Resource):
     @jwt_required()
     def get(self, caff_id):

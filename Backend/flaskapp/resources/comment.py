@@ -8,7 +8,9 @@ from flask_jwt_extended import jwt_required, current_user
 from flaskapp.database.models import CaffFile, Comment
 from datetime import datetime
 
+# Api for fetching, removing and uploading comments
 class CommentApi(Resource):
+    # Fetching comments for CAFF file based on file id
     @jwt_required()
     def get(self):
         caff_id = request.args.get('caffId', type=str)
@@ -49,6 +51,7 @@ class CommentApi(Resource):
 
             return make_response(jsonify(comments=paginated_comment_list, totalPages=ceil(total_comment_count / perpage)))
 
+    # Uploading new comments with restrictions regarding length (between 0 and 200 chars)
     @jwt_required()
     def post(self):
         body = request.get_json()
@@ -80,6 +83,7 @@ class CommentApi(Resource):
         return make_response(jsonify(message='comment created successful'), 200)
 
 
+    # Only admin can remove comments belonging to a CAFF file with file and comment id
     @jwt_required()
     def delete(self):
         if current_user.isAdmin:

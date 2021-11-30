@@ -6,7 +6,7 @@ from mongoengine import DoesNotExist
 from math import ceil
 from datetime import datetime
 
-
+# Fetching list of users with valid JWT
 class UsersListApi(Resource):
     @jwt_required()
     def get(self):
@@ -30,6 +30,7 @@ class UsersListApi(Resource):
 
 
 class UserDataApi(Resource):
+    # Getting detailed user data for single user based on username
     @jwt_required()
     def get(self, username):
         try:
@@ -44,6 +45,7 @@ class UserDataApi(Resource):
         except DoesNotExist:
             return make_response(jsonify(errorId="199", errorMessage='user not found'), 404)
 
+    # Admin can remove user from database based on username
     @jwt_required()
     def delete(self, username):
         if current_user.isAdmin:

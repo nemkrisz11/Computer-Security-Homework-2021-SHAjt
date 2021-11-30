@@ -10,7 +10,9 @@ import logging
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
-
+#Init Flask application
+#Configure database and JWT token properties
+#Configure routes
 def create_app():
     application = Flask(__name__)
     api = Api(application)
