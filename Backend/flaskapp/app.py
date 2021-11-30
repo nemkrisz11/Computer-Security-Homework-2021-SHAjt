@@ -10,6 +10,7 @@ import logging
 from logging import Formatter, FileHandler
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 
 # Init Flask application
@@ -20,6 +21,7 @@ def create_app(limiter_enabled):
     # csrf = CSRFProtect()
     # csrf.init_app(application)
     api = Api(application)
+    application.wsgi_app = ProxyFix(application.wsgi_app, x_for=1)
     limiter = Limiter(
         application,
         key_func=get_remote_address)
