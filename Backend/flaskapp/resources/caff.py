@@ -192,6 +192,11 @@ class CaffSearchApi(Resource):
         return make_response(jsonify(caffs=preview_file_list, totalPages=ceil(caff_files_total_count / perpage)), 200)
 
 
+def format_caff_name(name):
+    formatted_name = name.strip()
+    return formatted_name.replace("\"", "")
+
+
 # API for uploading new CAFF file via POST method
 class CaffUploadApi(Resource):
     @jwt_required()
@@ -231,6 +236,7 @@ class CaffUploadApi(Resource):
 
         preview_animation_image = parsed_file.animationImages[0]
 
+        name = format_caff_name(name)
         caff_file = CaffFile(
             caffName=name,
             numOfCiffs=parsed_file.header.numOfCiffs,
