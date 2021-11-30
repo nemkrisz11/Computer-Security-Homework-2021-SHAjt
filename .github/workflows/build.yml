@@ -81,7 +81,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: code-coverage
-          path: ./Backend/flaskapp/htmlcov
+          path: /tmp/coverage-reports/htmlcov
       - name: Download and set up sonar-scanner
         env:
           SONAR_SCANNER_DOWNLOAD_URL: https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ env.SONAR_SCANNER_VERSION }}-linux.zip
