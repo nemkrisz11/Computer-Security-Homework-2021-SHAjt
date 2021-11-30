@@ -24,9 +24,13 @@ class CommentApi(Resource):
         try:
             stored_file = CaffFile.objects.get(id=caff_id)
         except DoesNotExist:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('CAFF file with id does not found: ' + str(caff_id))
             return make_response(jsonify(errorId="299", errorMessage="file does not exist"), 404)
 
         if not stored_file.comments:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('Comments do not exist for CAFF id: ' + str(caff_id))
             return make_response(jsonify(errorId="399", errorMessage="comment not found"), 400)
         else:
             total_comment_count = len(stored_file.comments)
@@ -60,21 +64,31 @@ class CommentApi(Resource):
     def post(self):
         body = request.get_json()
         if body is None:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('Body in request is empty')
             return make_response(jsonify(errorId="300", errorMessage="comment cannot be empty"), 400)
 
         caff_id = body.get('caffId')
         comment = body.get('comment')
         if comment is None:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('Comment in request is empty')
             return make_response(jsonify(errorId="300", errorMessage="comment cannot be empty"), 400)
         if caff_id is None:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('CAFF id for comment in request is empty')
             return make_response(jsonify(errorId="300", errorMessage="comment cannot be empty"), 400)
 
         if len(comment) > 200:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('Comment in request is too long')
             return make_response(jsonify(errorId="301 ", errorMessage="comment too long"), 400)
 
         try:
             stored_file = CaffFile.objects.get(id=caff_id)
         except DoesNotExist:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('CAFF file does not exist with id: ' + str(caff_id))
             return make_response(jsonify(errorId="299 ", errorMessage="caff does not exist"), 400)
 
         new_comment = Comment(
@@ -95,8 +109,12 @@ class CommentApi(Resource):
             caff_id = request.args.get('caffId', type=str)
             comment_id = request.args.get('commentId', type=int)
             if caff_id is None:
+                current_app.logger.setLevel(logging.ERROR)
+                current_app.logger.error('CAFF id is empty')
                 return make_response(jsonify(errorId="399 ", errorMessage="caff id cannot be empty"), 400)
             if comment_id is None:
+                current_app.logger.setLevel(logging.ERROR)
+                current_app.logger.error('Comment id is empty')
                 return make_response(jsonify(errorId="399 ", errorMessage="comment id cannot be empty"), 400)
 
 
@@ -106,11 +124,17 @@ class CommentApi(Resource):
                 del stored_file.comments[comment_id]
                 stored_file.save()
             except DoesNotExist:
+                current_app.logger.setLevel(logging.ERROR)
+                current_app.logger.error('Comment with id does not exist: ' + str(comment_id))
                 return make_response(jsonify(errorId="399 ", errorMessage="comment not found"), 400)
             except IndexError:
+                current_app.logger.setLevel(logging.ERROR)
+                current_app.logger.error('Comment with id does not exist: ' + str(comment_id))
                 return make_response(jsonify(errorId="399 ", errorMessage="comment not found"), 400)
             current_app.logger.setLevel(logging.INFO)
             current_app.logger.info('Comment with id: '+ str(comment_id)+' was successfully removed by the following user: ' + str(current_user.name) + ' for CAFF file with id: ' + str(caff_id))
             return make_response(jsonify(message='comment deleted successful'), 200)
         else:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('User not allowed to delete comment: ' + str(current_user.username))
             return make_response(jsonify(errorId="002", errorMessage='forbidden interaction'), 403)

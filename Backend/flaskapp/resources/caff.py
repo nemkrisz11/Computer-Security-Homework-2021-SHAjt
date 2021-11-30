@@ -79,8 +79,12 @@ class CaffDataApi(Resource):
         try:
             storedFile = CaffFile.objects.get(id=caff_id)
         except DoesNotExist:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('CAFF file does not exist with following id: ' + str(caff_id))
             return make_response(jsonify(errorId="299", errorMessage="File does not exist"), 404)
         except ValidationError:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('CAFF file does not exist with following id: ' + str(caff_id))
             return make_response(jsonify(errorId="299", errorMessage="File does not exist"), 404)
 
         preview_file = createPreviewCaffFile(storedFile)
@@ -92,8 +96,12 @@ class CaffDataApi(Resource):
             try:
                 storedFile = CaffFile.objects.get(id=caff_id)
             except DoesNotExist:
+                current_app.logger.setLevel(logging.ERROR)
+                current_app.logger.error('CAFF file does not exist with following id: ' + str(caff_id))
                 return make_response(jsonify(errorId="299", errorMessage="File does not exist"), 404)
             except ValidationError:
+                current_app.logger.setLevel(logging.ERROR)
+                current_app.logger.error('CAFF file does not exist with following id: ' + str(caff_id))
                 return make_response(jsonify(errorId="299", errorMessage="File does not exist"), 404)
 
             filepath = os.path.join(os.environ.get('UPLOAD_FOLDER'), str(storedFile.id))
@@ -105,6 +113,8 @@ class CaffDataApi(Resource):
             current_app.logger.info('CAFF file was deleted with the following name: ' + str(storedFile.caffName))
             return make_response(jsonify(message='CaffFile delete successful'), 200)
         else:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('Deleting CAFF file is forbidden for user: ' + str(current_user.username))
             return make_response(jsonify(errorId="002", errorMessage='forbidden interaction'), 403)
 
 
@@ -121,8 +131,12 @@ class CaffSearchApi(Resource):
         uploaddate = request.args.get('uploadDate', -1, type=int)
 
         if page < 1:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('Unsuccessful searching with invalid page number: ' + str(page))
             return make_response(jsonify(errorId="003", errorMessage="Invalid page number"), 400)
         if perpage < 1:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('Unsuccessful searching with invalid per page number: ' + str(perpage))
             return make_response(jsonify(errorId="004", errorMessage="Invalid per page number"), 400)
 
         query = None
@@ -163,6 +177,8 @@ class CaffSearchApi(Resource):
         try:
             files = caff_files.paginate(page=page, per_page=perpage)
         except:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('Unsuccessful searching with invalid page number: ' + str(page))
             return make_response(jsonify(errorId="003", errorMessage="Invalid page number"), 400)
 
         if len(files.items) != 0:
@@ -178,16 +194,24 @@ class CaffUploadApi(Resource):
     @jwt_required()
     def post(self):
         if 'file' not in request.files:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('Missing file from request')
             return make_response(jsonify(errorId="299", errorMessage="file not in request"), 400)
 
         name = request.form.get('name')
         file = request.files['file']
         if name is None or file is None:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('Invalid parameters in request')
             return make_response(jsonify(errorId="299", errorMessage="invalid parameters"), 400)
 
         if file.filename == '':
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('Empty filename in request')
             return make_response(jsonify(errorId="299", errorMessage="no file selected for upload"), 400)
         if not allowed_file(file.filename):
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('Invalid file format in request')
             return make_response(jsonify(errorId="200", errorMessage="invalid file format"), 400)
 
         uploader = get_current_user()
@@ -198,6 +222,8 @@ class CaffUploadApi(Resource):
         try:
             parsed_file = caffParser.parse([b for b in bytes])
         except ValueError:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('Invalid file format cannot be parsed')
             return make_response(jsonify(errorId="200", errorMessage="invalid file format"), 400)
 
         previewAnimationImage = parsed_file.animationImages[0]
@@ -247,8 +273,12 @@ class CaffDownloadApi(Resource):
         try:
             storedFile = CaffFile.objects.get(id=caff_id)
         except DoesNotExist:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('CAFF file does not exist with following id: ' + str(caff_id))
             return make_response(jsonify(errorId="299", errorMessage="File does not exist"), 404)
         except ValidationError:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('CAFF file does not exist with following id: ' + str(caff_id))
             return make_response(jsonify(errorId="299", errorMessage="File does not exist"), 404)
 
         filename = str(storedFile.id)
@@ -259,4 +289,6 @@ class CaffDownloadApi(Resource):
             current_app.logger.info('CAFF file was downloaded with the following name: ' + str(storedFile.caffName))
             return send_file(path_or_file=filepath, as_attachment=True, download_name=storedFile.caffName)
         else:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('CAFF file does not exist with following id: ' + str(caff_id))
             return make_response(jsonify(errorId="299", errorMessage="File does not exist"), 404)

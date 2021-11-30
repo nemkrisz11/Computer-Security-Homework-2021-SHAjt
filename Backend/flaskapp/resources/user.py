@@ -16,8 +16,12 @@ class UsersListApi(Resource):
         perpage = request.args.get('perpage', 20, type=int)
 
         if page is None or page < 1:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('Invalid page argument: ' + str(page))
             return make_response(jsonify(errorId="003", errorMessage='incorrect arguments given'), 400)
         elif perpage is None or perpage < 1:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('Invalid page argument: ' + str(perpage))
             return make_response(jsonify(errorId="004", errorMessage='incorrect arguments given'), 400)
 
         users = User.objects.skip((page - 1) * perpage).limit(perpage)
@@ -45,6 +49,8 @@ class UserDataApi(Resource):
                 ), 200)
 
         except DoesNotExist:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('User does not exist with the follwoing name: ' + str(username))
             return make_response(jsonify(errorId="199", errorMessage='user not found'), 404)
 
     # Admin can remove user from database based on username
@@ -57,4 +63,6 @@ class UserDataApi(Resource):
             current_app.logger.info('User was deleted with the following username: ' + str(username))
             return make_response(jsonify(message='user delete successful'), 200)
         else:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('User not allowed to delete: ' + str(username))
             return make_response(jsonify(errorId="002", errorMessage='forbidden interaction'), 403)

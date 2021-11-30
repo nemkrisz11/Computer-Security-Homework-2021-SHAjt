@@ -122,10 +122,14 @@ class PasswordChangeApi(Resource):
     def post(self):
         body = request.get_json()
         if body is None:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('Password was empty')
             return make_response(jsonify(errorId="111", errorMessage="password cannot be empty"), 400)
 
         new_password = body.get('password')
         if new_password is None:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('Password was empty')
             return make_response(jsonify(errorId="111", errorMessage="password cannot be empty"), 400)
 
         password_errors = password_policy(new_password)
@@ -142,6 +146,8 @@ class PasswordChangeApi(Resource):
                 current_app.logger.setLevel(logging.INFO)
                 current_app.logger.info('Password changed successfully for the following user: ' + str(body.get('username')))
             except ValidationError as e:
+                current_app.logger.setLevel(logging.ERROR)
+                current_app.logger.error('Password was not changed')
                 return make_response(jsonify(errorId="120", errorMessage=e.to_dict()), 400)
 
             return make_response(jsonify(message="password change successful"), 200)
