@@ -1,7 +1,7 @@
 import os
 from flask import Flask
 from flask_restful import Api
-from flask_wtf import CSRFProtect
+# from flask_wtf import CSRFProtect
 from flaskapp.database.db import initialize_db
 from flaskapp.resources.routes import initialize_routes
 from flaskapp.authorization import jwt, TOKEN_EXPIRES
@@ -17,8 +17,8 @@ from flask_limiter.util import get_remote_address
 # Configure routes
 def create_app():
     application = Flask(__name__)
-    csrf = CSRFProtect()
-    csrf.init_app(application)
+    # csrf = CSRFProtect()
+    # csrf.init_app(application)
     api = Api(application)
     limiter = Limiter(
         application,
