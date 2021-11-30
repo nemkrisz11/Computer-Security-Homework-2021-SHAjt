@@ -51,9 +51,9 @@ def createPreviewCaffFile(file: CaffFile):
             "width": file.caffAnimationImage.width,
             "height": file.caffAnimationImage.height,
             "caption": file.caffAnimationImage.caption,
-            "tags": file.caffAnimationImage.tags
-        },
-        "pixelValues": compressed_array.tolist()
+            "tags": file.caffAnimationImage.tags,
+            "pixelValues": compressed_array.tolist()
+        }
     }
 
     return preview_file
