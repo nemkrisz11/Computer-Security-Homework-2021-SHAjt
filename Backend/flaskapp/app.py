@@ -34,11 +34,10 @@ def create_app(limiter_enabled):
 
     handler = FileHandler('/var/log/flask/info.log')
     handler.setLevel(logging.INFO)
-
     handler.addFilter(ContextualFilter())
     handler.setFormatter(logging.Formatter(log_format))
-
     application.logger.addHandler(handler)
+
     handler_err = FileHandler('/var/log/flask/error.log')
     handler_err.setLevel(logging.ERROR)
     handler_err.addFilter(ContextualFilter())
