@@ -1,14 +1,14 @@
-from flask import request, jsonify, make_response
+from flask import request, jsonify, make_response, current_app
 from flaskapp.database.models import User
 from flaskapp.authorization import jwt_redis_blocklist, TOKEN_EXPIRES
+from flaskapp.responses import *
 from flask_restful import Resource
-from flask_jwt_extended import create_access_token, get_jwt, current_user
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import create_access_token, get_jwt, current_user, jwt_required
 from mongoengine import ValidationError, NotUniqueError, DoesNotExist
-import re
-from flask import current_app
-import logging
 from datetime import datetime
+import re
+import logging
+
 
 def password_policy(password):
     """
@@ -43,9 +43,9 @@ def password_policy(password):
     if password_ok:
         return None
     elif length_error:
-        return jsonify(errorId="120", errorMessage="password too short")
+        return jsonify(RESPONSE_PASSWORD_SHORT)
     else:
-        return jsonify(errorId="114", errorMessage="password too weak")
+        return jsonify(RESPONSE_PASSWORD_WEAK)
 
 
 # API for registration post method
@@ -55,15 +55,15 @@ class RegisterApi(Resource):
     def post(self):
         body = request.get_json()
         if body is None:
-            return make_response(jsonify(errorId="101", errorMessage="username cannot be empty"), 400)
+            return make_response(jsonify(RESPONSE_USERNAME_EMPTY), 400)
 
         name = body.get('username')
         if name is None:
-            return make_response(jsonify(errorId="101", errorMessage="username cannot be empty"), 400)
+            return make_response(jsonify(RESPONSE_USERNAME_EMPTY), 400)
 
         password = body.get('password')
         if password is None:
-            return make_response(jsonify(errorId="111", errorMessage="password cannot be empty"), 400)
+            return make_response(jsonify(RESPONSE_PASSWORD_EMPTY), 400)
 
         password_errors = password_policy(password)
         if password_errors is not None:
@@ -78,7 +78,7 @@ class RegisterApi(Resource):
         except ValidationError as e:
             return make_response(jsonify(errorId="120", errorMessage=e.to_dict()), 400)
         except NotUniqueError as e:
-            return make_response(jsonify(errorId="104", errorMessage={"username": "username is already taken"}), 400)
+            return make_response(jsonify(RESPONSE_USERNAME_TAKEN), 400)
 
         return make_response(jsonify(id=str(user.id)), 200)
 
@@ -89,18 +89,18 @@ class LoginApi(Resource):
     def post(self):
         body = request.get_json()
         if body is None:
-            return make_response(jsonify(errorId="101", errorMessage="username cannot be empty"), 400)
+            return make_response(jsonify(RESPONSE_USERNAME_EMPTY), 400)
 
         try:
             user = User.objects.get(name=body.get('username'))
             current_app.logger.setLevel(logging.INFO)
             current_app.logger.info('Login attempt was made with the following username: ' + str(body.get('username')))
         except DoesNotExist:
-            return make_response(jsonify(errorId="120", errorMessage="invalid username or password"), 400)
+            return make_response(jsonify(RESPONSE_INVALID_USERNAME_OR_PASSWORD), 400)
 
         authorized = user.check_password(body.get('password'))
         if not authorized:
-            return make_response(jsonify(errorId="120", errorMessage="invalid username or password"), 400)
+            return make_response(jsonify(RESPONSE_INVALID_USERNAME_OR_PASSWORD), 400)
 
         access_token = create_access_token(identity=user, expires_delta=TOKEN_EXPIRES)
         expiration_date_milliseconds = int((datetime.now()+TOKEN_EXPIRES).timestamp()*1000)
@@ -126,13 +126,13 @@ class PasswordChangeApi(Resource):
         if body is None:
             current_app.logger.setLevel(logging.ERROR)
             current_app.logger.error('Password was empty')
-            return make_response(jsonify(errorId="111", errorMessage="password cannot be empty"), 400)
+            return make_response(jsonify(RESPONSE_PASSWORD_EMPTY), 400)
 
         new_password = body.get('password')
         if new_password is None:
             current_app.logger.setLevel(logging.ERROR)
             current_app.logger.error('Password was empty')
-            return make_response(jsonify(errorId="111", errorMessage="password cannot be empty"), 400)
+            return make_response(jsonify(RESPONSE_PASSWORD_EMPTY), 400)
 
         password_errors = password_policy(new_password)
         if password_errors is not None:
@@ -156,7 +156,7 @@ class PasswordChangeApi(Resource):
 
         else:
             if 'username' in body:
-                return make_response(jsonify(errorId="002", errorMessage="forbidden interaction"), 403)
+                return make_response(jsonify(RESPONSE_FORBIDDEN), 403)
             else:
                 try:
                     current_user.change_password(new_password)

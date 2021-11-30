@@ -1,11 +1,11 @@
-from flask import request, jsonify, make_response
+from flask import request, jsonify, make_response, current_app
 from flaskapp.database.models import User
+from flaskapp.responses import *
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, current_user
 from mongoengine import DoesNotExist
 from math import ceil
 from datetime import datetime
-from flask import current_app
 import logging
 
 
@@ -19,16 +19,16 @@ class UsersListApi(Resource):
         if page is None or page < 1:
             current_app.logger.setLevel(logging.ERROR)
             current_app.logger.error('Invalid page argument: ' + str(page))
-            return make_response(jsonify(errorId="003", errorMessage='incorrect arguments given'), 400)
+            return make_response(jsonify(RESPONSE_INVALID_PAGE), 400)
         elif perpage is None or perpage < 1:
             current_app.logger.setLevel(logging.ERROR)
             current_app.logger.error('Invalid page argument: ' + str(perpage))
-            return make_response(jsonify(errorId="004", errorMessage='incorrect arguments given'), 400)
+            return make_response(jsonify(RESPONSE_INVALID_PER_PAGE), 400)
 
         try:
             users = User.objects.paginate(page, perpage).items
         except:
-            return make_response(jsonify(errorId="003", errorMessage="invalid page number"), 400)
+            return make_response(jsonify(RESPONSE_INVALID_PAGE), 400)
 
         return make_response(
             jsonify(
@@ -55,7 +55,7 @@ class UserDataApi(Resource):
         except DoesNotExist:
             current_app.logger.setLevel(logging.ERROR)
             current_app.logger.error('User does not exist with the follwoing name: ' + str(username))
-            return make_response(jsonify(errorId="199", errorMessage='user not found'), 404)
+            return make_response(jsonify(RESPONSE_USER_NOT_FOUND), 404)
 
     # Admin can remove user from database based on username
     @jwt_required()
@@ -69,4 +69,4 @@ class UserDataApi(Resource):
         else:
             current_app.logger.setLevel(logging.ERROR)
             current_app.logger.error('User not allowed to delete: ' + str(username))
-            return make_response(jsonify(errorId="002", errorMessage='forbidden interaction'), 403)
+            return make_response(jsonify(RESPONSE_FORBIDDEN), 403)

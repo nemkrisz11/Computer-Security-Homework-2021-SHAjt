@@ -24,7 +24,7 @@ def test_caff_upload(client, token):
 
     resp = client.post("/caff/upload", headers={"Authorization": "Bearer " + token}, content_type='multipart/form-data',
                        data={'name': 'something', 'file': (BytesIO(b"asdasdasdasdasdasdasdasdas"), "")})
-    assert resp.status_code == 400 and resp.is_json and "no file selected" in resp.json["errorMessage"]
+    assert resp.status_code == 400 and resp.is_json and "file not in request" in resp.json["errorMessage"]
 
     resp = client.post("/caff/upload", headers={"Authorization": "Bearer " + token}, content_type='multipart/form-data',
                        data={'file': (b"", "1.caff")})
@@ -51,10 +51,10 @@ def test_caff_upload(client, token):
 @pytest.mark.password("test1234")
 def test_caff_download(client, token):
     resp = client.get("/caff/download/1", headers={"Authorization": "Bearer " + token})
-    assert resp.status_code == 404 and resp.is_json and "File does not exist" in resp.json["errorMessage"]
+    assert resp.status_code == 404 and resp.is_json and "file does not exist" in resp.json["errorMessage"]
 
     resp = client.get("/caff/download/61a559807ab83d946960d412", headers={"Authorization": "Bearer " + token})
-    assert resp.status_code == 404 and resp.is_json and "File does not exist" in resp.json["errorMessage"]
+    assert resp.status_code == 404 and resp.is_json and "file does not exist" in resp.json["errorMessage"]
 
     resp = client.get("/caff/download/61a559807aa83d946960d4f2", headers={"Authorization": "Bearer " + token})
     assert resp.status_code == 200
@@ -114,14 +114,14 @@ def test_caff_preview(client, token):
     assert resp.status_code == 200 and resp.json is not None
 
     resp = client.get("/caff/00a000807aa83d946960d4f2", headers={"Authorization": "Bearer " + token})
-    assert resp.status_code == 404 and resp.json and resp.is_json and "File does not exist" in resp.json["errorMessage"]
+    assert resp.status_code == 404 and resp.json and resp.is_json and "file does not exist" in resp.json["errorMessage"]
 
 
 @pytest.mark.username("testadmin")
 @pytest.mark.password("DLee7ono7LVT5qiH7bkAxWgDfeegMNSj")
 def test_caff_delete(client, token):
     resp = client.delete("/caff/00a000807aa83d946960d4f2", headers={"Authorization": "Bearer " + token})
-    assert resp.status_code == 404 and resp.json and resp.is_json and "File does not exist" in resp.json["errorMessage"]
+    assert resp.status_code == 404 and resp.json and resp.is_json and "file does not exist" in resp.json["errorMessage"]
 
     resp = client.delete("/caff/61a559807aa83d946960d4f2", headers={"Authorization": "Bearer " + token})
     assert resp.status_code == 200 and resp.json and "CaffFile delete successful" in resp.json["message"]
