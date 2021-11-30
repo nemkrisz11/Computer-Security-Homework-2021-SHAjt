@@ -20,6 +20,7 @@ class StartActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Installing splash screen
         installSplashScreen()
 
         // If user logged in start home activity else auth activity

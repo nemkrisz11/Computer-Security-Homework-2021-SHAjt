@@ -38,6 +38,9 @@ class HomeViewModel @Inject constructor(
         getMoreCaffs()
     }
 
+    /**
+     * Requests for caffs.
+     */
     fun getMoreCaffs() {
         if (actualPage >= totalPages) {
             return
@@ -61,12 +64,22 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Refreshes caff list.
+     */
     fun refreshCaffs() {
         _caffs.postValue(emptyList())
         actualPage = 0
         getMoreCaffs()
     }
 
+    /**
+     * Uploads caff.
+     *
+     * @param uri       uri of the file
+     * @param name      name of the file
+     * @param context   context
+     */
     fun uploadCaff(uri: Uri, name: String, context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
             val uploadCaffResult = caffShopRepository.uploadCaff(uri, name, context)
@@ -79,6 +92,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Logs out user.
+     */
     fun logout() {
         viewModelScope.launch(Dispatchers.IO) {
             caffShopRepository.logout()

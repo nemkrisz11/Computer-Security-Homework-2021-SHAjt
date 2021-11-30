@@ -51,6 +51,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         homeViewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
 
+        // Checking permission, creating permission change listener
         checkPermission()
         val permissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestPermission()
@@ -146,6 +147,9 @@ class HomeFragment : Fragment() {
         }
     }
 
+    /**
+     * Checks if necessary permission is granted or not.
+     */
     private fun checkPermission() {
         permission = when (PackageManager.PERMISSION_GRANTED) {
             ContextCompat.checkSelfPermission(
@@ -160,6 +164,9 @@ class HomeFragment : Fragment() {
         }
     }
 
+    /**
+     * Reacts for caff selection.
+     */
     private fun onCaffSelect(caffId: String) {
         startActivity(
             Intent(context, CaffDetailsActivity::class.java).apply {
@@ -168,6 +175,9 @@ class HomeFragment : Fragment() {
         )
     }
 
+    /**
+     * Dialog click handler.
+     */
     private fun dialogOnClick(dialog: DialogInterface?, which: Int) {
         when (which) {
             DialogInterface.BUTTON_POSITIVE -> {

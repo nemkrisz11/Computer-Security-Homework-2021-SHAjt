@@ -7,6 +7,8 @@ import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 
 /**
+ * Data encryption.
+ *
  * Based on: https://gist.github.com/JosiasSena/3bf4ca59777f7dedcaf41a495d96d984
  */
 class EnCryptor {
@@ -21,6 +23,9 @@ class EnCryptor {
     lateinit var iv: ByteArray
         private set
 
+    /**
+     * Encrypts text.
+     */
     fun encryptText(alias: String, textToEncrypt: String): ByteArray {
         val cipher: Cipher = Cipher.getInstance(TRANSFORMATION)
         cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(alias))
@@ -30,6 +35,9 @@ class EnCryptor {
         }
     }
 
+    /**
+     * Requests for secret key.
+     */
     fun getSecretKey(alias: String): SecretKey {
         val keyGenerator: KeyGenerator = KeyGenerator
             .getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEY_STORE)

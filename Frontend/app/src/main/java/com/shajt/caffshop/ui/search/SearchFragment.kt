@@ -127,6 +127,9 @@ class SearchFragment : Fragment() {
         })
     }
 
+    /**
+     * Validates text.
+     */
     private fun validateText(text: String): String? {
         val trimmed = text.trim()
         return if (trimmed.isBlank()) {
@@ -136,6 +139,9 @@ class SearchFragment : Fragment() {
         }
     }
 
+    /**
+     * Reacts for caff selection.
+     */
     private fun onCaffSelect(caffId: String) {
         startActivity(
             Intent(context, CaffDetailsActivity::class.java).apply {

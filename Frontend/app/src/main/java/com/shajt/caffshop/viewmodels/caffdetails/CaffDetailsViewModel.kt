@@ -41,6 +41,12 @@ class CaffDetailsViewModel @Inject constructor(
         get() = caffShopRepository.localUser?.isAdmin!!
 
 
+    /**
+     * Requests for caff details.
+     *
+     * @param caffId        id of the caff
+     * @param callbackId    callback id for notification match
+     */
     fun getCaffDetails(caffId: String, callbackId: Int = -1) {
         viewModelScope.launch(Dispatchers.IO) {
             val caffResult = caffShopRepository.getCaff(caffId)
@@ -52,6 +58,12 @@ class CaffDetailsViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Requests for comments.
+     *
+     * @param caffId        id of the caff
+     * @param callbackId    callback id for notification match
+     */
     fun getMoreComments(caffId: String, callbackId: Int = -1) {
         if (actualPage >= totalPages) {
             return
@@ -75,6 +87,13 @@ class CaffDetailsViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Downloads caff.
+     *
+     * @param caffId        id of the caff
+     * @param fileName      name of the file
+     * @param callbackId    callback id for notification match
+     */
     fun downloadCaff(caffId: String, fileName: String, callbackId: Int = -1) {
         viewModelScope.launch(Dispatchers.IO) {
             val downloadResult = caffShopRepository.downloadCaff(caffId, fileName)
@@ -86,6 +105,12 @@ class CaffDetailsViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Deletes caff.
+     *
+     * @param caffId        id of the caff
+     * @param callbackId    callback id for notification match
+     */
     fun deleteCaff(caffId: String, callbackId: Int = -1) {
         viewModelScope.launch(Dispatchers.IO) {
             val deleteCaffResult = caffShopRepository.deleteCaff(caffId)
@@ -97,6 +122,13 @@ class CaffDetailsViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Posts comment.
+     *
+     * @param caffId        id of the caff
+     * @param text          comment text
+     * @param callbackId    callback id for notification match
+     */
     fun postComment(caffId: String, text: String, callbackId: Int = -1) {
         viewModelScope.launch(Dispatchers.IO) {
             val postCommentResult = caffShopRepository.postComment(CommentToCreate(caffId, text))
@@ -110,16 +142,21 @@ class CaffDetailsViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Deletes comment.
+     *
+     * @param comment       comment to delete
+     * @param callbackId    callback id for notification match
+     */
     fun deleteComment(comment: Comment, callbackId: Int = -1) {
         viewModelScope.launch(Dispatchers.IO) {
             delay(5000)
             val deleteResult = caffShopRepository.deleteComment(comment.id, comment.caffId)
             if (deleteResult.success) {
                 if (comments.value != null) {
-                    val comments = comments.value!!.toMutableList().apply {
-                        remove(comment)
-                    }
-                    _comments.postValue(comments)
+                    _comments.postValue(emptyList())
+                    actualPage = 0
+                    getMoreComments(comment.caffId)
                 }
             } else {
                 _error.postValue(Pair(deleteResult.error!!, callbackId))

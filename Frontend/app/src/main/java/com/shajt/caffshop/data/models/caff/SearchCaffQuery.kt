@@ -1,5 +1,8 @@
 package com.shajt.caffshop.data.models.caff
 
+/**
+ * Caff search query parameter objective
+ */
 data class SearchCaffQuery(
     var searchTerm: String? = null,
     var username: String? = null,

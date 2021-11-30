@@ -33,10 +33,12 @@ class CaffShopApiInteractor(
     private val caffShopApi: CaffShopApi
 
     init {
+        // Creating logger
         val logging = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.HEADERS
         }
 
+        // Creating http client
         val httpClient = OkHttpClient.Builder()
             .sslSocketFactory(CustomTrust.certificate.sslSocketFactory(), CustomTrust.certificate.trustManager)
             .hostnameVerifier(HostnameVerifier { hostname, session ->
@@ -46,6 +48,7 @@ class CaffShopApiInteractor(
             .callTimeout(1, TimeUnit.MINUTES)
             .build()
 
+        // Creating retrofit
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
@@ -55,7 +58,9 @@ class CaffShopApiInteractor(
         this.caffShopApi = retrofit.create(CaffShopApi::class.java)
     }
 
-
+    /**
+     * Requests for user list.
+     */
     suspend fun getUsers(
         token: String,
         page: Int = 1,
@@ -69,6 +74,9 @@ class CaffShopApiInteractor(
         }
     }
 
+    /**
+     * Requests for user data.
+     */
     suspend fun getUser(
         token: String,
         username: String
@@ -81,6 +89,9 @@ class CaffShopApiInteractor(
         }
     }
 
+    /**
+     * Deletes user.
+     */
     suspend fun deleteUser(
         token: String,
         username: String
@@ -98,6 +109,9 @@ class CaffShopApiInteractor(
         }
     }
 
+    /**
+     * Registers a user.
+     */
     suspend fun register(
         userCredentials: UserCredentials
     ): ServerResult<Boolean, ErrorMessage> {
@@ -114,6 +128,9 @@ class CaffShopApiInteractor(
         }
     }
 
+    /**
+     * Logs in a user.
+     */
     suspend fun login(
         userCredentials: UserCredentials
     ): ServerResult<LoginResult, ErrorMessage> {
@@ -125,6 +142,9 @@ class CaffShopApiInteractor(
         }
     }
 
+    /**
+     * Logs out a user.
+     */
     suspend fun logout(
         token: String
     ): ServerResult<Boolean, ErrorMessage> {
@@ -141,6 +161,9 @@ class CaffShopApiInteractor(
         }
     }
 
+    /**
+     * Modifies user password.
+     */
     suspend fun modifyPassword(
         token: String,
         modifyPassword: ModifyPassword
@@ -158,6 +181,9 @@ class CaffShopApiInteractor(
         }
     }
 
+    /**
+     * Requests for caff data.
+     */
     suspend fun getCaff(
         token: String,
         id: String
@@ -170,6 +196,9 @@ class CaffShopApiInteractor(
         }
     }
 
+    /**
+     * Deletes a caff.
+     */
     suspend fun deleteCaff(
         token: String,
         id: String
@@ -187,6 +216,9 @@ class CaffShopApiInteractor(
         }
     }
 
+    /**
+     * Searches caffs.
+     */
     suspend fun searchCaffs(
         token: String,
         searchTerm: String? = null,
@@ -214,6 +246,9 @@ class CaffShopApiInteractor(
         }
     }
 
+    /**
+     * Uploads caff.
+     */
     suspend fun uploadCaff(
         token: String,
         name: String,
@@ -234,6 +269,9 @@ class CaffShopApiInteractor(
         }
     }
 
+    /**
+     * Downloads caff.
+     */
     suspend fun downloadCaff(
         token: String,
         id: String
@@ -246,6 +284,9 @@ class CaffShopApiInteractor(
         }
     }
 
+    /**
+     * Enques a download.
+     */
     suspend fun enqueueDownload(
         token: String,
         id: String,
@@ -259,6 +300,9 @@ class CaffShopApiInteractor(
         return downloadManager.enqueue(request)
     }
 
+    /**
+     * Requests for comment list.
+     */
     suspend fun getComments(
         token: String,
         caffId: String,
@@ -274,6 +318,9 @@ class CaffShopApiInteractor(
         }
     }
 
+    /**
+     * Posts comment.
+     */
     suspend fun postComment(
         token: String,
         commentToCreate: CommentToCreate
@@ -291,6 +338,9 @@ class CaffShopApiInteractor(
         }
     }
 
+    /**
+     * Deletes comment.
+     */
     suspend fun deleteComment(
         token: String,
         commentId: Int,
@@ -309,8 +359,14 @@ class CaffShopApiInteractor(
         }
     }
 
+    /**
+     * Creates auth header from token.
+     */
     private fun createAuthHeaderFromToken(token: String) = "Bearer $token"
 
+    /**
+     * Checks response.
+     */
     private fun <R> checkResponse(
         response: Response<R>,
         defaultErrorMessage: ErrorMessage = ErrorMessage.NETWORK_ERROR
@@ -322,6 +378,9 @@ class CaffShopApiInteractor(
         }
     }
 
+    /**
+     * Creates error message.
+     */
     private fun <R> createErrorMessage(
         errorBody: String?,
         defaultErrorMessage: ErrorMessage = ErrorMessage.NETWORK_ERROR

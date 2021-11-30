@@ -30,11 +30,19 @@ class SearchViewModel @Inject constructor(
     private lateinit var prevSearchCaffQuery: SearchCaffQuery
 
 
+    /**
+     * Searches caffs.
+     *
+     * @param searchCaffQuery caff search query
+     * @return search started or not
+     */
     fun searchCaffs(searchCaffQuery: SearchCaffQuery): Boolean {
         if (::prevSearchCaffQuery.isInitialized) {
             if (prevSearchCaffQuery == searchCaffQuery && actualPage >= totalPages) {
+                // Not searching if same query or all loaded
                 return false
             } else if (prevSearchCaffQuery != searchCaffQuery) {
+                // New search then reset values
                 actualPage = 0
                 totalPages = 1
             }

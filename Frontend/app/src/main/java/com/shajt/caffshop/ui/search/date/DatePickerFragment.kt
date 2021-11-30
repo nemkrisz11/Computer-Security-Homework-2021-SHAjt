@@ -9,6 +9,9 @@ import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import java.util.*
 
+/**
+ * DatePicker for SearchQuery date selection.
+ */
 class DatePickerFragment(
     private var textView: TextView,
     private var outDate: (Long) -> Unit

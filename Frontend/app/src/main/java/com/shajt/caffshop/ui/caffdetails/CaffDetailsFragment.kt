@@ -102,6 +102,7 @@ class CaffDetailsFragment : Fragment() {
             createCiffImage(it.caffAnimationImage)
         })
 
+        // Opens and closes full screen image
         var isFullScreen = false
         var oldParams: ViewGroup.LayoutParams? = null
         ciff.setOnClickListener {
@@ -109,6 +110,7 @@ class CaffDetailsFragment : Fragment() {
                 ciff.layoutParams = oldParams
                 ciff.adjustViewBounds = true
 
+                // Hiding comment layout
                 commentInput.visibility = View.VISIBLE
                 send.visibility = View.VISIBLE
 
@@ -121,6 +123,7 @@ class CaffDetailsFragment : Fragment() {
                 )
                 ciff.scaleType = ImageView.ScaleType.FIT_CENTER
 
+                // Showing comment layout
                 commentInput.visibility = View.INVISIBLE
                 send.visibility = View.INVISIBLE
 
@@ -222,6 +225,9 @@ class CaffDetailsFragment : Fragment() {
         })
     }
 
+    /**
+     * Creates ciff image.
+     */
     private fun createCiffImage(caffAnimationImage: CaffAnimationImage) {
         lifecycleScope.launch(Dispatchers.IO) {
             val bitmap = CreateCiff.createCiff(caffAnimationImage.pixelValues)
@@ -231,6 +237,9 @@ class CaffDetailsFragment : Fragment() {
         }
     }
 
+    /**
+     * Validates comment text.
+     */
     private fun validateCommentText(text: String): String? {
         val trimmed = text.trim()
         return if (trimmed.isBlank()) {

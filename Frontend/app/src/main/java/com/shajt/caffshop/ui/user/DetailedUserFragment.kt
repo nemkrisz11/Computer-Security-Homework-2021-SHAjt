@@ -137,6 +137,9 @@ class DetailedUserFragment : Fragment() {
         })
     }
 
+    /**
+     * Validates password.
+     */
     private fun validatePasswordText(text: String): String? {
         val trimmed = text.trim()
         return if (trimmed.isBlank() || !UserCredentialValidator.isPasswordValid(trimmed)) {

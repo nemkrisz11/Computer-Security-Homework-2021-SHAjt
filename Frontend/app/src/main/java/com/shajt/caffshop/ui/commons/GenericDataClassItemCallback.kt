@@ -3,6 +3,9 @@ package com.shajt.caffshop.ui.commons
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.DiffUtil
 
+/**
+ * Generic ItemCallback for list adapters.
+ */
 class GenericDataClassItemCallback<T> : DiffUtil.ItemCallback<T>() {
     override fun areItemsTheSame(oldItem: T, newItem: T): Boolean {
         return oldItem === newItem

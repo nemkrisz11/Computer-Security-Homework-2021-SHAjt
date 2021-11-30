@@ -1,5 +1,8 @@
 package com.shajt.caffshop.data.models
 
+/**
+ * Comment representation.
+ */
 data class Comment(
     val id: Int,
     val caffId: String,

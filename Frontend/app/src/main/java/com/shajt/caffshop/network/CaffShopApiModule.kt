@@ -8,6 +8,9 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import javax.inject.Singleton
 
+/**
+ * Module for dependency injection.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object CaffShopApiModule {

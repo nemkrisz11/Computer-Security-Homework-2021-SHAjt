@@ -6,6 +6,8 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 
 /**
+ * Data decryption.
+ *
  * Based on: https://gist.github.com/JosiasSena/3bf4ca59777f7dedcaf41a495d96d984
  */
 class DeCryptor {
@@ -21,6 +23,9 @@ class DeCryptor {
         keyStore.load(null)
     }
 
+    /**
+     * Decrypts encrypted data.
+     */
     fun decryptData(alias: String, encryptedData: ByteArray?, encryptionIv: ByteArray?): String {
         val cipher: Cipher = Cipher.getInstance(TRANSFORMATION)
         val spec = GCMParameterSpec(128, encryptionIv)
@@ -28,6 +33,9 @@ class DeCryptor {
         return String(cipher.doFinal(encryptedData), Charsets.UTF_8)
     }
 
+    /**
+     * Requests for secret key.
+     */
     private fun getSecretKey(alias: String): SecretKey {
         return (keyStore.getEntry(alias, null) as KeyStore.SecretKeyEntry).secretKey
     }

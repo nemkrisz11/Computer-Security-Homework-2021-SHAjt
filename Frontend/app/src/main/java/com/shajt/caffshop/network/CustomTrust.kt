@@ -3,7 +3,9 @@ package com.shajt.caffshop.network
 import okhttp3.tls.HandshakeCertificates
 import okhttp3.tls.decodeCertificatePem
 
-
+/**
+ * Custom trust for self signed server.
+ */
 object CustomTrust {
 
     private const val certString =

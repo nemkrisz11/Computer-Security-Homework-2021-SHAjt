@@ -3,6 +3,9 @@ package com.shajt.caffshop.ui.commons
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
+/**
+ * Generic swipe callback for recycler views.
+ */
 class GenericSwipeCallback(
     val action: (position: Int) -> Unit,
     directions: Int = ItemTouchHelper.LEFT

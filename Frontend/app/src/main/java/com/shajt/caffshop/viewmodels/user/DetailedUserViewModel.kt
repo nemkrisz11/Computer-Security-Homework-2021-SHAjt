@@ -35,6 +35,11 @@ class DetailedUserViewModel @Inject constructor(
     val currentUsername: String
         get() = caffShopRepository.localUser?.username!!
 
+    /**
+     * Requests for user details.
+     *
+     * @param username username
+     */
     fun getUserDetails(username: String) {
         viewModelScope.launch(Dispatchers.IO) {
             if (username.isBlank()) {
@@ -56,6 +61,11 @@ class DetailedUserViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Deletes user.
+     *
+     * @param username username
+     */
     fun deleteUser(username: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val deleteUserResult = caffShopRepository.deleteUser(username)
@@ -67,6 +77,11 @@ class DetailedUserViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Changes user password.
+     *
+     * @param newPassword new password
+     */
     fun changePassword(newPassword: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val modifyPasswordResult = caffShopRepository.modifyPassword(

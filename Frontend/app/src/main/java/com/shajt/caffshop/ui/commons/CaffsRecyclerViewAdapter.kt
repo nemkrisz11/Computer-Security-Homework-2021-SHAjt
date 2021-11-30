@@ -31,6 +31,7 @@ class CaffsRecyclerViewAdapter(
         }
         holder.name.text = item.caffName
 
+        // Ciff image creation
         CoroutineScope(Dispatchers.IO).launch {
             val bitmap = CreateCiff.createCiff(item.caffAnimationImage.pixelValues)
             holder.ciff.post {

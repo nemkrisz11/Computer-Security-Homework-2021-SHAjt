@@ -1,5 +1,8 @@
 package com.shajt.caffshop.data.models
 
+/**
+ * Ciff file representation.
+ */
 data class CaffAnimationImage(
     val duration: Long,
     val width: Int,

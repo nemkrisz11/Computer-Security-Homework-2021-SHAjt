@@ -51,7 +51,7 @@ class AuthActivity : AppCompatActivity() {
             // Disable login button unless both username / password is valid
             auth.isEnabled = authState.isDataValid
 
-            // Show errors
+            // Show/hide errors
             if (authState.usernameError != null) {
                 username.error = getString(authState.usernameError.errorStringResourceId)
             } else {

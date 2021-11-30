@@ -26,6 +26,9 @@ class UsersViewModel @Inject constructor(
     private var _users = MutableLiveData<List<UserData>>()
     val users: LiveData<List<UserData>> = _users
 
+    /**
+     * Requests for users.
+     */
     fun getMoreUsers() {
         if (actualPage >= totalPages) {
             return

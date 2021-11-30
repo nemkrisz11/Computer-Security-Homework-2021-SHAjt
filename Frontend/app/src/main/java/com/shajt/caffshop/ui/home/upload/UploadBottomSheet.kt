@@ -50,15 +50,17 @@ class UploadBottomSheet : BottomSheetDialogFragment() {
         val name = binding.name
         val upload = binding.upload
 
+        // File selector listener
         val fileSelectionLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
+                // Saving selected file uri and showing filename
                 fileUri = result.data?.data
                 fileName.text = getFileName()
             }
         }
-
+        // For animation
         fileName.isSelected = true
 
         select.setOnClickListener {
@@ -91,6 +93,9 @@ class UploadBottomSheet : BottomSheetDialogFragment() {
 
     }
 
+    /**
+     * Gives back file name if any or placeholder.
+     */
     private fun getFileName(): String {
         var name = getString(R.string.upload_content_file_name)
         fileUri?.let {
@@ -105,6 +110,9 @@ class UploadBottomSheet : BottomSheetDialogFragment() {
         return name
     }
 
+    /**
+     * Validates file name text.
+     */
     private fun validateNameText(text: String): String? {
         val trimmed = text.trim()
         return if (trimmed.isBlank()) {

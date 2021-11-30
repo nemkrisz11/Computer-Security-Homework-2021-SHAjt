@@ -21,6 +21,7 @@ class CaffDetailsCommentsRecyclerViewAdapter(
     private val deleteComment: (comment: Comment) -> Unit
 ) : GenericRecyclerViewAdapter<Comment, CaffDetailsCommentsRecyclerViewAdapter.CommentListItemViewHolder>() {
 
+    // Heights for animated opening/closing.
     private var originalHeight = -1
     private var expandedHeight = -1
 
@@ -77,6 +78,9 @@ class CaffDetailsCommentsRecyclerViewAdapter(
         }
     }
 
+    /**
+     * Animates opening and closing comment.
+     */
     private fun resize(holder: CommentListItemViewHolder, expand: Boolean) {
         val animator = if (expand) {
             ValueAnimator.ofFloat(0F, 1F)

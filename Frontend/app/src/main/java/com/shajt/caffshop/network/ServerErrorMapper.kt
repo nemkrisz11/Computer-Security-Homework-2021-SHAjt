@@ -3,6 +3,9 @@ package com.shajt.caffshop.network
 import com.shajt.caffshop.data.enums.ErrorMessage
 import com.shajt.caffshop.data.enums.ErrorMessage.*
 
+/**
+ * Server error mapper.
+ */
 object ServerErrorMapper {
 
     fun mapServerError(errorId: String, default: ErrorMessage = NETWORK_ERROR): ErrorMessage {
