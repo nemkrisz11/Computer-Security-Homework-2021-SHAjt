@@ -3,7 +3,6 @@ from flaskapp.resources.user import UsersListApi, UserDataApi
 from flaskapp.resources.caff import CaffUploadApi, CaffDownloadApi, CaffDataApi, CaffSearchApi
 from flaskapp.resources.comment import CommentApi
 
-
 # Defining Per-IP request-rate limits and register endpoints
 def initialize_routes(api, limiter):
     RegisterApi.decorators = [limiter.limit('10/hour', methods=['POST'])]
@@ -13,8 +12,8 @@ def initialize_routes(api, limiter):
     CaffDownloadApi.decorators = [limiter.limit('10/minute', methods=['GET'])]
     CaffUploadApi.decorators = [limiter.limit('10/minute', methods=['POST'])]
     CommentApi.decorators = [limiter.limit('10/minute', methods=['POST'])]
-    UserDataApi.decorators = [limiter.limit('30/minute', methods=['DELETE'])]
-    CaffDataApi.decorators = [limiter.limit('30/minute', methods=['DELETE'])]
+    UserDataApi.decorators = [limiter.limit('60/second', methods=['GET', 'DELETE'])]
+    CaffDataApi.decorators = [limiter.limit('60/second', methods=['GET', 'DELETE'])]
 
     api.add_resource(RegisterApi, '/user/register')
     api.add_resource(LoginApi, '/user/login')
