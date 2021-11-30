@@ -75,6 +75,7 @@ jobs:
         run: |
           docker exec -u root flask /var/www/test/run_tests.sh --cov
           docker cp flask:/tmp/htmlcov ./
+          docker cp flask:/tmp/coverage.xml ./
       - uses: actions/upload-artifact@v2
         with:
           name: code-coverage
