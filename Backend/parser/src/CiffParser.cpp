@@ -16,6 +16,10 @@ CiffFile CiffParser::parse(std::vector<unsigned char> buffer) const
     CiffFile ciff;
     ciff.header = header;
     ciff.pixelValues = std::vector<unsigned char>(it, buffer.end());
+	if (ciff.pixelValues.size() != ciff.header.contentSize)
+    {
+        throw std::invalid_argument("Content size and number of pixel values must match");
+    }
 
     return ciff;
 }

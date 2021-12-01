@@ -7,7 +7,7 @@ from setuptools import setup
 
 ext_modules = [
     Pybind11Extension("caffparser",
-        ["pybind11_wrapper.cpp"]
+        ["pybind11_wrapper.cpp", "src/CaffParser.cpp", "src/CiffParser.cpp"]
         ),
 ]
 

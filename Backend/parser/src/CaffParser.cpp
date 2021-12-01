@@ -140,8 +140,12 @@ CaffCredits CaffParser::parseCreditsBlock_(std::vector<unsigned char> block, siz
         throw std::invalid_argument("invalid credit block length");
     }
 
-    SafeAdvance(it, block.end(), lengthOfCreater);
-    std::string creatorName(it-lengthOfCreater, it);
+    std::string creatorName = "";
+    if(lengthOfCreater > 0)
+    {
+        SafeAdvance(it, block.end(), lengthOfCreater);
+        creatorName= std::string(it-lengthOfCreater, it);
+    }
 
     CaffCredits credits;
     credits.year = year;
