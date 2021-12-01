@@ -1,5 +1,5 @@
 from flask import request, jsonify, make_response, current_app
-from mongoengine import DoesNotExist
+from mongoengine import DoesNotExist, ValidationError
 from math import ceil
 from flaskapp.responses import *
 from flask_restful import Resource
@@ -21,7 +21,7 @@ class CommentApi(Resource):
 
         try:
             stored_file = CaffFile.objects.get(id=caff_id)
-        except DoesNotExist:
+        except (DoesNotExist, ValidationError):
             current_app.logger.setLevel(logging.ERROR)
             current_app.logger.error('CAFF file with id does not found: ' + str(caff_id))
             return make_response(jsonify(RESPONSE_FILE_DOES_NOT_EXIST), 404)
@@ -84,7 +84,7 @@ class CommentApi(Resource):
 
         try:
             stored_file = CaffFile.objects.get(id=caff_id)
-        except DoesNotExist:
+        except (DoesNotExist, ValidationError):
             current_app.logger.setLevel(logging.ERROR)
             current_app.logger.error('CAFF file does not exist with id: ' + str(caff_id))
             return make_response(jsonify(RESPONSE_FILE_DOES_NOT_EXIST), 400)
@@ -120,11 +120,7 @@ class CommentApi(Resource):
                 _ = stored_file.comments[comment_id]
                 del stored_file.comments[comment_id]
                 stored_file.save()
-            except DoesNotExist:
-                current_app.logger.setLevel(logging.ERROR)
-                current_app.logger.error('Comment with id does not exist: ' + str(comment_id))
-                return make_response(jsonify(RESPONSE_COMMENT_NOT_FOUND), 400)
-            except IndexError:
+            except (DoesNotExist, IndexError, ValidationError):
                 current_app.logger.setLevel(logging.ERROR)
                 current_app.logger.error('Comment with id does not exist: ' + str(comment_id))
                 return make_response(jsonify(RESPONSE_COMMENT_NOT_FOUND), 400)

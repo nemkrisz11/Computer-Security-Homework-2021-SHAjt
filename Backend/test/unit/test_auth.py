@@ -1,3 +1,5 @@
+from io import BytesIO
+
 import pytest
 from fixtures import client, token
 
@@ -106,7 +108,7 @@ def test_invalid_password_change_self(client, token):
                        json={
                            "username": "asdasd",
                            "password": "test5678ASD&@"})
-    assert resp.status_code == 403 and resp.is_json and "forbidden" in resp.json["errorMessage"]
+    assert resp.status_code == 403 and resp.is_json and "forbidden interaction" in resp.json["errorMessage"]
 
     # New password too short
     resp = client.post("/user/password", headers={"Authorization": "Bearer " + token},
@@ -153,3 +155,26 @@ def test_password_change_other_user(client, token):
                            "password": "test5678ASD&@"})
     assert resp.status_code == 200 and resp.is_json
     assert len(resp.json["token"]) > 20
+
+
+def test_attempt_access_without_login(client):
+    resp = client.post("/user/password",json={"password": "test5678ASD&@"})
+    assert resp.status_code == 401
+
+    resp = client.get("/user/", query_string={"page": 1, "perpage": 10})
+    assert resp.status_code == 401 and resp.is_json
+
+    resp = client.get("/user/testuser")
+    assert resp.status_code == 401 and resp.is_json
+
+    resp = client.delete("/user/testuser")
+    assert resp.status_code == 401
+
+    data = {'name': 'this is a name'}
+    with open("/var/www/parser/TestFiles/1.caff", "rb") as f:
+        data['file'] = (BytesIO(f.read()), "1.caff")
+    resp = client.post("/caff/upload", content_type='multipart/form-data', data=data)
+    assert resp.status_code == 401
+
+    resp = client.get("/caff/download/61a559807aa83d946960d4f2")
+    assert resp.status_code == 401

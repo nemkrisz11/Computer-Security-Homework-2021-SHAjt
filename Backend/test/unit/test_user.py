@@ -17,15 +17,23 @@ def test_user_list(client, token):
     assert len(resp.json["users"]) >= 2
     assert resp.json["totalPages"] > 0
 
+
+@pytest.mark.username("testuser")
+@pytest.mark.password("test1234")
+def test_user_list_misuse(client, token):
+    # Page number given is over the actual number of pages
     resp = client.get("/user/", headers={"Authorization": "Bearer " + token}, query_string={"page": 4, "perpage": 10})
     assert resp.status_code == 400 and resp.is_json and "invalid page number" in resp.json["errorMessage"]
 
-    resp = client.get("/user/", headers={"Authorization": "Bearer " + token}, query_string={"page": 1, "perpage": -1})
-    assert resp.status_code == 400 and resp.is_json
-
+    # Invalid page number
     resp = client.get("/user/", headers={"Authorization": "Bearer " + token}, query_string={"page": -11, "perpage": 10})
-    assert resp.status_code == 400 and resp.is_json
+    assert resp.status_code == 400 and resp.is_json and "invalid page number" in resp.json["errorMessage"]
 
+    # Invalid per page number
+    resp = client.get("/user/", headers={"Authorization": "Bearer " + token}, query_string={"page": 1, "perpage": -1})
+    assert resp.status_code == 400 and resp.is_json and "invalid per page number" in resp.json["errorMessage"]
+
+    # Invalid page and per page number
     resp = client.get("/user/", headers={"Authorization": "Bearer " + token}, query_string={"page": 0, "perpage": 0})
     assert resp.status_code == 400 and resp.is_json
 
@@ -41,6 +49,10 @@ def test_user_get(client, token):
     assert resp.status_code == 200 and resp.is_json
     assert resp.json["username"] == "testadmin" and resp.json["isAdmin"] is True
 
+
+@pytest.mark.username("testuser")
+@pytest.mark.password("test1234")
+def test_user_get_misuse(client, token):
     resp = client.get("/user/124153asda", headers={"Authorization": "Bearer " + token})
     assert resp.status_code == 404 and resp.is_json and "user not found" in resp.json["errorMessage"]
 

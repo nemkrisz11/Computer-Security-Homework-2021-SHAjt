@@ -104,7 +104,7 @@ class CaffDataApi(Resource):
             return make_response(jsonify(message='CaffFile delete successful'), 200)
         else:
             current_app.logger.setLevel(logging.ERROR)
-            current_app.logger.error('Deleting CAFF file is forbidden for user: ' + str(current_user.username))
+            current_app.logger.error('Deleting CAFF file is forbidden for user: ' + str(current_user.name))
             return make_response(jsonify(RESPONSE_FORBIDDEN), 403)
 
 
