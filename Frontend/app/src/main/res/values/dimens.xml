@@ -1,0 +1,41 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="fragment_horizontal_margin">16dp</dimen>
+    <dimen name="fragment_vertical_margin">16dp</dimen>
+    <dimen name="appbar_padding">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="appbar_padding_top">8dp</dimen>
+
+    <!-- Home -->
+    <dimen name="home_item_margin">16dp</dimen>
+    <dimen name="home_list_margin">4dp</dimen>
+
+    <!-- Upload -->
+    <dimen name="upload_item_margin">8dp</dimen>
+
+    <!-- CaffList -->
+    <dimen name="caff_list_item_margin">8dp</dimen>
+    <dimen name="caff_list_layout_margin">6dp</dimen>
+
+    <!-- CaffDetails -->
+    <dimen name="caff_details_item_margin">8dp</dimen>
+
+    <!-- Comment -->
+    <dimen name="comment_item_margin">8dp</dimen>
+    <dimen name="comment_text_margin">8dp</dimen>
+
+    <!-- Search -->
+    <dimen name="search_item_margin">12dp</dimen>
+    <dimen name="search_button_margin">16dp</dimen>
+
+    <!-- UserDetails -->
+    <dimen name="user_details_item_margin">8dp</dimen>
+
+    <!-- UserItem -->
+    <dimen name="user_item_margin">8dp</dimen>
+    <dimen name="user_text_margin">8dp</dimen>
+
+
+</resources>
