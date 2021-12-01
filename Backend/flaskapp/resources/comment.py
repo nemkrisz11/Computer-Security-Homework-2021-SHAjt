@@ -19,6 +19,15 @@ class CommentApi(Resource):
         page = request.args.get('page', 1, type=int)
         perpage = request.args.get('perpage', 20, type=int)
 
+        if page < 1:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('Unsuccessful searching with invalid page number: ' + str(page))
+            return make_response(jsonify(RESPONSE_INVALID_PAGE), 400)
+        if perpage < 1:
+            current_app.logger.setLevel(logging.ERROR)
+            current_app.logger.error('Unsuccessful searching with invalid per page number: ' + str(perpage))
+            return make_response(jsonify(RESPONSE_INVALID_PER_PAGE), 400)
+
         try:
             stored_file = CaffFile.objects.get(id=caff_id)
         except (DoesNotExist, ValidationError):

@@ -12,6 +12,10 @@ def test_comments(client, token):
         'caffId': '61a559807aa83d946960d4f2',
         'comment': 'Test Comment'
     }
+
+    resp = client.get("/comment?caffId=61a559807aa83d946960d4f2", headers={"Authorization": "Bearer " + token})
+    assert resp.status_code == 200 and resp.is_json and len(resp.json['comments']) == 0
+
     resp = client.post("/comment", headers={"Authorization": "Bearer " + token},
                        json=data)
     assert resp.status_code == 200 and resp.is_json and "comment created successful" in resp.json["message"]
@@ -22,7 +26,7 @@ def test_comments(client, token):
 
 @pytest.mark.username("testuser")
 @pytest.mark.password("test1234")
-def test_comments(client, token):
+def test_comments_misuse(client, token):
     # Bad CaffId
     resp = client.get("/comment?caffId=00a000000aa00a000000a0a0", headers={"Authorization": "Bearer " + token})
     assert resp.status_code == 404 and resp.is_json and "file does not exist" in resp.json["errorMessage"]
@@ -50,6 +54,19 @@ def test_comments(client, token):
     resp = client.post("/comment", headers={"Authorization": "Bearer " + token},
                        json={'caffId': '61a559807aa83d946960d4f2', 'comment': "a" * 210})
     assert resp.status_code == 400 and resp.is_json and "comment too long" in resp.json["errorMessage"]
+
+    # Incorrect page and per-page numbers
+    resp = client.get("/comment?caffId=61a559807aa83d946960d4f2&page=0", headers={"Authorization": "Bearer " + token})
+    assert resp.status_code == 400 and resp.is_json and "invalid page number" in resp.json["errorMessage"]
+
+    resp = client.get("/comment?caffId=61a559807aa83d946960d4f2&perpage=0", headers={"Authorization": "Bearer " + token})
+    assert resp.status_code == 400 and resp.is_json and "invalid per page number" in resp.json["errorMessage"]
+
+    resp = client.get("/comment?caffId=61a559807aa83d946960d4f2&perpage=-1", headers={"Authorization": "Bearer " + token})
+    assert resp.status_code == 400 and resp.is_json and "invalid per page number" in resp.json["errorMessage"]
+
+    resp = client.get("/comment?caffId=61a559807aa83d946960d4f2&page=50000", headers={"Authorization": "Bearer " + token})
+    assert resp.status_code == 200 and resp.is_json and len(resp.json['comments']) == 0
 
 
 @pytest.mark.username("testuser")
