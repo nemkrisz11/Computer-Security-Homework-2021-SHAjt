@@ -1,0 +1,148 @@
+<resources>
+    <!-- App -->
+    <string name="app_name">CaffShop</string>
+
+    <!-- Placeholder -->
+    <string name="placeholder">Placeholder</string>
+
+    <!-- ActionBar -->
+    <string name="action_profile">Profile</string>
+    <string name="action_search">Search</string>
+    <string name="action_users">Users</string>
+    <string name="action_logout">Logout</string>
+
+    <!-- Error -->
+    <string name="error_network_error">Network error</string>
+    <string name="error_user_list_request_failed">Failed to load the users data</string>
+    <string name="error_user_request_failed">Failed to load the user data</string>
+    <string name="error_user_delete_failed">Failed to delete the selected user</string>
+    <string name="error_registration_failed">Registration failed</string>
+    <string name="error_login_failed">Login failed</string>
+    <string name="error_logout_failed">Logout failed</string>
+    <string name="error_modify_password_failed">Failed to modify password</string>
+    <string name="error_auth_failed">Authentication failed</string>
+    <string name="error_caff_request_failed">Failed to load the caffs</string>
+    <string name="error_caff_delete_failed">Failed to delete the selected caff</string>
+    <string name="error_caff_search_failed">Failed to load the searched caffs</string>
+    <string name="error_caff_upload_failed">Failed to upload the caff</string>
+    <string name="error_caff_download_failed">Failed to download the caff</string>
+    <string name="error_comment_list_request_failed">Failed to load the comments</string>
+    <string name="error_comment_post_failed">Failed to post the comment</string>
+    <string name="error_comment_delete_failed">Failed to delete the comment</string>
+    <string name="error_required_field_is_empty">Required field cannot be empty!</string>
+    <string name="error_invalid_username_or_password">Invalid username or password!</string>
+    <string name="error_invalid_username">Not a valid username</string>
+    <string name="error_invalid_password">Password must be >8 characters</string>
+    <string name="error_invalid_password_again">Passwords must be the same</string>
+    <string name="error_invalid_user_data">Please log out and log in again</string>
+    <string name="error_invalid_caff_name">Caff name cannot be empty</string>
+    <string name="error_invalid_file_extension">Invalid file extension</string>
+    <string name="error_invalid_token">Invalid token</string>
+    <string name="error_authorization_failed">Authorization failed</string>
+    <string name="error_invalid_page_number">Invalid page number</string>
+    <string name="error_invalid_perpage_number">Invalid perpage number</string>
+    <string name="error_not_valid_username">Not valid username</string>
+    <string name="error_username_cannot_be_empty">Username cannot be empty</string>
+    <string name="error_username_too_short">Username too short</string>
+    <string name="error_username_too_long">Username too long</string>
+    <string name="error_username_is_already_taken">Username is already taken</string>
+    <string name="error_not_valid_password">Not valid password</string>
+    <string name="error_password_cannot_be_empty">Password cannot be empty</string>
+    <string name="error_password_too_short">Password too short</string>
+    <string name="error_password_too_long">Password too long</string>
+    <string name="error_password_too_weak">Password too weak</string>
+    <string name="error_user_not_found">User not found</string>
+    <string name="error_caff_parse_failed">Caff parse failed</string>
+    <string name="error_caff_not_found">Caff not found</string>
+    <string name="error_comment_cannot_be_empty">Comment cannot be empty</string>
+    <string name="error_comment_too_long">Comment too long</string>
+    <string name="error_comment_not_found">Comment not found</string>
+
+    <!-- Auth -->
+    <string name="auth_title">Sign in or register</string>
+    <string name="auth_action_login">Login</string>
+    <string name="auth_action_register">Register</string>
+    <string name="auth_action_sign_in">Sign in or register</string>
+    <string name="auth_action_sign_in_short">Sign in</string>
+    <string name="auth_prompt_username">Username</string>
+    <string name="auth_prompt_password">Password</string>
+    <string name="auth_prompt_password_again">Password again</string>
+    <string name="auth_content_welcome">"Welcome %s!"</string>
+
+    <!-- Home -->
+    <string name="home_title">Caff Shop</string>
+    <string name="home_action_upload">Upload caff</string>
+
+    <!-- Logout -->
+    <string name="logout_title_logout">Logout</string>
+    <string name="logout_content_logout">Are you sure you want to log out?</string>
+    <string name="logout_action_positive">Yes</string>
+    <string name="logout_action_negative">No</string>
+
+    <!-- Upload -->
+    <string name="upload_content_file_name">No file selected…</string>
+    <string name="upload_action_select">Select</string>
+    <string name="upload_content_custom_name">Custom file name</string>
+    <string name="upload_action_upload">Upload selected file</string>
+    <string name="upload_title_select">Select a CAFF file</string>
+    <string name="upload_content_successful">File uploaded successfully</string>
+
+    <!-- CaffList -->
+    <string name="caff_list_content_ciff">Ciff preview</string>
+
+    <!-- CaffDetails -->
+    <string name="caff_details_title">Caff details</string>
+    <string name="caff_details_caff_animation_image">Caff animation image</string>
+    <string name="caff_details_title_name">Name</string>
+    <string name="caff_details_title_creator">Creator</string>
+    <string name="caff_details_title_creation_date">Creation date</string>
+    <string name="caff_details_title_uploader_name">Uploader name</string>
+    <string name="caff_details_title_upload_date">Upload date</string>
+    <string name="caff_details_title_number_of_ciffs">Number of ciffs</string>
+    <string name="caff_details_action_download">Download</string>
+    <string name="caff_details_action_delete">Delete</string>
+    <string name="caff_details_content_post_comment">Comment</string>
+    <string name="caff_details_content_download_success">File downloaded: %s</string>
+    <string name="caff_details_content_caff_delete_success">Caff deleted successfully</string>
+
+    <!-- Comment -->
+    <string name="comment_content_expand">Expand comment</string>
+    <string name="comment_action_delete">Delete comment</string>
+
+    <!-- Search -->
+    <string name="search_title">Search Caffs</string>
+    <string name="search_title_filter">Filter</string>
+    <string name="search_content_drag">Drag</string>
+    <string name="search_content_search_term">Search term</string>
+    <string name="search_content_creator_name">Creator name</string>
+    <string name="search_content_uploader_name">Uploader name</string>
+    <string name="search_content_creation_date">Creation date</string>
+    <string name="search_content_upload_date">Upload date</string>
+    <string name="search_action_search">Search</string>
+    <string name="search_action_clear">Clear all</string>
+    <string name="search_content_no_items">No matching items</string>
+
+    <!-- UserDetails -->
+    <string name="user_details_title">User details</string>
+    <string name="user_details_username">Username</string>
+    <string name="user_details_is_admin">User is admin</string>
+    <string name="user_details_reg_date">Registration date</string>
+    <string name="user_content_delete">Delete user</string>
+    <string name="user_delete_text">Delete user</string>
+    <string name="user_details_modify_password_text">Change password</string>
+    <string name="user_details_sample_account_image_description">Account image</string>
+    <string name="user_details_content_new_password">New password</string>
+    <string name="user_details_content_new_password_again">New password again</string>
+    <string name="user_details_content_password_change_success">Successful password modification</string>
+    <string name="user_details_content_user_delete_success">User deleted successfully</string>
+
+    <!-- Users -->
+    <string name="users_title">Users</string>
+    <string name="users_content_empty_users">No users</string>
+
+    <!-- UserListItem -->
+    <string name="user_list_item_is_admin">Is admin</string>
+
+
+
+</resources>
