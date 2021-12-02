@@ -135,6 +135,7 @@ class CaffDetailsViewModel @Inject constructor(
             if (postCommentResult.success) {
                 _comments.postValue(emptyList())
                 actualPage = 0
+                totalPages = 1
                 getMoreComments(caffId)
             } else {
                 _error.postValue(Pair(postCommentResult.error!!, callbackId))
@@ -156,6 +157,7 @@ class CaffDetailsViewModel @Inject constructor(
                 if (comments.value != null) {
                     _comments.postValue(emptyList())
                     actualPage = 0
+                    totalPages = 1
                     getMoreComments(comment.caffId)
                 }
             } else {
