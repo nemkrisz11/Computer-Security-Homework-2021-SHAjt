@@ -70,6 +70,7 @@ class HomeViewModel @Inject constructor(
     fun refreshCaffs() {
         _caffs.postValue(emptyList())
         actualPage = 0
+        totalPages = 1
         getMoreCaffs()
     }
 
